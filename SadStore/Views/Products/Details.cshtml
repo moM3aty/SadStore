@@ -1,0 +1,202 @@
+﻿@model SadStore.Data.Product
+@{
+    ViewData["Title"] = Model.NameAr;
+    var related = ViewBag.RelatedProducts as List<SadStore.Data.Product>;
+    var reviews = ViewBag.Reviews as List<SadStore.Data.CustomerReview>;
+}
+
+<div class="product-details-page product-page">
+    <nav class="breadcrumb-nav py-4">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">الرئيسية</a><i class="fas fa-angle-left mx-2"></i></li>
+                <li class="breadcrumb-item"><a href="/Products">المنتجات</a><i class="fas fa-angle-left mx-2"></i></li>
+                <li class="breadcrumb-item active">@Model.NameAr</li>
+            </ol>
+        </div>
+    </nav>
+
+    <section class="product-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product-images">
+                        <div class="main-image-container">
+                            @if (Model.IsFeatured)
+                            {
+                                <span class="badge-new">مميز</span>
+                            }
+                            <button class="btn-wishlist"><i class="far fa-heart"></i></button>
+                            <img id="mainImage" src="@Model.ImageUrl" alt="@Model.NameAr" class="main-image" onerror="this.src='/images/main-product-details.webp'">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="product-info">
+                        <h2 class="product-title">@Model.NameAr</h2>
+                        <div class="product-price">
+                            <span class="price">@Model.Price.ToString("N2") ر.س</span>
+                        </div>
+                        <p class="price-note">السعر شامل الضريبة</p>
+
+                        <div class="availability">
+                            <i class="fas fa-check-circle"></i>
+                            <span>@(Model.StockQuantity > 0 ? "متوفر" : "غير متوفر")</span>
+                        </div>
+
+                        <p class="mt-3">@Model.DescriptionAr</p>
+
+                        <div class="product-number">
+                            <span>رقم المنتج</span>
+                            <strong>#@Model.Id</strong>
+                        </div>
+
+                        <form action="/Cart/Add" method="post" class="mt-4">
+                            <input type="hidden" name="productId" value="@Model.Id" />
+                            <div class="quantity-selector mb-4 d-flex justify-content-between align-items-center">
+                                <label class="form-label">الكمية</label>
+                                <div class="quantity-controls">
+                                    <button type="button" class="qty-btn" onclick="decreaseQty()">−</button>
+                                    <input type="text" id="quantity" name="quantity" value="1" readonly>
+                                    <button type="button" class="qty-btn" onclick="increaseQty()">+</button>
+                                </div>
+                            </div>
+                            <div class="action-buttons">
+                                <button type="submit" class="btn btn-primary btn-add-cart w-100">
+                                    <i class="fas fa-shopping-bag"></i> إضافة للسلة
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-12">
+                    <ul class="nav nav-tabs product-tabs" id="productTabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#details" type="button">تفاصيل المنتج</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews" type="button">التقييمات</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content product-tab-content">
+                        <div class="tab-pane fade show active" id="details">
+                            <h3>الوصف</h3>
+                            <p>@Model.DescriptionAr</p>
+                            <p class="text-muted">@Model.DescriptionEn</p>
+                        </div>
+                        <div class="tab-pane fade" id="reviews">
+                            @if (TempData["SuccessMessage"] != null)
+                            {
+                                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                            }
+
+                            <div class="mb-4">
+                                <h5>أضف تقييمك</h5>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <form action="/Products/AddReview" method="post">
+                                        <input type="hidden" name="productId" value="@Model.Id" />
+                                        <div class="mb-3">
+                                            <label>التقييم:</label>
+                                            <select name="rating" class="form-select w-auto">
+                                                <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                                                <option value="4">⭐⭐⭐⭐ (4/5)</option>
+                                                <option value="3">⭐⭐⭐ (3/5)</option>
+                                                <option value="2">⭐⭐ (2/5)</option>
+                                                <option value="1">⭐ (1/5)</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <textarea name="reviewText" class="form-control" rows="3" placeholder="اكتب رأيك هنا..." required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-sm btn-primary">إرسال التقييم</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-warning">يجب عليك <a href="/Auth">تسجيل الدخول</a> لكتابة تقييم.</div>
+                                }
+                            </div>
+
+                            <hr />
+
+                            <h5>آراء العملاء</h5>
+                            @if (reviews != null && reviews.Any())
+                            {
+                                foreach (var review in reviews)
+                                {
+                                    <div class="card mb-3 border-0 bg-white shadow-sm">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <h6 class="fw-bold">@review.CustomerName</h6>
+                                                <div class="text-warning">
+                                                    @for (int i = 0; i < review.Rating; i++)
+                                                    {
+                                                        <i class="fas fa-star"></i>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <p class="mb-0 text-muted">@review.ReviewText</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">لا توجد تقييمات بعد لهذا المنتج.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h3 class="section-title">منتجات ذات صلة</h3>
+                    <div class="related-products row g-3">
+                        @if (related != null && related.Any())
+                        {
+                            foreach (var item in related)
+                            {
+                                <div class="col-6 col-md-3">
+                                    <a href="/Products/Details/@item.Id" class="products-card text-decoration-none text-dark d-block">
+                                        <div class="products-image-wrapper position-relative" style="height: 250px; overflow: hidden; border-radius: 8px;">
+                                            <img src="@item.ImageUrl" class="products-image w-100 h-100 object-fit-cover" onerror="this.src='/images/product.webp'">
+                                        </div>
+                                        <div class="products-info p-2 text-center">
+                                            <h6 class="products-title fw-bold">@item.NameAr</h6>
+                                            <div class="products-price text-primary fw-bold">@item.Price.ToString("N2") ر.س</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-center text-muted">لا توجد منتجات مشابهة.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        function increaseQty() {
+            var qty = document.getElementById('quantity');
+            var val = parseInt(qty.value);
+            qty.value = val + 1;
+        }
+        function decreaseQty() {
+            var qty = document.getElementById('quantity');
+            var val = parseInt(qty.value);
+            if (val > 1) qty.value = val - 1;
+        }
+    </script>
+}

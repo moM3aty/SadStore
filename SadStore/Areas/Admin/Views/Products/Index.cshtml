@@ -1,0 +1,101 @@
+﻿@model IEnumerable<SadStore.Data.Product>
+
+@{
+    ViewData["Title"] = "إدارة المنتجات";
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-card">
+            <div class="table-header">
+                <h5 class="mb-0">قائمة المنتجات</h5>
+                <a href="/Admin/Products/Create" class="btn btn-custom">
+                    <i class="fas fa-plus"></i> إضافة منتج جديد
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>الصورة</th>
+                                <th>اسم المنتج</th>
+                                <th>القسم</th>
+                                <th>السعر</th>
+                                <th>المخزون</th>
+                                <th>مميز</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="@item.ImageUrl" alt="@item.NameAr" class="rounded" style="width: 50px; height: 50px; object-fit: cover;" onerror="this.src='/images/product-1.jpeg'">
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold">@item.NameAr</div>
+                                        <small class="text-muted">@item.NameEn</small>
+                                    </td>
+                                    <td>@(item.Category?.NameAr ?? "غير مصنف")</td>
+                                    <td>@item.Price.ToString("N2") ر.س</td>
+                                    <td>
+                                        @if (item.StockQuantity > 0)
+                                        {
+                                            <span class="badge bg-success">@item.StockQuantity</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">نفذت الكمية</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsFeatured)
+                                        {
+                                            <i class="fas fa-check-circle text-success"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-times-circle text-muted"></i>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="/Admin/Products/Edit/@item.Id" class="btn btn-sm btn-outline-primary" title="تعديل"><i class="fas fa-edit"></i></a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id" title="حذف">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+
+                                        <!-- Delete Modal -->
+                                        <div class="modal fade" id="deleteModal-@item.Id" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">تأكيد الحذف</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        هل أنت متأكد من حذف المنتج "@item.NameAr"؟
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form action="/Admin/Products/Delete/@item.Id" method="post">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                                                            <button type="submit" class="btn btn-danger">حذف</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

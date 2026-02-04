@@ -1,0 +1,70 @@
+﻿@model IEnumerable<SadStore.Data.BlogPost>
+
+@{
+    ViewData["Title"] = "إدارة المدونة";
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-card">
+            <div class="table-header">
+                <h5 class="mb-0">المقالات المنشورة</h5>
+                <a href="/Admin/Blogs/Create" class="btn btn-custom">
+                    <i class="fas fa-plus"></i> إضافة مقال جديد
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>الصورة</th>
+                            <th>العنوان</th>
+                            <th>تاريخ النشر</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@item.ImageUrl" class="rounded" style="width: 60px; height: 40px; object-fit: cover;" onerror="this.src='/images/blog-default.jpg'">
+                                </td>
+                                <td class="fw-bold">@item.Title</td>
+                                <td>@item.PublishedDate.ToString("yyyy/MM/dd")</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteBlogModal-@item.Id">
+                                        <i class="fas fa-trash"></i> حذف
+                                    </button>
+
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="deleteBlogModal-@item.Id" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">حذف المقال</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    هل أنت متأكد من حذف المقال "@item.Title"؟
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form action="/Admin/Blogs/Delete" method="post">
+                                                        <input type="hidden" name="id" value="@item.Id" />
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                                                        <button type="submit" class="btn btn-danger">حذف</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

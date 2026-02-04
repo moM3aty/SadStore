@@ -1,0 +1,283 @@
+.header-pattern {
+    background-color: #a89166;
+    background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,.1) 10px, rgba(0,0,0,.1) 20px),
+        repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(0,0,0,.1) 10px, rgba(0,0,0,.1) 20px);
+    padding: 40px 0;
+    position: relative;
+}
+
+.header-pattern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        linear-gradient(45deg, #8b7355 25%, transparent 25%),
+        linear-gradient(-45deg, #8b7355 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #8b7355 75%),
+        linear-gradient(-45deg, transparent 75%, #8b7355 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    opacity: 0.3;
+}
+
+.logo-section {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.brand-logo {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 8px;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.profile-section {
+    margin-top: -50px;
+    position: relative;
+    z-index: 2;
+}
+
+.profile-card {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0px 0;
+    gap: 20px;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #667eea 0%, #4a5f8f 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 3px solid white;
+}
+
+.profile-avatar i {
+    font-size: 3.5rem;
+    color: #fff;
+}
+
+.profile-name {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.menu-section {
+    padding: 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.profile-nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.menu-section .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.nav-item i {
+    font-size: 1.2rem;
+}
+
+.nav-item:hover {
+    color: #8b7355;
+    transform: translateY(-2px);
+}
+
+.nav-item.active {
+    color: #8b7355;
+    font-weight: 700;
+}
+.full-content{
+        background: #f8f9fa;
+
+}
+.content-section {
+    padding: 40px 0;
+
+}
+
+.content-area {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 30px;
+    min-height: 400px;
+}
+
+.page-content {
+    display: none;
+}
+
+.page-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+}
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state i {
+    font-size: 5rem;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.empty-state p {
+    font-size: 1.2rem;
+    color: #999;
+}
+.wallet-info,
+.loyalty-info {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.wallet-info .card,
+.loyalty-info .card {
+    border: none;
+}
+
+.wallet-info h2,
+.loyalty-info h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+.account-form {
+    max-width: 600px;
+}
+
+.account-form .form-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.account-form .form-control {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 12px;
+}
+
+.account-form .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.account-form .btn-primary {
+    background: #667eea;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.account-form .btn-primary:hover {
+    background: #5568d3;
+}
+
+.logout-confirm {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.logout-confirm p {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+.logout-confirm button {
+    margin: 0 10px;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .brand-logo {
+        font-size: 2.5rem;
+        letter-spacing: 4px;
+    }
+
+    .profile-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .profile-avatar i {
+        font-size: 2.5rem;
+    }
+
+    .profile-name {
+        font-size: 1.4rem;
+    }
+
+    .profile-nav {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nav-item {
+        justify-content: flex-start;
+    }
+
+    .content-area {
+        padding: 20px;
+    }
+
+    .page-title {
+        font-size: 1.4rem;
+    }
+}

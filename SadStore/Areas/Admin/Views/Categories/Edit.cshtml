@@ -1,0 +1,35 @@
+﻿@model SadStore.Data.Category
+
+@{
+    ViewData["Title"] = "تعديل القسم";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">تعديل القسم: @Model.NameAr</h5>
+                <a href="/Admin/Categories" class="btn btn-outline-secondary btn-sm">عودة للقائمة</a>
+            </div>
+            <div class="card-body">
+                <form action="/Admin/Categories/Edit/@Model.Id" method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label">اسم القسم (عربي)</label>
+                        <input type="text" asp-for="NameAr" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">اسم القسم (إنجليزي)</label>
+                        <input type="text" asp-for="NameEn" class="form-control" required />
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-custom">حفظ التغييرات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

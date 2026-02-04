@@ -1,0 +1,216 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - متجر صاد</title>
+    <link rel="stylesheet" href="~/css/all.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/main.css">
+</head>
+
+<body>
+    <div class="logos">
+        <div class="track" id="track">
+            <span class="content" data-ar="تمتعي بخصم مميز 10% كود [صاد] - شحن مجاني للطلبات فوق 499SR"
+                  data-en="Enjoy a special 10% discount with code [SAD] - Free shipping on orders over 499 SR">
+                تمتعي بخصم مميز 10% كود [صاد] - شحن مجاني للطلبات فوق 499SR
+            </span>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-light bg-white sticky-top flex-column p-0">
+        <div class="top-bar d-none d-lg-block w-100">
+            <div class="container d-flex justify-content-between align-items-center">
+                <div class="top-bar-left">
+                    <a href="tel:+966500000000" class="mx-2">
+                        <i class="fas fa-phone-alt mx-1"></i> +966500000000
+                    </a>
+                    <a href="mailto:info@store.com" class="ms-3">
+                        <i class="fas fa-envelope mx-1"></i> info@store.com
+                    </a>
+                </div>
+
+                <div class="top-bar-right d-flex align-items-center">
+                    <a href="/Blogs" data-ar="المدونة" data-en="Blog">المدونة</a>
+                    <span class="mx-2">|</span>
+                    <a href="/Home/ReturnPolicy" data-ar="سياسة الاسترجاع" data-en="Return Policy">سياسة الاسترجاع</a>
+                    <span class="mx-2">|</span>
+                    <a href="/Home/Terms" data-ar="الشروط والاحكام" data-en="Terms & Conditions">الشروط والاحكام</a>
+                    <span class="mx-2">|</span>
+
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <div class="dropdown mx-3 border-end px-3">
+                            <a class="dropdown-toggle text-white text-decoration-none" href="#" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle"></i> مرحبًا @User.Identity.Name
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/Profile">ملفي الشخصي</a></li>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li><a class="dropdown-item" href="/Admin/Dashboard">لوحة التحكم</a></li>
+                                }
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="/Auth/Logout">تسجيل خروج</a></li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="auth-links">
+                            <a href="/Auth" data-ar=" تسجيل دخول / انشاء حساب" data-en="login / signup">
+                                تسجيل دخول / انشاء حساب
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="container d-flex align-items-center justify-content-between py-2">
+            <div class="d-flex align-items-center flex-1">
+                <button class="btn border-0 p-0 mx-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                    <i class="fas fa-bars fs-3"></i>
+                </button>
+                <div class="search-box d-none d-md-block">
+                    <form action="/Products" method="get">
+                        <input type="search" name="search" class="form-control px-5" placeholder="ابحث في المتجر...">
+                        <i class="fas fa-search mx-2"></i>
+                    </form>
+                </div>
+            </div>
+            <a class="navbar-brand m-0" href="/">
+                <img src="~/images/logo.png" class="brand-logo" height="65">
+            </a>
+            <div class="d-flex align-items-center justify-content-end flex-1">
+                <a href="/Wishlist" class="nav-icon position-relative d-none d-md-block ms-3">
+                    <i class="fas fa-heart"></i>
+                    <span class="badge">0</span>
+                </a>
+                <a href="/Cart" class="nav-icon position-relative ms-3">
+                    <i class="fas fa-bag-shopping"></i>
+                    <span class="badge">@((Context.Session.GetString("Cart") != null && Context.Session.GetString("Cart") != "{}") ? "!" : "0")</span>
+                </a>
+                <a href="/Profile" class="nav-icon mx-2">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="nav-links-bar d-none d-lg-block w-100">
+            <div class="container">
+                <!-- استدعاء القائمة الديناميكية -->
+                @await Component.InvokeAsync("NavbarCategories")
+            </div>
+        </div>
+    </nav>
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold" data-ar="القائمة" data-en="Menu">القائمة</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <div class="p-3 d-md-none border-bottom">
+                <div class="search-box w-100">
+                    <form action="/Products" method="get">
+                        <input type="search" name="search" class="form-control" placeholder="ابحث...">
+                        <i class="fas fa-search"></i>
+                    </form>
+                </div>
+            </div>
+            <ul class="list-unstyled sidebar-list">
+                <li><a href="/" class="sidebar-link active"><i class="fas fa-home ms-2"></i> الرئيسية</a></li>
+                <li><a href="/Products" class="sidebar-link"><i class="fas fa-fire ms-2"></i> كل المنتجات</a></li>
+                <li><a href="/Profile" class="sidebar-link"><i class="fas fa-user ms-2"></i> حسابي</a></li>
+                <li><a href="/Home/Contact" class="sidebar-link"><i class="fas fa-envelope ms-2"></i> تواصل معنا</a></li>
+            </ul>
+        </div>
+    </div>
+
+    @RenderBody()
+
+    <footer class="px-3">
+        <div class="container-fluid">
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-6 col-xl-3">
+                    <div class="logo">
+                        <img src="~/images/logo.png" alt="logo">
+                        <p>الوجهة الأولى لجميع تفاصيل المرأة✨</p>
+                        <div class="d-flex flex-row gap-2 logo-section">
+                            <div>
+                                <img src="~/images/footer-1.avif" alt="footer">
+                                <div><p class="fw-bold">السجل التجاري</p><p>1010166254</p></div>
+                            </div>
+                            <div>
+                                <img src="~/images/footer-2.webp" alt="footer">
+                                <div><p class="fw-bold">الرقم الضريبي</p><p>300076485500003</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3 justify-content-center px-lg-5">
+                    <div class="links">
+                        <h3>روابط مهمة</h3>
+                        <div class="links-browse d-flex flex-wrap gap-3">
+                            <ul class="first">
+                                <li><a href="/Blogs">المدونة</a></li>
+                                <li><a href="/Home/ReturnPolicy">سياسة الاسترجاع</a></li>
+                                <li><a href="/Home/Terms">الشروط والاحكام</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="contact-us">
+                        <h3>تواصل معنا</h3>
+                        <div class="d-flex gap-2">
+                            <a href=""><i class="fas fa-phone"></i> الهاتف</a>
+                            <a href=""><i class="fas fa-envelope"></i> البريد الالكتروني</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row g-4">
+                    <div class="col-lg-3">
+                        <div class="text">
+                            <p>جميع الحقوق محفوظة © صاد 2026</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/966565532971" class="whatsapp-float text-decoration-none" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="~/js/main.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        const track = document.getElementById("track");
+        if(track){
+            const originalSpan = track.querySelector(".content");
+            while (track.offsetWidth < window.innerWidth + originalSpan.offsetWidth) {
+                const clone = originalSpan.cloneNode(true);
+                track.appendChild(clone);
+            }
+        }
+    </script>
+</body>
+</html>

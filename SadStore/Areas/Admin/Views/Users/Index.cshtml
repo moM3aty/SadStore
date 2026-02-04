@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+
+@{
+    ViewData["Title"] = "إدارة المستخدمين";
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-card">
+            <div class="table-header">
+                <h5 class="mb-0">المستخدمين المسجلين</h5>
+                <span class="badge bg-secondary">@Model.Count() مستخدم</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>البريد الإلكتروني / اسم المستخدم</th>
+                            <th>رقم الهاتف</th>
+                            <th>معرف المستخدم</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle me-2 bg-light text-primary d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        @user.Email
+                                    </div>
+                                </td>
+                                <td>@(string.IsNullOrEmpty(user.PhoneNumber) ? "-" : user.PhoneNumber)</td>
+                                <td><small class="text-muted">@user.Id</small></td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal-@user.Id">
+                                        <i class="fas fa-trash"></i> حذف
+                                    </button>
+
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="deleteUserModal-@user.Id" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">تأكيد حذف المستخدم</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    هل أنت متأكد من حذف المستخدم "@user.Email"؟ هذا الإجراء لا يمكن التراجع عنه.
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form action="/Admin/Users/Delete" method="post">
+                                                        <input type="hidden" name="id" value="@user.Id" />
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                                                        <button type="submit" class="btn btn-danger">حذف</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

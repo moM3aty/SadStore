@@ -1,0 +1,74 @@
+﻿@model SadStore.Data.Product
+
+@{
+    ViewData["Title"] = "إضافة منتج جديد";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">إضافة منتج جديد</h5>
+                <a href="/Admin/Products" class="btn btn-outline-secondary btn-sm">عودة للقائمة</a>
+            </div>
+            <div class="card-body">
+                <form action="/Admin/Products/Create" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اسم المنتج (عربي)</label>
+                            <input type="text" name="NameAr" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اسم المنتج (إنجليزي)</label>
+                            <input type="text" name="NameEn" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">القسم</label>
+                            <select name="CategoryId" class="form-select" asp-items="ViewBag.CategoryId"></select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">السعر</label>
+                            <input type="number" name="Price" class="form-control" step="0.01" required />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">الكمية في المخزون</label>
+                            <input type="number" name="StockQuantity" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">صورة المنتج</label>
+                            <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">الوصف (عربي)</label>
+                        <textarea name="DescriptionAr" class="form-control" rows="4"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">الوصف (إنجليزي)</label>
+                        <textarea name="DescriptionEn" class="form-control" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" name="IsFeatured" value="true" id="IsFeatured">
+                        <label class="form-check-label" for="IsFeatured">
+                            عرض في الصفحة الرئيسية (منتج مميز)
+                        </label>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-custom">حفظ المنتج</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

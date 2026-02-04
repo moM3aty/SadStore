@@ -1,0 +1,66 @@
+﻿@model IEnumerable<SadStore.Data.ShippingLocation>
+
+@{
+    ViewData["Title"] = "أماكن الشحن";
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="table-card">
+            <div class="table-header">
+                <h5 class="mb-0">مناطق الشحن والتكلفة</h5>
+                <a href="/Admin/Shipping/Create" class="btn btn-custom">
+                    <i class="fas fa-plus"></i> إضافة منطقة
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>المدينة / المنطقة</th>
+                            <th>تكلفة الشحن</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.CityName</td>
+                                <td>@item.ShippingCost.ToString("N2") ر.س</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteLocModal-@item.Id">
+                                        <i class="fas fa-trash"></i> حذف
+                                    </button>
+
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="deleteLocModal-@item.Id" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">حذف المنطقة</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    هل أنت متأكد من حذف "@item.CityName" من مناطق الشحن؟
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form action="/Admin/Shipping/Delete" method="post">
+                                                        <input type="hidden" name="id" value="@item.Id" />
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                                                        <button type="submit" class="btn btn-danger">حذف</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

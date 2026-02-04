@@ -1,0 +1,76 @@
+﻿@model SadStore.Data.BlogPost
+
+@{
+    ViewData["Title"] = Model.Title;
+    var relatedPosts = ViewBag.RelatedPosts as List<SadStore.Data.BlogPost>;
+}
+
+<div class="product-page">
+    <nav class="breadcrumb-nav py-4">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">الرئيسية</a><i class="fas fa-angle-left mx-2"></i></li>
+                <li class="breadcrumb-item"><a href="/Blogs">المدونة</a><i class="fas fa-angle-left mx-2"></i></li>
+                <li class="breadcrumb-item active">تفاصيل المدونة</li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <a href="/Blogs" class="btn-back mb-4 d-inline-flex align-items-center text-decoration-none text-dark fw-bold">
+                    <i class="fas fa-arrow-right me-2"></i> العودة إلى المدونة
+                </a>
+
+                <div class="blog-details-header mb-4 text-center">
+                    <h1 class="blog-details-title fw-bold mb-3">@Model.Title</h1>
+                    <div class="blog-meta text-muted">
+                        <span class="date"><i class="fas fa-calendar-alt me-1"></i> @Model.PublishedDate.ToString("dd MMMM yyyy")</span>
+                        <span class="mx-2">|</span>
+                        <span class="author"><i class="fas fa-user me-1"></i> أدمن</span>
+                    </div>
+                </div>
+
+                <div class="blog-featured-image mb-5 rounded overflow-hidden shadow-sm">
+                    <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid w-100" onerror="this.src='/images/blog-default.jpg'">
+                </div>
+
+                <div class="blog-details-content lh-lg text-secondary">
+                    @Html.Raw(Model.Content.Replace("\n", "<br>"))
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="related-posts py-5 bg-light mt-5">
+        <div class="container">
+            <h3 class="text-center mb-4 fw-bold">مقالات ذات صلة</h3>
+            <div class="row g-4">
+                @if (relatedPosts != null && relatedPosts.Any())
+                {
+                    foreach (var item in relatedPosts)
+                    {
+                        <div class="col-md-4">
+                            <a href="/Blogs/Details/@item.Id" class="blog-card-link text-decoration-none">
+                                <div class="blog-card border rounded overflow-hidden bg-white h-100">
+                                    <div class="blog-image" style="height: 200px;">
+                                        <img src="@item.ImageUrl" class="w-100 h-100 object-fit-cover" onerror="this.src='/images/blog-default.jpg'">
+                                    </div>
+                                    <div class="blog-content p-3">
+                                        <h5 class="blog-title text-dark fw-bold" style="font-size: 1rem;">@item.Title</h5>
+                                        <small class="text-muted">@item.PublishedDate.ToString("yyyy/MM/dd")</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-center text-muted">لا توجد مقالات أخرى حالياً.</p>
+                }
+            </div>
+        </div>
+    </section>
+</div>

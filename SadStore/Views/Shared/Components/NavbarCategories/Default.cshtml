@@ -1,0 +1,22 @@
+﻿@model IEnumerable<SadStore.Data.Category>
+
+<ul class="nav justify-content-center">
+    <li class="nav-item">
+        <a class="nav-link" href="/" data-ar="الرئيسية" data-en="Home">الرئيسية</a>
+    </li>
+
+    @foreach (var item in Model)
+    {
+        <li class="nav-item">
+            <a class="nav-link" href="/Products?category=@item.NameEn">@item.NameAr</a>
+        </li>
+    }
+
+    <li class="nav-item">
+        <a class="nav-link" href="/Products" data-ar="جميع المنتجات" data-en="All Products">جميع المنتجات</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="/Home/Contact" data-ar="تواصل معنا" data-en="Contact Us">تواصل معنا</a>
+    </li>
+</ul>

@@ -1,0 +1,72 @@
+﻿@model IEnumerable<SadStore.Data.Category>
+
+@{
+    ViewData["Title"] = "إدارة الأقسام";
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-card">
+            <div class="table-header">
+                <h5 class="mb-0">الأقسام</h5>
+                <a href="/Admin/Categories/Create" class="btn btn-custom">
+                    <i class="fas fa-plus"></i> إضافة قسم جديد
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>الاسم (عربي)</th>
+                                <th>الاسم (إنجليزي)</th>
+                                <th>عدد المنتجات</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.NameAr</td>
+                                    <td>@item.NameEn</td>
+                                    <td>@item.Products?.Count()</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="/Admin/Categories/Edit/@item.Id" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteCatModal-@item.Id">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+
+                                        <!-- Delete Modal -->
+                                        <div class="modal fade" id="deleteCatModal-@item.Id" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">حذف القسم</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        هل أنت متأكد من حذف القسم "@item.NameAr"؟
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form action="/Admin/Categories/Delete/@item.Id" method="post">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                                                            <button type="submit" class="btn btn-danger">حذف</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

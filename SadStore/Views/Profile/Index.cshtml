@@ -1,0 +1,106 @@
+﻿@model List<SadStore.Data.Order>
+@{
+    ViewData["Title"] = "الملف الشخصي";
+}
+
+<div class="full-content">
+    <header class="header-pattern">
+        <div class="container">
+            <div class="logo-section">
+                <h1 class="brand-logo" data-ar="صاد" data-en="Saad">صاد</h1>
+            </div>
+        </div>
+    </header>
+    <section class="profile-section">
+        <div class="container">
+            <div class="profile-card pb-3">
+                <div class="profile-avatar overflow-hidden">
+                    <img src="~/images/main-product-details.webp" class="img-fluid" alt="" onerror="this.src='https://ui-avatars.com/api/?name=@ViewBag.UserName'">
+                </div>
+                <h2 class="profile-name mt-5">@ViewBag.UserName</h2>
+                <p class="text-muted">@ViewBag.UserEmail</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="menu-section">
+        <div class="container">
+            <nav class="profile-nav">
+                <a href="#orders" class="nav-item active" onclick="switchTab('orders')">
+                    <i class="fas fa-box"></i>
+                    <span>الطلبات</span>
+                </a>
+                <a href="#logout" class="nav-item" onclick="document.getElementById('logoutForm').submit()">
+                    <i class="fas fa-right-from-bracket"></i>
+                    <span>تسجيل الخروج</span>
+                </a>
+            </nav>
+            <form id="logoutForm" action="/Auth/Logout" method="get" style="display:none;"></form>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="container">
+            <div class="content-area">
+                <div id="orders" class="page-content active">
+                    <h3 class="page-title">سجل الطلبات</h3>
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>رقم الطلب</th>
+                                        <th>التاريخ</th>
+                                        <th>الإجمالي</th>
+                                        <th>الحالة</th>
+                                        <th>التفاصيل</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model)
+                                    {
+                                        <tr>
+                                            <td>#@order.Id</td>
+                                            <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                                            <td>@order.TotalAmount.ToString("0.00") ر.س</td>
+                                            <td><span class="badge bg-info text-dark">@order.Status</span></td>
+                                            <td>
+                                                <ul class="list-unstyled mb-0 small">
+                                                    @foreach (var item in order.OrderItems)
+                                                    {
+                                                        <li>@item.Product.NameAr (@item.Quantity)</li>
+                                                    }
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state">
+                            <i class="fas fa-box"></i>
+                            <p>لا توجد طلبات سابقة</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        function switchTab(tabId) {
+            // منطق التبديل البسيط للعرض فقط
+            document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+}

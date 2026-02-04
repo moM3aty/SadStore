@@ -1,0 +1,107 @@
+﻿@{
+    ViewData["Title"] = "تسجيل الدخول / إنشاء حساب";
+}
+
+<section class="auth">
+    <div class="container" id="container">
+        <div class="text-center mt-3 mb-0 d-lg-none">
+            <button type="button" class="btn btn-link text-decoration-none" onclick="toggleForm()">
+                إنشاء حساب / تسجيل دخول
+            </button>
+        </div>
+
+        <div class="form-container sign-up-container">
+            <form asp-action="Register" method="post">
+                <h1>انشئ حساب</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>أو استخدم بريدك الإلكتروني للتسجيل</span>
+                <div class="infield">
+                    <input type="text" name="name" placeholder="الاسم" required />
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="email" name="email" placeholder="البريد الالكتروني" required />
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="password" name="password" placeholder="الرقم السري" required />
+                    <label></label>
+                </div>
+                <button type="submit">انشاء حساب</button>
+            </form>
+        </div>
+
+        <div class="form-container sign-in-container">
+            <form asp-action="Login" method="post">
+                <h1>تسجيل الدخول</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>أو سجّل الدخول باستخدام حسابك</span>
+                <div asp-validation-summary="All" class="text-danger small"></div>
+                <div class="infield">
+                    <input type="email" name="email" placeholder="البريد الالكتروني" required />
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="password" name="password" placeholder="الرقم السري" required />
+                    <label></label>
+                </div>
+                <a href="#" class="forgot">هل نسيت كلمة المرور؟</a>
+                <button type="submit">تسجيل الدخول</button>
+            </form>
+        </div>
+
+        <div class="overlay-container" id="overlayCon">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>مرحبًا بعودتك!</h1>
+                    <p>للبقاء على تواصل معنا، يرجى تسجيل الدخول باستخدام بياناتك</p>
+                    <button class="overlay-btn" id="signInBtn">تسجيل الدخول</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>أهلًا بك!</h1>
+                    <p>أدخل بياناتك وابدأ إنشاء حسابك معنا</p>
+                    <button id="signUpBtn">إنشاء حساب</button>
+                </div>
+            </div>
+            <button id="overlayBtn"></button>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        const container = document.getElementById('container');
+        const overlayCon = document.getElementById('overlayCon');
+        const overlayBtn = document.getElementById('overlayBtn');
+        const signInBtn = document.getElementById('signInBtn');
+        const signUpBtn = document.getElementById('signUpBtn');
+
+        overlayBtn.addEventListener('click', () => {
+            container.classList.toggle('right-panel-active');
+            overlayBtn.classList.remove('btnScaled');
+            window.requestAnimationFrame(() => {
+                overlayBtn.classList.add('btnScaled');
+            });
+        });
+
+        signInBtn.addEventListener('click', () => {
+            container.classList.remove('right-panel-active');
+        });
+
+        signUpBtn.addEventListener('click', () => {
+            container.classList.add('right-panel-active');
+        });
+
+        function toggleForm() {
+            document.getElementById("container").classList.toggle("right-panel-active");
+        }
+    </script>
+}

@@ -1,0 +1,40 @@
+﻿@model SadStore.Data.BlogPost
+
+@{
+    ViewData["Title"] = "إضافة مقال جديد";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">نشر مقال جديد</h5>
+            </div>
+            <div class="card-body">
+                <form action="/Admin/Blogs/Create" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">عنوان المقال</label>
+                        <input type="text" name="Title" class="form-control" required placeholder="أدخل عنوان المقال هنا..." />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">صورة المقال</label>
+                        <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                        <small class="text-muted">يفضل استخدام صور عرضية بجودة عالية.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">محتوى المقال</label>
+                        <textarea name="Content" class="form-control" rows="12" required placeholder="اكتب محتوى المقال هنا..."></textarea>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-custom">نشر المقال</button>
+                        <a href="/Admin/Blogs" class="btn btn-link mt-2">إلغاء</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

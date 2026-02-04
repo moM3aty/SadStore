@@ -1,0 +1,96 @@
+﻿@model SadStore.Controllers.CartViewModel
+@{
+    ViewData["Title"] = "سلة المشتريات";
+}
+
+<div class="product-page">
+    <nav class="breadcrumb-nav py-4">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/">
+                        <span>الرئيسية</span>
+                        <i class="fas fa-angle-left mx-2 fs-6 breadcrumb-arrow"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">سلة المشتريات</li>
+            </ol>
+        </div>
+    </nav>
+    <main class="container py-5">
+        @if (Model.Items.Any())
+        {
+            <div class="row g-4">
+                <div class="col-lg-4 order-lg-1">
+                    <div class="summary-card shadow-sm">
+                        <div class="summary-title">ملخص الطلب</div>
+
+                        <div class="summary-row">
+                            <span>مجموع المنتجات (بدون ضريبة)</span>
+                            <span>@Model.SubTotal.ToString("0.00") ر.س</span>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>ضريبة القيمة المضافة (15%)</span>
+                            <span>@Model.Tax.ToString("0.00") ر.س</span>
+                        </div>
+
+                        <div class="summary-row total-row">
+                            <span>الإجمالي</span>
+                            <span>@Model.GrandTotal.ToString("0.00") ر.س</span>
+                        </div>
+
+                        <form action="/Checkout/Process" method="post">
+                            <button type="submit" class="btn-checkout">إتمام الطلب عبر واتساب <i class="fab fa-whatsapp"></i></button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-8 order-lg-2" id="cart-container">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="cart-item-card">
+                            <form action="/Cart/Remove" method="post" class="d-inline">
+                                <input type="hidden" name="productId" value="@item.Product.Id" />
+                                <button type="submit" class="remove-btn">✕</button>
+                            </form>
+
+                            <div class="row align-items-center">
+                                <div class="col-md-2 col-4 text-center">
+                                    <div class="product-img">
+                                        <img src="@item.Product.ImageUrl" class="img-fluid rounded-2" onerror="this.src='/images/product-1.jpeg'">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-8">
+                                    <h6 class="fw-bold mb-1">@item.Product.NameAr</h6>
+                                    <div class="mt-3 fw-bold">
+                                        <span>@item.Product.Price</span> <span>ر.س</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mt-3 mt-md-0">
+                                    <div class="d-flex flex-column align-items-md-end">
+                                        <form action="/Cart/Update" method="post" class="qty-control mb-2">
+                                            <input type="hidden" name="productId" value="@item.Product.Id" />
+                                            <button type="submit" name="quantity" value="@(item.Quantity - 1)">-</button>
+                                            <span>@item.Quantity</span>
+                                            <button type="submit" name="quantity" value="@(item.Quantity + 1)">+</button>
+                                        </form>
+                                        <span class="text-muted small">الإجمالي: @item.Total ر.س</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-shopping-basket fa-3x mb-3 text-muted"></i>
+                <h3>سلة المشتريات فارغة</h3>
+                <a href="/Products" class="btn btn-primary mt-3">تصفح المنتجات</a>
+            </div>
+        }
+    </main>
+</div>

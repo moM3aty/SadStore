@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "نقاط صاد VIP";
+}
+
+<div class="product-page">
+    <nav class="breadcrumb-nav py-4">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/">
+                        <span>الرئيسية</span>
+                        <i class="fas fa-angle-left mx-2 fs-6 breadcrumb-arrow"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">نقاط صاد VIP</li>
+            </ol>
+        </div>
+    </nav>
+
+    <section class="vip-section">
+        <div class="container">
+            <div class="vip-card">
+                <div class="vip-content">
+                    <div class="vip-text">
+                        <h2>نقاط صاد VIP</h2>
+                        <p>اجمع النقاط مع كل طلب واستبدلها كخصم على مشترياتك القادمة بكل سهولة. اشتري بـ 1 ريال تحصل على 1 نقطة.</p>
+                        <p>للاستفادة من المكافآت والخصومات يجب توفر 500 نقطة أو أكثر في حسابك.</p>
+                        <div class="alert alert-warning mt-3 d-inline-block">
+                            <strong>500 نقطة = خصم 50 ريال</strong> <br>
+                            <strong>1000 نقطة = خصم 100 ريال</strong>
+                        </div>
+                    </div>
+                    <a href="/Products" class="btn-receive">ابدأ التسوق الآن</a>
+                </div>
+                <div class="vip-icon">
+                    <i class="fas fa-crown text-warning"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="points-section">
+        <div class="container">
+            <h2 class="section-title">طرق الحصول على النقاط</h2>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="points-card">
+                        <div class="points-header">
+                            <div>
+                                <h3>1 نقطة</h3>
+                                <p class="points-subtitle">لكل 1 ريال مشتريات</p>
+                            </div>
+                            <div class="points-icon"><i class="fas fa-shopping-bag"></i></div>
+                        </div>
+                        <a href="/Products" class="btn-action">الطلب من المتجر</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="points-card">
+                        <div class="points-header">
+                            <div>
+                                <h3>100 نقطة</h3>
+                                <p class="points-subtitle">عند تقييم طلبك</p>
+                            </div>
+                            <div class="points-icon"><i class="fas fa-star"></i></div>
+                        </div>
+                        <a href="/Profile" class="btn-action">تقييم الطلب</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="points-card">
+                        <div class="points-header">
+                            <div>
+                                <h3>25 نقطة</h3>
+                                <p class="points-subtitle">شارك أصدقائك</p>
+                            </div>
+                            <div class="points-icon"><i class="fas fa-share-alt"></i></div>
+                        </div>
+                        <div class="share-link">
+                            <input type="text" value="https://actan.com/..." readonly>
+                            <button class="btn-copy"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
