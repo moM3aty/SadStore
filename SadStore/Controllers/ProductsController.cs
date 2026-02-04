@@ -17,6 +17,7 @@ namespace SadStore.Controllers
 
         public async Task<IActionResult> Index(string category, string search, string sort)
         {
+            // ... (نفس الكود السابق للاندكس)
             var query = _context.Products.Include(p => p.Category).AsQueryable();
 
             if (!string.IsNullOrEmpty(category))
@@ -53,6 +54,7 @@ namespace SadStore.Controllers
         {
             var product = await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.Images) // تضمين الصور الإضافية
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
@@ -62,9 +64,7 @@ namespace SadStore.Controllers
                 .Take(4)
                 .ToListAsync();
 
-            // جلب التقييمات المعتمدة فقط
             var reviews = await _context.CustomerReviews
-                //.Where(r => r.ProductId == id && r.IsApproved) // ملاحظة: يجب إضافة ProductId للموديل CustomerReview لاحقاً لربطها بدقة
                 .Where(r => r.IsApproved)
                 .OrderByDescending(r => r.Id)
                 .Take(5)
@@ -81,6 +81,7 @@ namespace SadStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddReview(int productId, string reviewText, int rating)
         {
+            // ... (نفس كود التقييم السابق)
             if (string.IsNullOrEmpty(reviewText) || rating < 1 || rating > 5)
             {
                 return RedirectToAction(nameof(Details), new { id = productId });
@@ -91,14 +92,12 @@ namespace SadStore.Controllers
                 CustomerName = User.Identity.Name ?? "عميل",
                 ReviewText = reviewText,
                 Rating = rating,
-                IsApproved = false // تتطلب موافقة الأدمن
-                // ProductId = productId // تذكر إضافة هذا الحقل للموديل لاحقاً
+                IsApproved = false
             };
 
             _context.CustomerReviews.Add(review);
             await _context.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "تم إرسال تقييمك بنجاح وسيظهر بعد المراجعة.";
+            TempData["SuccessMessage"] = "Review submitted";
             return RedirectToAction(nameof(Details), new { id = productId });
         }
     }

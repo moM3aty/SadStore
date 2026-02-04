@@ -273,6 +273,7 @@ body {
 }
 html[dir="ltr"] .hero-section .row{
         justify-content: flex-start;
+        padding-left:15%;
 
 }
 .fabrics-section {
@@ -289,7 +290,7 @@ html[dir="ltr"] .hero-section .row{
 }
 
 .weaving-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url('../images/kinitting.avif');
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url('../images/kinitting.jpg');
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -394,12 +395,13 @@ footer {
     padding-top: 60px;
 }
 
-footer a {
-    color: #eee;
-    text-decoration: none;
-    transition: 0.3s;
-    font-weight: 700;
-}
+    footer a {
+        color: #eee;
+        text-decoration: none;
+        transition: 0.3s;
+        font-weight: 700;
+        
+    }
 
 footer a:hover {
     color: #d4b06a;
@@ -457,20 +459,21 @@ footer h3 {
 }
 
 
- ul li::marker {
+ul li::marker {
     unicode-bidi: embed;
-    font-variant-numeric: tabular-nums; 
-    text-transform: none; 
-        padding-right:10px !important ;
-
+    font-variant-numeric: tabular-nums;
+    text-transform: none;
+    padding-right: 10px !important;
 }
 
 
 .links a:hover {
     padding-left: 6px; 
 }
-
-html[dir="ltr"] .links a:hover {
+html [dir="ltr"]  ul li::marker {
+    padding-left:10px !important;
+}
+    html [dir="ltr"] .links a:hover {
     padding-right: 10px; 
 }
 
@@ -585,7 +588,9 @@ html[dir="ltr"] .links a:hover {
 .header-section {
     border-bottom: 1px solid var(--border-color);
 }
-
+.dropdown-menu[data-bs-popper]{
+    left:-45% !important;
+}
 .form-check .form-check-input {
     float: right;
     margin-left: 0.5em;
@@ -663,11 +668,8 @@ html[dir="ltr"] .form-check .form-check-input{
 
 .products-image {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
     transition: transform 0.3s ease;
     display: block;
-    height: 100%;
 }
 
 .new-badge {
@@ -2281,7 +2283,7 @@ html[dir="ltr"] .product-page .fa-angle-right{
 
 
 .auth {
-  height: 100vh;
+  height: 75vh;
   background: #f6f5f7;
   display: grid;
   place-content: center;
@@ -2608,4 +2610,7 @@ btnScaled {
   .auth .social-container a {
     margin: 0 4px;
   }
+}
+a{
+    text-decoration:none !important;
 }

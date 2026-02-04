@@ -1,45 +1,82 @@
-﻿@{
-    ViewData["Title"] = "سياسة الهدية";
+﻿@inject SadStore.Services.LanguageService Lang
+@{
+    ViewData["Title"] = Lang.Get("Gift Policy");
+    var isRtl = Lang.IsRtl();
 }
 
 <div class="product-page">
-    <nav class="breadcrumb-nav py-4">
+    <nav class="breadcrumb-nav py-4 bg-light border-bottom">
         <div class="container">
-            <ol class="breadcrumb">
+            <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
-                    <a href="/">
-                        <span>الرئيسية</span>
-                        <i class="fas fa-angle-left mx-2 fs-6 breadcrumb-arrow"></i>
+                    <a href="/" class="text-decoration-none text-muted">
+                        <span>@Lang.Get("Home")</span>
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2 fs-6 breadcrumb-arrow"></i>
                     </a>
                 </li>
-                <li class="breadcrumb-item active">سياسة الهدية</li>
+                <li class="breadcrumb-item active text-dark fw-bold">@Lang.Get("Gift Policy")</li>
             </ol>
         </div>
     </nav>
 
-    <section class="py-5 return-policy">
+    <section class="py-5 gift-policy">
         <div class="container">
-            <div class="row g-4 justify-content-center">
+            <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <div class="content bg-white p-5 rounded-3 shadow-sm">
-                        <h2 class="mb-4 fw-bold text-center">سياسة الهدية</h2>
+                    <div class="content bg-white p-5 rounded-4 shadow-sm border-top border-5 border-danger position-relative overflow-hidden">
+                        
+                        <div class="text-center mb-5">
+                            <div class="d-inline-block bg-danger bg-opacity-10 p-4 rounded-circle mb-3">
+                                <i class="fas fa-gift fa-4x text-danger"></i>
+                            </div>
+                            <h2 class="fw-bold" style="color: #4b3b1f;">@Lang.Get("Gift Policy")</h2>
+                        </div>
 
-                        <div class="mb-5">
-                            <h5 class="fw-bold mb-3 border-bottom pb-2">الشروط والأحكام عرض هدية شتوية:</h5>
-                            <ul class="list-unstyled">
-                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> الهدايا تُمنح لجميع الطلبات حتى نفاد الكمية.</li>
-                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> في حال استرجاع الطلب، يجب إعادة الهدية المرفقة لإتمام استرداد المبلغ.</li>
-                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> الطلبات حتى 199 ريال: هدية واحدة بلوزة شتوية.</li>
-                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> الطلبات أكثر من 599 ريال: هديتان شتوية.</li>
+                        <!-- Winter Offer -->
+                        <div class="policy-box mb-5 p-4 rounded-3" style="background-color: #fcfcfc; border: 1px solid #eee;">
+                            <h5 class="fw-bold mb-4 d-flex align-items-center" style="color: #4b3b1f;">
+                                <span class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mx-2" style="width: 35px; height: 35px;"><i class="fas fa-snowflake"></i></span>
+                                @Lang.Get("Terms_WinterOffer")
+                            </h5>
+                            <ul class="list-unstyled pe-3">
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="fas fa-check-circle text-success mt-1 mx-3 fs-5"></i>
+                                    <span class="text-muted">@Lang.Get("Gift_StockCondition")</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="fas fa-rotate-left text-warning mt-1 mx-3 fs-5"></i>
+                                    <span class="text-muted">@Lang.Get("Gift_ReturnCondition")</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="fas fa-tag text-primary mt-1 mx-3 fs-5"></i>
+                                    <span class="text-muted fw-bold">@Lang.Get("Gift_Winter_199")</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="fas fa-tags text-danger mt-1 mx-3 fs-5"></i>
+                                    <span class="text-muted fw-bold">@Lang.Get("Gift_Winter_599")</span>
+                                </li>
                             </ul>
                         </div>
 
-                        <div>
-                            <h5 class="fw-bold mb-3 border-bottom pb-2">الشروط والأحكام عرض هدية الاكسسوار:</h5>
-                            <ul class="list-unstyled">
-                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> الهدايا تُمنح لجميع الطلبات حتى نفاد الكمية.</li>
-                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> الطلبات حتى 599 ريال: هدية قطعة واحدة مجانية من صاد.</li>
-                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> الطلبات من 600 ريال وأكثر: هدية قطعة واحدة مجانية من صاد + اكسسوار هدية.</li>
+                        <!-- Accessory Offer -->
+                        <div class="policy-box p-4 rounded-3" style="background-color: #fff9f0; border: 1px solid #fae1c3;">
+                            <h5 class="fw-bold mb-4 d-flex align-items-center" style="color: #a67c52;">
+                                <span class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mx-2" style="width: 35px; height: 35px;"><i class="fas fa-gem"></i></span>
+                                @Lang.Get("Terms_AccessoryOffer")
+                            </h5>
+                            <ul class="list-unstyled pe-3">
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="fas fa-check-circle text-success mt-1 mx-3 fs-5"></i>
+                                    <span class="text-muted">@Lang.Get("Gift_StockCondition")</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="fas fa-gift text-warning mt-1 mx-3 fs-5"></i>
+                                    <span class="text-muted fw-bold">@Lang.Get("Gift_Accessory_599")</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="fas fa-gifts text-warning mt-1 mx-3 fs-5"></i>
+                                    <span class="text-muted fw-bold">@Lang.Get("Gift_Accessory_600")</span>
+                                </li>
                             </ul>
                         </div>
                     </div>

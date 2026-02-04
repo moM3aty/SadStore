@@ -1,41 +1,66 @@
-﻿@{
-    ViewData["Title"] = "طريقة الاسترجاع";
+﻿@inject SadStore.Services.LanguageService Lang
+@{
+    ViewData["Title"] = Lang.Get("Return Method");
+    var isRtl = Lang.IsRtl();
 }
 
 <div class="product-page">
-    <nav class="breadcrumb-nav py-4">
+    <nav class="breadcrumb-nav py-4 bg-light border-bottom">
         <div class="container">
-            <ol class="breadcrumb">
+            <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
                     <a href="/">
-                        <span>الرئيسية</span>
-                        <i class="fas fa-angle-left mx-2 fs-6 breadcrumb-arrow"></i>
+                        <span>@Lang.Get("Home")</span>
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2 fs-6 breadcrumb-arrow"></i>
                     </a>
                 </li>
-                <li class="breadcrumb-item active">طريقة الاسترجاع</li>
+                <li class="breadcrumb-item active text-dark fw-bold">@Lang.Get("Return Method")</li>
             </ol>
         </div>
     </nav>
 
-    <section class="py-5 return-policy">
+    <section class="py-5 return-method">
         <div class="container">
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-10">
-                    <div class="content bg-white p-5 rounded-3 shadow-sm text-center">
-                        <h2 class="mb-4 fw-bold">طريقة الإسترجاع</h2>
-
-                        <div class="py-5">
-                            <a href="https://wa.me/966565532971" target="_blank" class="btn btn-success btn-lg px-5">
-                                <i class="fab fa-whatsapp me-2"></i> تواصل معنا عبر الواتساب لبدء الاسترجاع
-                            </a>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="content bg-white p-5 rounded-4 shadow-sm text-center border-top border-5 border-success">
+                        <div class="mb-5">
+                            <div class="icon-box bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4 shadow-lg" style="width: 100px; height: 100px;">
+                                <i class="fab fa-whatsapp fa-4x"></i>
+                            </div>
+                            <h2 class="mb-3 fw-bold" style="color: #2c3e50;">@Lang.Get("Return Method")</h2>
+                            <div class="d-flex justify-content-center">
+                                <div style="width: 60px; height: 3px; background-color: #198754;"></div>
+                            </div>
                         </div>
 
-                        <p class="text-muted">
-                            سيقوم فريق خدمة العملاء بالرد عليكم وتزويدكم ببوليصة الشحن خلال 48 ساعة.
+                        <p class="lead text-muted mb-5 lh-lg">
+                            @Lang.Get("ReturnMethod_Action")
                         </p>
+
+                        <a href="https://wa.me/966565532971" target="_blank" class="btn btn-success btn-lg px-5 py-3 rounded-pill shadow hover-lift fw-bold">
+                            <i class="fab fa-whatsapp me-2 fa-lg"></i> @Lang.Get("Contact Us")
+                        </a>
+
+                        <div class="mt-5 p-4 bg-light rounded-3 border border-light">
+                            <p class="text-secondary mb-0">
+                                <i class="fas fa-clock me-2 text-warning"></i> @Lang.Get("ReturnMethod_Note")
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </div>
+
+<style>
+    .hover-lift {
+        transition: transform 0.3s;
+    }
+
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+        }
+</style>

@@ -1,29 +1,30 @@
 ﻿@model SadStore.Data.ShippingLocation
+@inject SadStore.Services.LanguageService Lang
 
 @{
-    ViewData["Title"] = "إضافة منطقة شحن";
+    ViewData["Title"] = Lang.Get("Add New Location");
     Layout = "_AdminLayout";
 }
 
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0">إضافة منطقة شحن جديدة</h5>
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">@Lang.Get("Add New Location")</h5>
+                <a href="/Admin/Shipping" class="btn btn-outline-secondary btn-sm">@Lang.Get("Back to List")</a>
             </div>
             <div class="card-body">
                 <form action="/Admin/Shipping/Create" method="post">
                     <div class="mb-3">
-                        <label class="form-label">اسم المدينة / المنطقة</label>
-                        <input type="text" name="CityName" class="form-control" required placeholder="مثال: الرياض" />
+                        <label class="form-label">@Lang.Get("City / Region")</label>
+                        <input type="text" name="CityName" class="form-control" required />
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">تكلفة الشحن (ر.س)</label>
-                        <input type="number" name="ShippingCost" class="form-control" step="0.01" required placeholder="مثال: 25.00" />
+                        <label class="form-label">@Lang.Get("Cost") (@Lang.Get("SAR"))</label>
+                        <input type="number" name="ShippingCost" class="form-control" step="0.01" required />
                     </div>
                     <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-custom">حفظ المنطقة</button>
-                        <a href="/Admin/Shipping" class="btn btn-link mt-2">إلغاء</a>
+                        <button type="submit" class="btn btn-custom">@Lang.Get("Save Location")</button>
                     </div>
                 </form>
             </div>

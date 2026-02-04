@@ -49,7 +49,10 @@ namespace SadStore.Controllers
                 cart[productId] = quantity;
             }
             SaveCart(cart);
-            return RedirectToAction("Index");
+            TempData["SuccessMessage"] = "Item added to cart";
+            // العودة لنفس الصفحة
+            string referer = Request.Headers["Referer"].ToString();
+            return Redirect(string.IsNullOrEmpty(referer) ? "/" : referer);
         }
 
         [HttpPost]
@@ -64,6 +67,7 @@ namespace SadStore.Controllers
                     cart.Remove(productId);
             }
             SaveCart(cart);
+            TempData["SuccessMessage"] = "Cart updated";
             return RedirectToAction("Index");
         }
 
@@ -76,10 +80,10 @@ namespace SadStore.Controllers
                 cart.Remove(productId);
             }
             SaveCart(cart);
+            TempData["ErrorMessage"] = "Item removed from cart";
             return RedirectToAction("Index");
         }
 
-        // Helper Methods for Session
         private Dictionary<int, int> GetCart()
         {
             var sessionCart = HttpContext.Session.GetString("Cart");
@@ -100,7 +104,7 @@ namespace SadStore.Controllers
     {
         public List<CartItemViewModel> Items { get; set; } = new List<CartItemViewModel>();
         public decimal SubTotal => Items.Sum(i => i.Total);
-        public decimal Tax => SubTotal * 0.15m; // 15% ضريبة
+        public decimal Tax => SubTotal * 0.15m;
         public decimal GrandTotal => SubTotal + Tax;
     }
 

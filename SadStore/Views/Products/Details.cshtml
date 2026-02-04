@@ -1,6 +1,9 @@
 ﻿@model SadStore.Data.Product
+@inject SadStore.Services.LanguageService Lang
+
 @{
-    ViewData["Title"] = Model.NameAr;
+    var isRtl = Lang.IsRtl();
+    ViewData["Title"] = isRtl ? Model.NameAr : Model.NameEn;
     var related = ViewBag.RelatedProducts as List<SadStore.Data.Product>;
     var reviews = ViewBag.Reviews as List<SadStore.Data.CustomerReview>;
 }
@@ -9,9 +12,19 @@
     <nav class="breadcrumb-nav py-4">
         <div class="container">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">الرئيسية</a><i class="fas fa-angle-left mx-2"></i></li>
-                <li class="breadcrumb-item"><a href="/Products">المنتجات</a><i class="fas fa-angle-left mx-2"></i></li>
-                <li class="breadcrumb-item active">@Model.NameAr</li>
+                <li class="breadcrumb-item">
+                    <a href="/">
+                        @Lang.Get("Home")
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="/Products">
+                        @Lang.Get("Products")
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">@(isRtl? Model.NameAr: Model.NameEn)</li>
             </ol>
         </div>
     </nav>
@@ -21,49 +34,126 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="product-images">
+                        <!-- Thumbnails -->
+                        <div class="thumbnail-images">
+                            @if (Model.Images != null && Model.Images.Any())
+                            {
+                                int idx = 0;
+                                foreach (var img in Model.Images)
+                                {
+                                    <img src="@img.Url" alt="Thumbnail" class="thumbnail @(idx == 0 ? "active" : "")"
+                                         onclick="changeImage(this)" onerror="this.src='/images/product.webp'">
+                                    idx++;
+                                }
+                            }
+                            else
+                            {
+                                <img src="@Model.ImageUrl" class="thumbnail active" onclick="changeImage(this)" onerror="this.src='/images/product.webp'">
+                            }
+                        </div>
+
+                        <!-- Main Image -->
                         <div class="main-image-container">
                             @if (Model.IsFeatured)
                             {
-                                <span class="badge-new">مميز</span>
+                                <span class="badge-new">@Lang.Get("New")</span>
                             }
                             <button class="btn-wishlist"><i class="far fa-heart"></i></button>
-                            <img id="mainImage" src="@Model.ImageUrl" alt="@Model.NameAr" class="main-image" onerror="this.src='/images/main-product-details.webp'">
+                            <button class="btn-share"><i class="fas fa-share-alt"></i></button>
+
+                            <img id="mainImage"
+                                 src="@(Model.Images != null && Model.Images.Any() ? Model.Images.First().Url : Model.ImageUrl)"
+                                 alt="@(isRtl? Model.NameAr: Model.NameEn)"
+                                 class="main-image"
+                                 onerror="this.src='/images/main-product-details.webp'">
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-6">
                     <div class="product-info">
-                        <h2 class="product-title">@Model.NameAr</h2>
+                        <h2 class="product-title">@(isRtl? Model.NameAr: Model.NameEn)</h2>
+
+                        <!-- الأسعار: قبل وبعد الخصم -->
                         <div class="product-price">
-                            <span class="price">@Model.Price.ToString("N2") ر.س</span>
+                            @if (Model.OldPrice.HasValue && Model.OldPrice > Model.Price)
+                            {
+                                <span class="text-decoration-line-through text-muted fs-6 mx-2">
+                                    @Model.OldPrice.Value.ToString("N0") @Lang.Get("SAR")
+                                </span>
+                            }
+                            <span class="price">@Model.Price.ToString("N0") @Lang.Get("SAR")</span>
                         </div>
-                        <p class="price-note">السعر شامل الضريبة</p>
+
+                        <p class="price-note">@Lang.Get("Price includes VAT")</p>
+
+                        <div class="product-tags">
+                            <a href="#" class="tag">@(Model.Category != null ? (isRtl ? Model.Category.NameAr : Model.Category.NameEn) : "")</a>
+                        </div>
 
                         <div class="availability">
                             <i class="fas fa-check-circle"></i>
-                            <span>@(Model.StockQuantity > 0 ? "متوفر" : "غير متوفر")</span>
+                            <span>@(Model.StockQuantity > 0 ? Lang.Get("Available") : Lang.Get("Out of Stock"))</span>
                         </div>
 
-                        <p class="mt-3">@Model.DescriptionAr</p>
+                        <div class="payment-options">
+                            <div class="payment-item">
+                                <div class="payment-logo tamara-logo">
+                                    <img src="~/images/tamara.svg" alt="tamara" onerror="this.style.display='none'">
+                                </div>
+                                <p>
+                                    @if (isRtl)
+                                    {
+                                        <text>أو قسم فاتورتك على <strong>4 دفعات</strong> بقيمة <strong>@((Model.Price / 4).ToString("N2")) @Lang.Get("SAR")</strong> بدون رسوم تأخير.</text>
+                                    }
+                                    else
+                                    {
+                                        <text>Split into <strong>4 payments</strong> of <strong>@((Model.Price / 4).ToString("N2")) @Lang.Get("SAR")</strong> with no late fees.</text>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+
+                        <p class="mt-3">@(isRtl? Model.DescriptionAr: Model.DescriptionEn)</p>
 
                         <div class="product-number">
-                            <span>رقم المنتج</span>
-                            <strong>#@Model.Id</strong>
+                            <span>@Lang.Get("Product Number")</span>
+                            <strong>@Model.ModelNumber ?? "#@Model.Id"</strong>
                         </div>
 
                         <form action="/Cart/Add" method="post" class="mt-4">
                             <input type="hidden" name="productId" value="@Model.Id" />
+
+                            <!-- قائمة المقاسات الديناميكية -->
+                            @if (!string.IsNullOrEmpty(Model.AvailableSizes))
+                            {
+                                <div class="size-selector mb-3 d-flex justify-content-between align-items-center">
+                                    <label class="form-label mb-0">@Lang.Get("Select Size") <span class="text-danger">*</span></label>
+                                    <select class="form-select w-50" name="size" required>
+                                        <option value="">@Lang.Get("Select Size")</option>
+                                        @foreach (var size in Model.AvailableSizes.Split(','))
+                                        {
+                                            <option value="@size.Trim()">@size.Trim()</option>
+                                        }
+                                    </select>
+                                </div>
+                            }
+
                             <div class="quantity-selector mb-4 d-flex justify-content-between align-items-center">
-                                <label class="form-label">الكمية</label>
+                                <label class="form-label mb-0">@Lang.Get("Quantity")</label>
                                 <div class="quantity-controls">
                                     <button type="button" class="qty-btn" onclick="decreaseQty()">−</button>
                                     <input type="text" id="quantity" name="quantity" value="1" readonly>
                                     <button type="button" class="qty-btn" onclick="increaseQty()">+</button>
                                 </div>
                             </div>
+
                             <div class="action-buttons">
-                                <button type="submit" class="btn btn-primary btn-add-cart w-100">
-                                    <i class="fas fa-shopping-bag"></i> إضافة للسلة
+                                <button type="submit" class="btn btn-outline-primary btn-buy-now">
+                                    <i class="fas fa-shopping-cart"></i> @Lang.Get("Buy Now")
+                                </button>
+                                <button type="submit" class="btn btn-primary btn-add-cart">
+                                    <i class="fas fa-shopping-bag"></i> @Lang.Get("Add to Cart")
                                 </button>
                             </div>
                         </form>
@@ -71,92 +161,71 @@
                 </div>
             </div>
 
+            <!-- Tabs Section -->
             <div class="row mt-5">
                 <div class="col-12">
                     <ul class="nav nav-tabs product-tabs" id="productTabs" role="tablist">
                         <li class="nav-item">
-                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#details" type="button">تفاصيل المنتج</button>
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#details" type="button">@Lang.Get("Product Details")</button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews" type="button">التقييمات</button>
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews" type="button">@Lang.Get("Reviews")</button>
                         </li>
                     </ul>
 
                     <div class="tab-content product-tab-content">
                         <div class="tab-pane fade show active" id="details">
-                            <h3>الوصف</h3>
-                            <p>@Model.DescriptionAr</p>
-                            <p class="text-muted">@Model.DescriptionEn</p>
+                            <h3>@Lang.Get("Description")</h3>
+                            <p>@(isRtl? Model.DescriptionAr: Model.DescriptionEn)</p>
+
+                            <!-- عرض المواصفات الإضافية -->
+                            <ul class="product-specs mt-3">
+                                @if (!string.IsNullOrEmpty(isRtl ? Model.DesignTypeAr : Model.DesignTypeEn))
+                                {
+                                    <li><strong>@Lang.Get("Design Type"):</strong> @(isRtl? Model.DesignTypeAr: Model.DesignTypeEn)</li>
+                                }
+                                @if (!string.IsNullOrEmpty(isRtl ? Model.MaterialAr : Model.MaterialEn))
+                                {
+                                    <li><strong>@Lang.Get("Material"):</strong> @(isRtl? Model.MaterialAr: Model.MaterialEn)</li>
+                                }
+                                @if (!string.IsNullOrEmpty(isRtl ? Model.CareInstructionsAr : Model.CareInstructionsEn))
+                                {
+                                    <li><strong>@Lang.Get("Care Instructions"):</strong> @(isRtl? Model.CareInstructionsAr: Model.CareInstructionsEn)</li>
+                                }
+                            </ul>
                         </div>
                         <div class="tab-pane fade" id="reviews">
-                            @if (TempData["SuccessMessage"] != null)
-                            {
-                                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-                            }
-
-                            <div class="mb-4">
-                                <h5>أضف تقييمك</h5>
-                                @if (User.Identity.IsAuthenticated)
-                                {
-                                    <form action="/Products/AddReview" method="post">
-                                        <input type="hidden" name="productId" value="@Model.Id" />
-                                        <div class="mb-3">
-                                            <label>التقييم:</label>
-                                            <select name="rating" class="form-select w-auto">
-                                                <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
-                                                <option value="4">⭐⭐⭐⭐ (4/5)</option>
-                                                <option value="3">⭐⭐⭐ (3/5)</option>
-                                                <option value="2">⭐⭐ (2/5)</option>
-                                                <option value="1">⭐ (1/5)</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <textarea name="reviewText" class="form-control" rows="3" placeholder="اكتب رأيك هنا..." required></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-sm btn-primary">إرسال التقييم</button>
-                                    </form>
-                                }
-                                else
-                                {
-                                    <div class="alert alert-warning">يجب عليك <a href="/Auth">تسجيل الدخول</a> لكتابة تقييم.</div>
-                                }
-                            </div>
-
-                            <hr />
-
-                            <h5>آراء العملاء</h5>
                             @if (reviews != null && reviews.Any())
                             {
-                                foreach (var review in reviews)
+                                foreach (var rev in reviews)
                                 {
-                                    <div class="card mb-3 border-0 bg-white shadow-sm">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between">
-                                                <h6 class="fw-bold">@review.CustomerName</h6>
-                                                <div class="text-warning">
-                                                    @for (int i = 0; i < review.Rating; i++)
-                                                    {
-                                                        <i class="fas fa-star"></i>
-                                                    }
-                                                </div>
+                                    <div class="review-item border-bottom pb-3 mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="fw-bold">@rev.CustomerName</h6>
+                                            <div class="text-warning">
+                                                @for (int i = 0; i < rev.Rating; i++)
+                                                {
+                                                    <i class="fas fa-star"></i>
+                                                }
                                             </div>
-                                            <p class="mb-0 text-muted">@review.ReviewText</p>
                                         </div>
+                                        <p class="text-muted mb-0">@rev.ReviewText</p>
                                     </div>
                                 }
                             }
                             else
                             {
-                                <p class="text-muted">لا توجد تقييمات بعد لهذا المنتج.</p>
+                                <p class="text-muted">@Lang.Get("No reviews yet for this product.")</p>
                             }
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Related Products -->
             <div class="row mt-5">
                 <div class="col-12">
-                    <h3 class="section-title">منتجات ذات صلة</h3>
+                    <h3 class="section-title">@Lang.Get("Related Products")</h3>
                     <div class="related-products row g-3">
                         @if (related != null && related.Any())
                         {
@@ -168,16 +237,12 @@
                                             <img src="@item.ImageUrl" class="products-image w-100 h-100 object-fit-cover" onerror="this.src='/images/product.webp'">
                                         </div>
                                         <div class="products-info p-2 text-center">
-                                            <h6 class="products-title fw-bold">@item.NameAr</h6>
-                                            <div class="products-price text-primary fw-bold">@item.Price.ToString("N2") ر.س</div>
+                                            <h6 class="products-title fw-bold">@(isRtl? item.NameAr: item.NameEn)</h6>
+                                            <div class="products-price text-primary fw-bold">@item.Price.ToString("N0") <span class="coin">@Lang.Get("SAR")</span></div>
                                         </div>
                                     </a>
                                 </div>
                             }
-                        }
-                        else
-                        {
-                            <p class="text-center text-muted">لا توجد منتجات مشابهة.</p>
                         }
                     </div>
                 </div>
@@ -187,16 +252,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        function increaseQty() {
-            var qty = document.getElementById('quantity');
-            var val = parseInt(qty.value);
-            qty.value = val + 1;
-        }
-        function decreaseQty() {
-            var qty = document.getElementById('quantity');
-            var val = parseInt(qty.value);
-            if (val > 1) qty.value = val - 1;
-        }
-    </script>
+    <script src="~/js/product-details.js"></script>
 }

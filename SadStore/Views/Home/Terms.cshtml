@@ -1,56 +1,175 @@
-﻿@{
-    ViewData["Title"] = "الشروط والأحكام";
+﻿@inject SadStore.Services.LanguageService Lang
+@{
+    ViewData["Title"] = Lang.Get("Terms & Conditions");
+    var isRtl = Lang.IsRtl();
 }
 
 <div class="product-page">
-    <nav class="breadcrumb-nav py-4">
+    <!-- Header / Breadcrumb -->
+    <nav class="breadcrumb-nav py-4 bg-light border-bottom">
         <div class="container">
-            <ol class="breadcrumb">
+            <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
-                    <a href="/">
-                        <span>الرئيسية</span>
-                        <i class="fas fa-angle-left mx-2 fs-6 breadcrumb-arrow"></i>
+                    <a href="/" class="text-decoration-none text-muted">
+                        <span>@Lang.Get("Home")</span>
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2 fs-6 breadcrumb-arrow"></i>
                     </a>
                 </li>
-                <li class="breadcrumb-item active">الشروط والأحكام</li>
+                <li class="breadcrumb-item active text-dark fw-bold">@Lang.Get("Terms & Conditions")</li>
             </ol>
         </div>
     </nav>
 
-    <section class="py-5 return-policy">
+    <!-- Main Content -->
+    <section class="py-5 terms-section" style="background-color: #f9f9f9;">
         <div class="container">
-            <div class="row g-4 justify-content-center">
+
+            <!-- Page Header -->
+            <div class="text-center mb-5">
+                <h1 class="fw-bold mb-3" style="color: var(--primary-dark);">@Lang.Get("Terms_Intro_Title")</h1>
+                <div class="d-flex justify-content-center">
+                    <div style="width: 80px; height: 3px; background-color: var(--primary-color);"></div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <div class="content bg-white p-5 rounded-3 shadow-sm">
-                        <h2 class="mb-4 fw-bold text-center">الشروط والأحكام</h2>
 
-                        <div class="mb-4">
-                            <h5 class="fw-bold text-dark">1. الملكية الفكرية</h5>
-                            <p class="text-muted">يشكل كل المحتوى المتوفر على هذا الموقع (بما في ذلك النصوص، التصميم، الرسومات، الشعارات) ملكية حصرية لـ (صاد) وهي محمية بموجب حقوق النشر.</p>
+                    <!-- Intellectual Property -->
+                    <div class="term-card mb-4 bg-white p-4 p-lg-5 rounded-3 shadow-sm border-start border-5 border-primary position-relative overflow-hidden">
+                        <div class="term-icon position-absolute top-0 end-0 p-3 opacity-10">
+                            <i class="fas fa-copyright fa-4x text-secondary"></i>
                         </div>
+                        <h4 class="fw-bold mb-3 text-dark">
+                            <i class="fas fa-scale-balanced me-2 text-primary"></i> @Lang.Get("Terms_IP_Title")
+                        </h4>
+                        <p class="text-muted lh-lg mb-0 text-justify">@Lang.Get("Terms_IP_Body")</p>
+                    </div>
 
-                        <div class="mb-4">
-                            <h5 class="fw-bold text-dark">2. الأسعار والدفع</h5>
-                            <p class="text-muted">تشمل الأسعار ضريبة القيمة المضافة المطبقة. نحتفظ بالحق في تغيير الأسعار في أي وقت دون إشعار مسبق. يتم قبول الدفع عبر البطاقات الائتمانية ومدى وApple Pay.</p>
+                    <!-- Flash Sales -->
+                    <div class="term-card mb-4 bg-white p-4 p-lg-5 rounded-3 shadow-sm border-start border-5 border-warning position-relative overflow-hidden">
+                        <div class="term-icon position-absolute top-0 end-0 p-3 opacity-10">
+                            <i class="fas fa-bolt fa-4x text-warning"></i>
                         </div>
+                        <h4 class="fw-bold mb-3 text-dark">
+                            <i class="fas fa-tags me-2 text-warning"></i> @Lang.Get("Terms_Flash_Title")
+                        </h4>
+                        <p class="text-muted lh-lg mb-0 text-justify">@Lang.Get("Terms_Flash_Body")</p>
+                    </div>
 
-                        <div class="mb-4">
-                            <h5 class="fw-bold text-dark">3. الشحن والتوصيل</h5>
-                            <p class="text-muted">نحن غير مسؤولين عن أي تأخير في التوصيل خارج عن إرادتنا. في حال كان العنوان غير صحيح، يتحمل العميل رسوم الشحن الإضافية.</p>
+                    <!-- Orders & Pricing -->
+                    <div class="term-card mb-4 bg-white p-4 p-lg-5 rounded-3 shadow-sm border-start border-5 border-success position-relative overflow-hidden">
+                        <div class="term-icon position-absolute top-0 end-0 p-3 opacity-10">
+                            <i class="fas fa-file-invoice-dollar fa-4x text-success"></i>
                         </div>
+                        <h4 class="fw-bold mb-3 text-dark">
+                            <i class="fas fa-cart-shopping me-2 text-success"></i> @Lang.Get("Terms_Orders_Title")
+                        </h4>
+                        <p class="text-muted lh-lg mb-0 text-justify">@Lang.Get("Terms_Orders_Body")</p>
+                    </div>
 
-                        <div class="mb-4">
-                            <h5 class="fw-bold text-dark">4. الخصوصية</h5>
-                            <p class="text-muted">نحن نحترم خصوصيتك ولا نشارك بياناتك مع أي طرف ثالث إلا لغرض إتمام الطلب (مثل شركات الشحن).</p>
-                        </div>
+                    <!-- Payment Policy -->
+                    <div class="term-card mb-4 bg-white p-4 p-lg-5 rounded-3 shadow-sm border-start border-5 border-info position-relative overflow-hidden">
+                        <h4 class="fw-bold mb-3 text-dark">
+                            <i class="fas fa-credit-card me-2 text-info"></i> @Lang.Get("Terms_Payment_Title")
+                        </h4>
+                        <p class="text-muted lh-lg mb-0 text-justify">@Lang.Get("Terms_Payment_Body")</p>
+                    </div>
 
-                        <div class="mb-4">
-                            <h5 class="fw-bold text-dark">5. القانون المطبق</h5>
-                            <p class="text-muted">تخضع هذه الشروط لقوانين المملكة العربية السعودية، وأي نزاع ينشأ يتم حله في محاكم المملكة.</p>
+                    <!-- Grid for Smaller Terms -->
+                    <div class="row g-4 mb-4">
+                        <!-- Offers -->
+                        <div class="col-md-6">
+                            <div class="term-card bg-white p-4 rounded-3 shadow-sm h-100 border-top border-4 border-dark">
+                                <h5 class="fw-bold mb-3"><i class="fas fa-gift me-2 text-danger"></i> @Lang.Get("Terms_Offers_Title")</h5>
+                                <p class="text-muted small mb-0">@Lang.Get("Terms_Offers_Body")</p>
+                            </div>
                         </div>
+                        <!-- Returns for Offers -->
+                        <div class="col-md-6">
+                            <div class="term-card bg-white p-4 rounded-3 shadow-sm h-100 border-top border-4 border-dark">
+                                <h5 class="fw-bold mb-3"><i class="fas fa-box-open me-2 text-danger"></i> @Lang.Get("Terms_ReturnOffers_Title")</h5>
+                                <p class="text-muted small mb-0">@Lang.Get("Terms_ReturnOffers_Body")</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Liability & Legal (Accordion Style for heavy text) -->
+                    <div class="accordion shadow-sm rounded-3 overflow-hidden" id="legalAccordion">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button fw-bold text-dark bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                    <i class="fas fa-user-shield mx-2  text-secondary"></i> @Lang.Get("Terms_Liability_Title")
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#legalAccordion">
+                                <div class="accordion-body text-muted lh-lg bg-white">
+                                    @Lang.Get("Terms_Liability_Body")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 border-top">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed fw-bold text-dark bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                    <i class="fas fa-gavel mx-2 text-secondary"></i> @Lang.Get("Terms_Legal_Title")
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#legalAccordion">
+                                <div class="accordion-body text-muted lh-lg bg-white">
+                                    @Lang.Get("Terms_Legal_Body")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 border-top">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed fw-bold text-dark bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                    <i class="fas fa-comments mx-2 text-secondary"></i> @Lang.Get("Terms_Comments_Title")
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#legalAccordion">
+                                <div class="accordion-body text-muted lh-lg bg-white">
+                                    @Lang.Get("Terms_Comments_Body")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 border-top">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed fw-bold text-dark bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                                    <i class="fas fa-pen-to-square mx-2 text-secondary"></i> @Lang.Get("Terms_EditOrder_Title")
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#legalAccordion">
+                                <div class="accordion-body text-muted lh-lg bg-white">
+                                    @Lang.Get("Terms_EditOrder_Body")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5 text-muted small">
+                        @Lang.Get("All rights reserved © Sad 2026")
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </div>
+
+<style>
+    .term-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .term-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.1) !important;
+        }
+
+    .text-justify {
+        text-align: justify;
+    }
+
+    .opacity-10 {
+        opacity: 0.05;
+    }
+</style>

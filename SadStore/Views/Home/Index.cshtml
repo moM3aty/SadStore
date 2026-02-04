@@ -1,15 +1,18 @@
-﻿@model List<SadStore.Data.Product>
+﻿@inject SadStore.Services.LanguageService Lang
+@{
+    ViewData["Title"] = Lang.Get("Home");
+}
 
 <section class="hero-section mx-4">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-5 text-content">
                 <div class="hero-text">
-                    <h1 class="abayaa-text" data-ar="عبايات" data-en="Abayas">عبايات</h1>
+                    <h1 class="abayaa-text">@Lang.Get("Abayas")</h1>
                     <div class="collection-links">
-                        <a href="/Products?category=casual" class="casual-text" data-ar="كاجوال" data-en="Casual">كاجوال</a>
-                        <a href="/Products?category=evening" class="sahra-text" data-ar="سهرة" data-en="Evening">سهرة</a>
-                        <a href="/Products?category=umrah" class="omra-text" data-ar="عمرة" data-en="Umrah">عمرة</a>
+                        <a href="/Products?category=Abayas&tag=casual" class="casual-text">@Lang.Get("Casual")</a>
+                        <a href="/Products?category=Abayas&tag=evening" class="sahra-text">@Lang.Get("Evening")</a>
+                        <a href="/Products?category=Abayas&tag=umrah" class="omra-text">@Lang.Get("Umrah")</a>
                     </div>
                 </div>
             </div>
@@ -22,9 +25,8 @@
         <div class="row justify-content-center align-items-center">
             <div class="col-lg-12 text-content">
                 <div class="hero-text">
-                    <a href="/Products?category=fabrics" class="fabrics-text text-decoration-none text-center"
-                       data-ar="أقمشة عبايات وكلف" data-en="Abaya Fabrics & Accessories">
-                        أقمشة عبايات وكلف
+                    <a href="/Products?category=Fabrics" class="fabrics-text text-decoration-none text-center">
+                        @Lang.Get("Abaya Fabrics & Accessories")
                     </a>
                 </div>
             </div>
@@ -37,10 +39,10 @@
         <div class="row justify-content-center align-items-center">
             <div class="col-lg-4 text-content">
                 <div class="hero-text">
-                    <h1 class="clothes-text" data-ar="ملابس" data-en="Clothes">ملابس</h1>
+                    <h1 class="clothes-text">@Lang.Get("Clothes")</h1>
                     <div class="collection-links">
-                        <a href="/Products?category=casual" class="casual-text" data-ar="كاجوال" data-en="Casual">كاجوال</a>
-                        <a href="/Products?category=evening" class="sahra-text" data-ar="سهرات" data-en="Evening">سهرات</a>
+                        <a href="/Products?category=Clothes&tag=casual" class="casual-text">@Lang.Get("Casual")</a>
+                        <a href="/Products?category=Clothes&tag=evening" class="sahra-text">@Lang.Get("Evening")</a>
                     </div>
                 </div>
             </div>
@@ -53,26 +55,25 @@
         <div class="row justify-content-center align-items-center">
             <div class="col-lg-8 text-content">
                 <div class="hero-text d-flex flex-column gap-2">
-                    <a href="/Products?category=leather" class="weaving-text text-decoration-none" data-ar="حياكة وزخرفة جلود"
-                       data-en="Leather Sewing & Decoration">
-                        حياكة وزخرفة جلود
+                    <a href="/Products?category=Leather" class="weaving-text text-decoration-none">
+                        @Lang.Get("Leather Sewing & Decoration")
                     </a>
-                    <a href="/Products?category=embroidery" class="weaving-text text-decoration-none" data-ar="تطريز وشك"
-                       data-en="Embroidery & Lace">
-                        تطريز وشك
+
+                    <a href="/Products?category=Embroidery" class="weaving-text text-decoration-none">
+                        @Lang.Get("Embroidery & Lace")
                     </a>
-                    <a href="/Products?category=bags" class="weaving-text text-decoration-none" data-ar="شنط وأحزمة"
-                       data-en="Bags & Belts">
-                        شنط وأحزمة
+
+                    <a href="/Products?category=Bags" class="weaving-text text-decoration-none">
+                        @Lang.Get("Bags & Belts")
                     </a>
+
                     <div class="d-flex flex-wrap gap-5">
-                        <a href="/Products?category=raw-leather" class="weaving-text text-decoration-none" data-ar="جلود خام"
-                           data-en="Raw Leather">
-                            جلود خام
+                        <a href="/Products?category=RawLeather" class="weaving-text text-decoration-none">
+                            @Lang.Get("Raw Leather")
                         </a>
-                        <a href="/Products?category=supplies" class="weaving-text text-decoration-none" data-ar="توزيعات"
-                           data-en="Supplies">
-                            توزيعات
+
+                        <a href="/Products?category=Supplies" class="weaving-text text-decoration-none">
+                            @Lang.Get("Supplies")
                         </a>
                     </div>
                 </div>

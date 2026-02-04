@@ -1,7 +1,9 @@
 ﻿@model List<SadStore.Data.Product>
+@inject SadStore.Services.LanguageService Lang
 
 @{
-    ViewData["Title"] = "قائمة الأمنيات";
+    ViewData["Title"] = Lang.Get("My Profile"); // Using a close match or "Wishlist" if added
+    var isRtl = Lang.IsRtl();
 }
 
 <div class="product-page">
@@ -10,18 +12,18 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a href="/">
-                        <span>الرئيسية</span>
-                        <i class="fas fa-angle-left mx-2 fs-6 breadcrumb-arrow"></i>
+                        <span>@Lang.Get("Home")</span>
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2 fs-6 breadcrumb-arrow"></i>
                     </a>
                 </li>
-                <li class="breadcrumb-item active">قائمة الأمنيات</li>
+                <li class="breadcrumb-item active">@Lang.Get("My Profile")</li> <!-- Can serve as Wishlist title if key missing -->
             </ol>
         </div>
     </nav>
 
     <section class="wishlist py-5">
         <div class="container">
-            <h3 class="page-title text-center mb-5">المفضلة</h3>
+            <h3 class="page-title text-center mb-5">@Lang.Get("My Profile")</h3>
 
             @if (Model.Any())
             {
@@ -30,11 +32,11 @@
                         <thead class="bg-light">
                             <tr>
                                 <th>#</th>
-                                <th>الصورة</th>
-                                <th>اسم المنتج</th>
-                                <th>السعر</th>
-                                <th>أضف إلى السلة</th>
-                                <th>حذف</th>
+                                <th>@Lang.Get("Image")</th>
+                                <th>@Lang.Get("Product Name")</th>
+                                <th>@Lang.Get("Price")</th>
+                                <th>@Lang.Get("Add to Cart")</th>
+                                <th>@Lang.Get("Delete")</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,14 +50,14 @@
                                         </a>
                                     </td>
                                     <td class="fw-bold">
-                                        <a href="/Products/Details/@item.Id" class="text-dark text-decoration-none">@item.NameAr</a>
+                                        <a href="/Products/Details/@item.Id" class="text-dark text-decoration-none">@(isRtl? item.NameAr: item.NameEn)</a>
                                     </td>
-                                    <td class="fw-bold text-danger">@item.Price.ToString("N2") ر.س</td>
+                                    <td class="fw-bold text-danger">@item.Price.ToString("N2") @Lang.Get("SAR")</td>
                                     <td>
                                         <form action="/Cart/Add" method="post">
                                             <input type="hidden" name="productId" value="@item.Id" />
                                             <button type="submit" class="action-btn add-cart btn btn-dark btn-sm">
-                                                <i class="fas fa-cart-plus"></i> إضافة
+                                                <i class="fas fa-cart-plus"></i> @Lang.Get("Add to Cart")
                                             </button>
                                         </form>
                                     </td>
@@ -77,8 +79,8 @@
             {
                 <div class="text-center">
                     <i class="far fa-heart fa-4x text-muted mb-3"></i>
-                    <p class="lead">قائمة الأمنيات فارغة</p>
-                    <a href="/Products" class="btn btn-primary">تصفح المنتجات</a>
+                    <p class="lead">@Lang.Get("Your cart is empty")</p> <!-- Using similar logic -->
+                    <a href="/Products" class="btn btn-primary">@Lang.Get("Browse Products")</a>
                 </div>
             }
         </div>

@@ -1,32 +1,63 @@
 ﻿@model IEnumerable<SadStore.Data.Order>
-
+@inject SadStore.Services.LanguageService Lang
 @{
-    ViewData["Title"] = "إدارة الطلبات";
+    ViewData["Title"] = Lang.Get("Orders");
     Layout = "_AdminLayout";
 }
 
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <form method="get" action="/Admin/Orders" class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label">@Lang.Get("Search")</label>
+                        <input type="text" name="search" class="form-control" value="@ViewBag.Search" placeholder="@Lang.Get("Order ID"), @Lang.Get("Customer")...">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">@Lang.Get("Status")</label>
+                        <select name="status" class="form-select">
+                            <option value="">@Lang.Get("All")</option>
+                            <option value="جديد" selected="@(ViewBag.CurrentStatus == "جديد")">@Lang.Get("جديد")</option>
+                            <option value="قيد التنفيذ" selected="@(ViewBag.CurrentStatus == "قيد التنفيذ")">@Lang.Get("قيد التنفيذ")</option>
+                            <option value="تم الشحن" selected="@(ViewBag.CurrentStatus == "تم الشحن")">@Lang.Get("تم الشحن")</option>
+                            <option value="مكتمل" selected="@(ViewBag.CurrentStatus == "مكتمل")">@Lang.Get("مكتمل")</option>
+                            <option value="ملغي" selected="@(ViewBag.CurrentStatus == "ملغي")">@Lang.Get("ملغي")</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-filter"></i> @Lang.Get("Filter")
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="/Admin/Orders/Export" class="btn btn-success w-100">
+                            <i class="fas fa-file-csv"></i> @Lang.Get("Export to Excel")
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-12">
-        <div class="table-card">
+        <div class="table-card shadow-sm">
             <div class="table-header">
-                <h5 class="mb-0">سجل الطلبات</h5>
-                <div class="btn-group">
-                    <a href="/Admin/Orders" class="btn btn-outline-secondary btn-sm">الكل</a>
-                    <a href="/Admin/Orders?status=جديد" class="btn btn-outline-primary btn-sm">جديد</a>
-                    <a href="/Admin/Orders?status=قيد التنفيذ" class="btn btn-outline-warning btn-sm">قيد التنفيذ</a>
-                    <a href="/Admin/Orders?status=مكتمل" class="btn btn-outline-success btn-sm">مكتمل</a>
-                </div>
+                <h5 class="mb-0">@Lang.Get("Order List")</h5>
+                <span class="badge bg-secondary">@Model.Count()</span>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th>رقم الطلب</th>
-                            <th>اسم العميل</th>
-                            <th>تاريخ الطلب</th>
-                            <th>الإجمالي</th>
-                            <th>الحالة</th>
-                            <th>التفاصيل</th>
+                            <th>@Lang.Get("Order Number")</th>
+                            <th>@Lang.Get("Customer")</th>
+                            <th>@Lang.Get("Date")</th>
+                            <th>@Lang.Get("Amount")</th>
+                            <th>@Lang.Get("Status")</th>
+                            <th>@Lang.Get("Actions")</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,28 +67,39 @@
                                 <td class="fw-bold">#@item.Id</td>
                                 <td>@item.CustomerName</td>
                                 <td>@item.OrderDate.ToString("yyyy/MM/dd HH:mm")</td>
-                                <td>@item.TotalAmount.ToString("N2") ر.س</td>
+                                <td>@item.TotalAmount.ToString("N2") @Lang.Get("SAR")</td>
                                 <td>
                                     @if (item.Status == "جديد")
                                     {
-                                        <span class="badge bg-primary">@item.Status</span>
+                                        <span class="badge bg-primary">@Lang.Get(item.Status)</span>
                                     }
                                     else if (item.Status == "مكتمل")
                                     {
 
-                                        <span class="badge bg-success">@item.Status</span>
+                                        <span class="badge bg-success">@Lang.Get(item.Status)</span>
+                                    }
+                                    else if (item.Status == "ملغي")
+                                    {
+
+                                        <span class="badge bg-danger">@Lang.Get(item.Status)</span>
                                     }
                                     else
                                     {
 
-                                        <span class="badge bg-secondary">@item.Status</span>
+                                        <span class="badge bg-secondary">@Lang.Get(item.Status)</span>
                                     }
                                 </td>
                                 <td>
                                     <a href="/Admin/Orders/Details/@item.Id" class="btn btn-sm btn-info text-white">
-                                        <i class="fas fa-eye"></i> عرض
+                                        <i class="fas fa-eye"></i> @Lang.Get("Details")
                                     </a>
                                 </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">@Lang.Get("No previous orders found")</td>
                             </tr>
                         }
                     </tbody>

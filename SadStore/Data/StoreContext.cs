@@ -1,31 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection.Emit;
 
 namespace SadStore.Data
 {
     public class StoreContext : IdentityDbContext
     {
-        public StoreContext(DbContextOptions<StoreContext> options)
-            : base(options)
-        {
-        }
+        public StoreContext(DbContextOptions<StoreContext> options) : base(options) { }
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<CustomerReview> CustomerReviews { get; set; }
         public DbSet<ShippingLocation> ShippingLocations { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-        }
     }
 
     public class Category
@@ -48,14 +39,64 @@ namespace SadStore.Data
         public string NameEn { get; set; }
         public string DescriptionAr { get; set; }
         public string DescriptionEn { get; set; }
+
+        // --- تفاصيل المنتج ---
+        public string? ModelNumber { get; set; }
+
+        // المقاسات المتاحة (S,M,L,XL)
+        public string? AvailableSizes { get; set; }
+
+        public string? DesignTypeAr { get; set; }
+        public string? DesignTypeEn { get; set; }
+
+        public string? CutTypeAr { get; set; }
+        public string? CutTypeEn { get; set; }
+
+        public string? OccasionAr { get; set; }
+        public string? OccasionEn { get; set; }
+
+        public string? FitTypeAr { get; set; }
+        public string? FitTypeEn { get; set; }
+
+        public string? LiningAr { get; set; }
+        public string? LiningEn { get; set; }
+
+        public string? SleevesAr { get; set; }
+        public string? SleevesEn { get; set; }
+
+        public string? StretchAr { get; set; }
+        public string? StretchEn { get; set; }
+
+        public string? MaterialAr { get; set; }
+        public string? MaterialEn { get; set; }
+
+        public string? CareInstructionsAr { get; set; }
+        public string? CareInstructionsEn { get; set; }
+        // -----------------------
+
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
+        public decimal Price { get; set; } // السعر الحالي (بعد الخصم)
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal? OldPrice { get; set; } // السعر القديم (قبل الخصم)
+
         public int StockQuantity { get; set; }
         public string ImageUrl { get; set; }
+
+        public List<ProductImage> Images { get; set; } = new List<ProductImage>();
+
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         public bool IsFeatured { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+    }
+
+    public class ProductImage
+    {
+        public int Id { get; set; }
+        public string Url { get; set; }
+        public int ProductId { get; set; }
+        public Product Product { get; set; }
     }
 
     public class CustomerReview

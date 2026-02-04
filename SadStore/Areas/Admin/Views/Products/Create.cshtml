@@ -1,7 +1,7 @@
 ﻿@model SadStore.Data.Product
-
+@inject SadStore.Services.LanguageService Lang
 @{
-    ViewData["Title"] = "إضافة منتج جديد";
+    ViewData["Title"] = Lang.Get("Add New Product");
     Layout = "_AdminLayout";
 }
 
@@ -9,63 +9,83 @@
     <div class="col-md-10">
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">إضافة منتج جديد</h5>
-                <a href="/Admin/Products" class="btn btn-outline-secondary btn-sm">عودة للقائمة</a>
+                <h5 class="mb-0">@Lang.Get("Add New Product")</h5>
+                <a href="/Admin/Products" class="btn btn-outline-secondary btn-sm">@Lang.Get("Back to List")</a>
             </div>
             <div class="card-body">
                 <form action="/Admin/Products/Create" method="post" enctype="multipart/form-data">
+                    <!-- البيانات الأساسية -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">اسم المنتج (عربي)</label>
+                            <label class="form-label">@Lang.Get("Product Name (Ar)")</label>
                             <input type="text" name="NameAr" class="form-control" required />
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">اسم المنتج (إنجليزي)</label>
+                            <label class="form-label">@Lang.Get("Product Name (En)")</label>
                             <input type="text" name="NameEn" class="form-control" required />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">القسم</label>
+                            <label class="form-label">@Lang.Get("Category")</label>
                             <select name="CategoryId" class="form-select" asp-items="ViewBag.CategoryId"></select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">السعر</label>
-                            <input type="number" name="Price" class="form-control" step="0.01" required />
+                            <label class="form-label">@Lang.Get("Model Number")</label>
+                            <input type="text" name="ModelNumber" class="form-control" />
                         </div>
                     </div>
 
+                    <!-- الأسعار -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">الكمية في المخزون</label>
+                            <label class="form-label text-success">@Lang.Get("Current Price")</label>
+                            <input type="number" name="Price" class="form-control border-success" step="0.01" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">@Lang.Get("Old Price")</label>
+                            <input type="number" name="OldPrice" class="form-control" step="0.01" />
+                        </div>
+                    </div>
+
+                    <!-- المخزون والمقاسات -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">@Lang.Get("Stock")</label>
                             <input type="number" name="StockQuantity" class="form-control" required />
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">صورة المنتج</label>
-                            <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                            <label class="form-label">@Lang.Get("Available Sizes")</label>
+                            <input type="text" name="AvailableSizes" class="form-control" placeholder="S,M,L,XL" />
+                            <div class="form-text">@Lang.Get("Sizes Note")</div>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">الوصف (عربي)</label>
+                        <label class="form-label">@Lang.Get("Product Images") (اختر صور متعددة)</label>
+                        <input type="file" name="imageFiles" class="form-control" accept="image/*" multiple />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">@Lang.Get("Description (Ar)")</label>
                         <textarea name="DescriptionAr" class="form-control" rows="4"></textarea>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">الوصف (إنجليزي)</label>
+                        <label class="form-label">@Lang.Get("Description (En)")</label>
                         <textarea name="DescriptionEn" class="form-control" rows="4"></textarea>
                     </div>
 
                     <div class="form-check mb-4">
                         <input class="form-check-input" type="checkbox" name="IsFeatured" value="true" id="IsFeatured">
                         <label class="form-check-label" for="IsFeatured">
-                            عرض في الصفحة الرئيسية (منتج مميز)
+                            @Lang.Get("Display on Home Page")
                         </label>
                     </div>
 
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-custom">حفظ المنتج</button>
+                        <button type="submit" class="btn btn-custom">@Lang.Get("Save Product")</button>
                     </div>
                 </form>
             </div>

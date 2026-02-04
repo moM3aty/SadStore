@@ -1,7 +1,8 @@
 ﻿@model SadStore.Data.BlogPost
+@inject SadStore.Services.LanguageService Lang
 
 @{
-    ViewData["Title"] = "تعديل المقال";
+    ViewData["Title"] = Lang.Get("Edit Post");
     Layout = "_AdminLayout";
 }
 
@@ -9,34 +10,34 @@
     <div class="col-md-10">
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">تعديل المقال: @Model.Title</h5>
-                <a href="/Admin/Blogs" class="btn btn-outline-secondary btn-sm">عودة للقائمة</a>
+                <h5 class="mb-0">@Lang.Get("Edit Post"): @Model.Title</h5>
+                <a href="/Admin/Blogs" class="btn btn-outline-secondary btn-sm">@Lang.Get("Back to List")</a>
             </div>
             <div class="card-body">
                 <form action="/Admin/Blogs/Edit/@Model.Id" method="post" enctype="multipart/form-data">
                     <input type="hidden" asp-for="Id" />
 
                     <div class="mb-3">
-                        <label class="form-label">عنوان المقال</label>
+                        <label class="form-label">@Lang.Get("Title")</label>
                         <input type="text" asp-for="Title" class="form-control" required />
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">تغيير الصورة</label>
+                        <label class="form-label">@Lang.Get("Product Image")</label>
                         <input type="file" name="imageFile" class="form-control" accept="image/*" />
                         <div class="mt-2">
-                            <small>الصورة الحالية:</small>
+                            <small>@Lang.Get("Current Image"):</small>
                             <img src="@Model.ImageUrl" style="width: 100px; height: 60px; object-fit: cover;" class="rounded border">
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">محتوى المقال</label>
+                        <label class="form-label">@Lang.Get("Content")</label>
                         <textarea asp-for="Content" class="form-control" rows="12" required></textarea>
                     </div>
 
                     <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-custom">حفظ التعديلات</button>
+                        <button type="submit" class="btn btn-custom">@Lang.Get("Save Changes")</button>
                     </div>
                 </form>
             </div>

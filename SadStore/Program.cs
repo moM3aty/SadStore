@@ -1,31 +1,37 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using SadStore.Data;
+using SadStore.Services;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. ????? ??????? ?????? ????????
+// 1. قاعدة البيانات
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? "Server=(localdb)\\mssqllocaldb;Database=SadStoreDb;Trusted_Connection=True;MultipleActiveResultSets=true";
+    ?? "Server=M3ATY;Database=SadStoreDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;";
 
 builder.Services.AddDbContext<StoreContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-// 2. ????? Identity (?????????? ????????)
+// 2. Identity
 builder.Services.AddDefaultIdentity<IdentityUser>(options => {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
 })
-.AddRoles<IdentityRole>() // ????? ???????
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<StoreContext>();
 
-// 3. ????? ?????? (Session) ?????
+// 3. تسجيل خدمة الترجمة الخاصة بنا (Singleton لأنها ثابتة)
+builder.Services.AddSingleton<LanguageService>();
+
+builder.Services.AddControllersWithViews();
+
+// 4. Session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -34,30 +40,38 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddControllersWithViews();
-
 var app = builder.Build();
 
-// 4. ????? ????? ???????? (Seeding)
+// 5. تهيئة قاعدة البيانات (تم تحديث هذا الجزء لضمان العمل)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
+        // هذا السطر سينشئ قاعدة البيانات والجداول إذا لم تكن موجودة
+        var context = services.GetRequiredService<StoreContext>();
+        context.Database.EnsureCreated();
+
+        // استدعاء دالة ملء البيانات
         await DbInitializer.Initialize(services);
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "??? ??? ????? ????? ????? ????????.");
+        logger.LogError(ex, "An error occurred while seeding the database.");
     }
 }
 
-if (app.Environment.IsDevelopment())
+// 6. إعدادات اللغة
+var supportedCultures = new[] { new CultureInfo("ar"), new CultureInfo("en") };
+app.UseRequestLocalization(new RequestLocalizationOptions
 {
-    app.UseMigrationsEndPoint();
-}
-else
+    DefaultRequestCulture = new RequestCulture("ar"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
+
+if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
@@ -65,12 +79,8 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
-// 5. ????? ??????
 app.UseSession();
-
 app.UseAuthentication();
 app.UseAuthorization();
 

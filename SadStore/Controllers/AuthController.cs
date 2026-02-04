@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SadStore.Services;
 
 namespace SadStore.Controllers
 {
@@ -8,11 +9,13 @@ namespace SadStore.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly LanguageService _lang;
 
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, LanguageService lang)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _lang = lang;
         }
 
         public IActionResult Index()
@@ -32,6 +35,7 @@ namespace SadStore.Controllers
                 var result = await _signInManager.PasswordSignInAsync(email, password, isPersistent: true, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    TempData["SuccessMessage"] = "Logged in successfully";
                     var user = await _userManager.FindByEmailAsync(email);
                     if (await _userManager.IsInRoleAsync(user, "Admin"))
                     {
@@ -39,7 +43,8 @@ namespace SadStore.Controllers
                     }
                     return RedirectToAction("Index", "Home");
                 }
-                ModelState.AddModelError(string.Empty, "محاولة الدخول غير صحيحة.");
+                // إضافة رسالة خطأ مترجمة
+                ModelState.AddModelError(string.Empty, _lang.Get("Invalid login attempt"));
             }
             return View("Index");
         }
@@ -49,11 +54,13 @@ namespace SadStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = email, Email = email };
+                var user = new IdentityUser { UserName = email, Email = email, PhoneNumber = name }; // تخزين الاسم في حقل الهاتف مؤقتاً أو استخدام حقل مخصص
                 var result = await _userManager.CreateAsync(user, password);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "Customer");
                     await _signInManager.SignInAsync(user, isPersistent: false);
+                    TempData["SuccessMessage"] = "Logged in successfully";
                     return RedirectToAction("Index", "Home");
                 }
                 foreach (var error in result.Errors)

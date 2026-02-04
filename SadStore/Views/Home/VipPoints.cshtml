@@ -1,18 +1,28 @@
-﻿@{
-    ViewData["Title"] = "نقاط صاد VIP";
+﻿@inject SadStore.Services.LanguageService Lang
+@{
+    ViewData["Title"] = Lang.Get("Sad VIP Points");
+    var isRtl = Lang.IsRtl();
 }
+<style>
+    .aBtn{
+        color:#000;
+    }
 
+    button:hover .aBtn {
+       color: #FFF;
+    }
+</style>
 <div class="product-page">
     <nav class="breadcrumb-nav py-4">
         <div class="container">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a href="/">
-                        <span>الرئيسية</span>
-                        <i class="fas fa-angle-left mx-2 fs-6 breadcrumb-arrow"></i>
+                        <span>@Lang.Get("Home")</span>
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2 fs-6 breadcrumb-arrow"></i>
                     </a>
                 </li>
-                <li class="breadcrumb-item active">نقاط صاد VIP</li>
+                <li class="breadcrumb-item active">@Lang.Get("Sad VIP Points")</li>
             </ol>
         </div>
     </nav>
@@ -22,18 +32,18 @@
             <div class="vip-card">
                 <div class="vip-content">
                     <div class="vip-text">
-                        <h2>نقاط صاد VIP</h2>
-                        <p>اجمع النقاط مع كل طلب واستبدلها كخصم على مشترياتك القادمة بكل سهولة. اشتري بـ 1 ريال تحصل على 1 نقطة.</p>
-                        <p>للاستفادة من المكافآت والخصومات يجب توفر 500 نقطة أو أكثر في حسابك.</p>
-                        <div class="alert alert-warning mt-3 d-inline-block">
-                            <strong>500 نقطة = خصم 50 ريال</strong> <br>
-                            <strong>1000 نقطة = خصم 100 ريال</strong>
-                        </div>
+                        <h2>@Lang.Get("Sad VIP Points")</h2>
+                        <p>@Lang.Get("Vip_Desc1")</p>
+                        <p>@Lang.Get("Vip_Desc2")</p>
+                        <p>@Lang.Get("Vip_Promo")</p>
                     </div>
-                    <a href="/Products" class="btn-receive">ابدأ التسوق الآن</a>
+
+                    <button class="btn-receive">
+                        @Lang.Get("Receive Points")
+                    </button>
                 </div>
                 <div class="vip-icon">
-                    <i class="fas fa-crown text-warning"></i>
+                    <i class="fas fa-star"></i>
                 </div>
             </div>
         </div>
@@ -41,45 +51,115 @@
 
     <section class="points-section">
         <div class="container">
-            <h2 class="section-title">طرق الحصول على النقاط</h2>
+            <h2 class="section-title">@Lang.Get("Ways to Earn Points")</h2>
+
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
                     <div class="points-card">
                         <div class="points-header">
                             <div>
-                                <h3>1 نقطة</h3>
-                                <p class="points-subtitle">لكل 1 ريال مشتريات</p>
+                                <h3>@Lang.Get("1 Point")</h3>
+                                <p class="points-subtitle">@Lang.Get("Shop Now")</p>
                             </div>
-                            <div class="points-icon"><i class="fas fa-shopping-bag"></i></div>
+                            <div class="points-icon">
+                                <i class="fas fa-gift"></i>
+                            </div>
                         </div>
-                        <a href="/Products" class="btn-action">الطلب من المتجر</a>
+
+                        <button class="btn-action">
+                            <a href="/Products" class="p-0 m-0 border-0 aBtn" >
+
+                            @Lang.Get("Order from Store")
+                            </a>
+                        </button>
                     </div>
                 </div>
+
                 <div class="col-lg-4 col-md-6">
                     <div class="points-card">
                         <div class="points-header">
                             <div>
-                                <h3>100 نقطة</h3>
-                                <p class="points-subtitle">عند تقييم طلبك</p>
+                                <h3>@Lang.Get("100 Points")</h3>
+                                <p class="points-subtitle">@Lang.Get("Rate Your Order")</p>
                             </div>
-                            <div class="points-icon"><i class="fas fa-star"></i></div>
+                            <div class="points-icon">
+                                <i class="fas fa-gift"></i>
+                            </div>
                         </div>
-                        <a href="/Profile" class="btn-action">تقييم الطلب</a>
+
+                        <button  class="btn-action">
+                            <a href="/Profile" class="p-0 m-0 border-0 aBtn">
+                            @Lang.Get("Rate Order")
+                            </a>
+                        </button>
                     </div>
                 </div>
+
                 <div class="col-lg-4 col-md-6">
                     <div class="points-card">
                         <div class="points-header">
                             <div>
-                                <h3>25 نقطة</h3>
-                                <p class="points-subtitle">شارك أصدقائك</p>
+                                <h3>@Lang.Get("25 Points")</h3>
+                                <p class="points-subtitle">@Lang.Get("Invite Your Friends")</p>
                             </div>
-                            <div class="points-icon"><i class="fas fa-share-alt"></i></div>
+                            <div class="points-icon">
+                                <i class="fas fa-gift"></i>
+                            </div>
                         </div>
+
                         <div class="share-link">
                             <input type="text" value="https://actan.com/..." readonly>
-                            <button class="btn-copy"><i class="fas fa-copy"></i></button>
+                            <button class="btn-copy">
+                                <i class="fas fa-copy"></i>
+                            </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="discounts-section">
+        <div class="container">
+            <h2 class="section-title">@Lang.Get("Discounts")</h2>
+
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="discount-card">
+                        <div class="discount-logo">
+                            <div class="logo-text">صاد</div>
+                            <div class="logo-english">SAAD</div>
+                        </div>
+
+                        <h3>@Lang.Get("100 SAR Discount Coupon")</h3>
+                        <p class="discount-code">@Lang.Get("SAR100 Discount Code")</p>
+                        <p class="discount-points">@Lang.Get("1000 Points")</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="discount-card">
+                        <div class="discount-logo">
+                            <div class="logo-text">صاد</div>
+                            <div class="logo-english">SAAD</div>
+                        </div>
+
+                        <h3>@Lang.Get("150 SAR Discount Coupon")</h3>
+                        <p class="discount-code">@Lang.Get("SAR150 Discount Code")</p>
+                        <p class="discount-points">@Lang.Get("1500 Points")</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="discount-card">
+                        <div class="discount-logo">
+                            <div class="logo-text">صاد</div>
+                            <div class="logo-english">SAAD</div>
+                        </div>
+
+                        <h3>@Lang.Get("50 SAR Discount Coupon")</h3>
+                        <p class="discount-code">@Lang.Get("SAR50 Discount Code")</p>
+                        <p class="discount-points">@Lang.Get("500 Points")</p>
                     </div>
                 </div>
             </div>

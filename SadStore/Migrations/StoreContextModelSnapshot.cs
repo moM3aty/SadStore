@@ -376,11 +376,26 @@ namespace SadStore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AvailableSizes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CareInstructionsAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CareInstructionsEn")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("CutTypeAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CutTypeEn")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionAr")
                         .IsRequired()
@@ -390,12 +405,39 @@ namespace SadStore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DesignTypeAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DesignTypeEn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FitTypeAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FitTypeEn")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsFeatured")
                         .HasColumnType("bit");
+
+                    b.Property<string>("LiningAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LiningEn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaterialAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaterialEn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameAr")
                         .IsRequired()
@@ -405,17 +447,60 @@ namespace SadStore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OccasionAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OccasionEn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("OldPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("SleevesAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SleevesEn")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("StockQuantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("StretchAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StretchEn")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("SadStore.Data.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("SadStore.Data.ShippingLocation", b =>
@@ -519,6 +604,17 @@ namespace SadStore.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("SadStore.Data.ProductImage", b =>
+                {
+                    b.HasOne("SadStore.Data.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("SadStore.Data.Category", b =>
                 {
                     b.Navigation("Products");
@@ -527,6 +623,11 @@ namespace SadStore.Migrations
             modelBuilder.Entity("SadStore.Data.Order", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("SadStore.Data.Product", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

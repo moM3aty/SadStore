@@ -1,26 +1,26 @@
 ﻿@model IEnumerable<SadStore.Data.ShippingLocation>
-
+@inject SadStore.Services.LanguageService Lang
 @{
-    ViewData["Title"] = "أماكن الشحن";
+    ViewData["Title"] = Lang.Get("Shipping");
     Layout = "_AdminLayout";
 }
 
 <div class="row">
-    <div class="col-md-8 mx-auto">
+    <div class="col-md-10 mx-auto">
         <div class="table-card">
             <div class="table-header">
-                <h5 class="mb-0">مناطق الشحن والتكلفة</h5>
+                <h5 class="mb-0">@Lang.Get("Shipping Locations")</h5>
                 <a href="/Admin/Shipping/Create" class="btn btn-custom">
-                    <i class="fas fa-plus"></i> إضافة منطقة
+                    <i class="fas fa-plus"></i> @Lang.Get("Add New Location")
                 </a>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th>المدينة / المنطقة</th>
-                            <th>تكلفة الشحن</th>
-                            <th>الإجراءات</th>
+                            <th>@Lang.Get("City / Region")</th>
+                            <th>@Lang.Get("Cost")</th>
+                            <th>@Lang.Get("Actions")</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,28 +28,30 @@
                         {
                             <tr>
                                 <td>@item.CityName</td>
-                                <td>@item.ShippingCost.ToString("N2") ر.س</td>
+                                <td>@item.ShippingCost.ToString("N2") @Lang.Get("SAR")</td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteLocModal-@item.Id">
-                                        <i class="fas fa-trash"></i> حذف
-                                    </button>
+                                    <div class="btn-group">
+                                        <a href="/Admin/Shipping/Edit/@item.Id" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i> @Lang.Get("Edit")</a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteLocModal-@item.Id">
+                                            <i class="fas fa-trash"></i> @Lang.Get("Delete")
+                                        </button>
+                                    </div>
 
-                                    <!-- Delete Modal -->
                                     <div class="modal fade" id="deleteLocModal-@item.Id" tabindex="-1">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">حذف المنطقة</h5>
+                                                    <h5 class="modal-title">@Lang.Get("Confirm Delete")</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    هل أنت متأكد من حذف "@item.CityName" من مناطق الشحن؟
+                                                    @Lang.Get("Are you sure you want to delete") "@item.CityName"?
                                                 </div>
                                                 <div class="modal-footer">
                                                     <form action="/Admin/Shipping/Delete" method="post">
                                                         <input type="hidden" name="id" value="@item.Id" />
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                                                        <button type="submit" class="btn btn-danger">حذف</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Lang.Get("Cancel")</button>
+                                                        <button type="submit" class="btn btn-danger">@Lang.Get("Delete")</button>
                                                     </form>
                                                 </div>
                                             </div>

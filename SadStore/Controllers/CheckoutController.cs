@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SadStore.Data;
+using SadStore.Services;
 using System.Text;
 using System.Text.Json;
 using System.Web;
@@ -12,11 +13,13 @@ namespace SadStore.Controllers
     {
         private readonly StoreContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly LanguageService _lang;
 
-        public CheckoutController(StoreContext context, UserManager<IdentityUser> userManager)
+        public CheckoutController(StoreContext context, UserManager<IdentityUser> userManager, LanguageService lang)
         {
             _context = context;
             _userManager = userManager;
+            _lang = lang;
         }
 
         [HttpPost]
@@ -32,15 +35,17 @@ namespace SadStore.Controllers
 
             var order = new Order
             {
-                CustomerName = User.Identity.IsAuthenticated ? User.Identity.Name : "زائر",
+                CustomerName = User.Identity.IsAuthenticated ? User.Identity.Name : (_lang.IsRtl() ? "زائر" : "Guest"),
                 OrderDate = DateTime.Now,
-                Status = "جديد",
+                Status = "جديد", // سيتم ترجمتها عند العرض
                 OrderItems = new List<OrderItem>()
             };
 
             decimal totalAmount = 0;
+
+            // بناء رسالة الواتساب
             var messageBuilder = new StringBuilder();
-            messageBuilder.AppendLine("مرحباً، أرغب بإتمام الطلب التالي من موقعكم:");
+            messageBuilder.AppendLine(_lang.Get("Hello, I would like to complete the following order:")); // تأكد من إضافة هذا المفتاح للقاموس أو استخدامه مباشرة
             messageBuilder.AppendLine("------------------------");
 
             foreach (var product in products)
@@ -57,7 +62,8 @@ namespace SadStore.Controllers
                 });
 
                 totalAmount += total;
-                messageBuilder.AppendLine($"- {product.NameAr} (العدد: {quantity}) - {total} ر.س");
+                var productName = _lang.IsRtl() ? product.NameAr : product.NameEn;
+                messageBuilder.AppendLine($"- {productName} ({_lang.Get("Quantity")}: {quantity}) - {total} {_lang.Get("SAR")}");
             }
 
             decimal tax = totalAmount * 0.15m;
@@ -67,19 +73,19 @@ namespace SadStore.Controllers
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
-            // Clear Cart
+            // إفراغ السلة
             HttpContext.Session.Remove("Cart");
 
             messageBuilder.AppendLine("------------------------");
-            messageBuilder.AppendLine($"المجموع: {totalAmount:0.00} ر.س");
-            messageBuilder.AppendLine($"الضريبة (15%): {tax:0.00} ر.س");
-            messageBuilder.AppendLine($"*الإجمالي النهائي: {grandTotal:0.00} ر.س*");
-            messageBuilder.AppendLine($"رقم الطلب المرجعي: #{order.Id}");
+            messageBuilder.AppendLine($"{_lang.Get("Subtotal")}: {totalAmount:0.00} {_lang.Get("SAR")}");
+            messageBuilder.AppendLine($"{_lang.Get("VAT (15%)")}: {tax:0.00} {_lang.Get("SAR")}");
+            messageBuilder.AppendLine($"*{_lang.Get("Total")}: {grandTotal:0.00} {_lang.Get("SAR")}*");
+            messageBuilder.AppendLine($"{_lang.Get("Order Number")}: #{order.Id}");
             messageBuilder.AppendLine("------------------------");
-            messageBuilder.AppendLine("الرجاء تزويدي بطريقة الدفع وتأكيد الطلب.");
+            messageBuilder.AppendLine(_lang.Get("Please provide payment method and confirm order.")); // تأكد من إضافتها للقاموس
 
-            // WhatsApp Redirect
-            string adminPhone = "966565532971"; // رقم الأدمن كما في الفوتر
+            // توجيه للواتساب
+            string adminPhone = "966565532971";
             string urlEncodedMessage = HttpUtility.UrlEncode(messageBuilder.ToString());
             string whatsappUrl = $"https://wa.me/{adminPhone}?text={urlEncodedMessage}";
 

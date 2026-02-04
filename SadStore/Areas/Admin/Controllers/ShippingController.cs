@@ -32,6 +32,7 @@ namespace SadStore.Areas.Admin.Controllers
             {
                 _context.Add(shippingLocation);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Saved successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(shippingLocation);
@@ -40,7 +41,6 @@ namespace SadStore.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
-
             var shippingLocation = await _context.ShippingLocations.FindAsync(id);
             if (shippingLocation == null) return NotFound();
             return View(shippingLocation);
@@ -58,6 +58,7 @@ namespace SadStore.Areas.Admin.Controllers
                 {
                     _context.Update(shippingLocation);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Saved successfully";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -78,6 +79,7 @@ namespace SadStore.Areas.Admin.Controllers
             {
                 _context.ShippingLocations.Remove(location);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Deleted successfully";
             }
             return RedirectToAction(nameof(Index));
         }

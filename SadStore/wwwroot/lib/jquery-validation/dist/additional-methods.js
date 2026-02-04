@@ -122,7 +122,10 @@ $.validator.addMethod( "alphanumeric", function( value, element ) {
 }, "Letters, numbers, and underscores only please." );
 
 /*
- * Dutch bank account numbers (not 'giro' numbers) have 9 digits
+ * Dutch bank 
+ 
+ 
+ numbers (not 'giro' numbers) have 9 digits
  * and pass the '11 check'.
  * We accept the notation with spaces, as that is common.
  * acceptable: 123456789 or 12 34 56 789

@@ -1,48 +1,98 @@
-﻿@{
-    ViewData["Title"] = "خدمة التوصيل";
+﻿@inject SadStore.Services.LanguageService Lang
+@{
+    ViewData["Title"] = Lang.Get("Delivery Service");
+    var isRtl = Lang.IsRtl();
 }
 
 <div class="product-page">
-    <nav class="breadcrumb-nav py-4">
+    <nav class="breadcrumb-nav py-4 bg-light border-bottom">
         <div class="container">
-            <ol class="breadcrumb">
+            <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
-                    <a href="/">
-                        <span>الرئيسية</span>
-                        <i class="fas fa-angle-left mx-2 fs-6 breadcrumb-arrow"></i>
+                    <a href="/" class="text-decoration-none text-muted">
+                        <span>@Lang.Get("Home")</span>
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2 fs-6 breadcrumb-arrow"></i>
                     </a>
                 </li>
-                <li class="breadcrumb-item active">خدمة التوصيل</li>
+                <li class="breadcrumb-item active text-dark fw-bold">@Lang.Get("Delivery Service")</li>
             </ol>
         </div>
     </nav>
 
-    <section class="py-5 return-policy">
+    <section class="py-5 delivery-section" style="background-color: #fcfcfc;">
         <div class="container">
-            <div class="row g-4 justify-content-center">
+            <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <div class="content bg-white p-5 rounded-3 shadow-sm text-center">
-                        <h2 class="mb-4 fw-bold">خدمة التوصيل</h2>
+                    <div class="text-center mb-5">
+                        <div class="d-inline-block bg-white p-4 rounded-circle shadow-sm mb-3">
+                            <i class="fas fa-truck-fast fa-4x text-primary"></i>
+                        </div>
+                        <h1 class="fw-bold" style="color: #2c3e50;">@Lang.Get("Delivery Service")</h1>
+                    </div>
 
-                        <div class="mb-4">
-                            <i class="fas fa-truck fa-3x text-primary mb-3"></i>
-                            <p class="fw-bolder fs-5">
-                                في حال كان عنوان العميل خارج نطاق التوصيل الخاص بشركة الشحن، سيتم توجيه الشحنة إلى أقرب فرع تابع للشركة في منطقة العميل، حيث يمكن للعميل استلام الشحنة مباشرة من المكتب المحدد.
-                            </p>
+                    <div class="alert alert-light border-start border-5 border-primary shadow-sm p-4 mb-5 rounded-3" role="alert">
+                        <div class="d-flex">
+                            <div class="me-3 ms-3 text-primary">
+                                <i class="fas fa-circle-info fa-2x"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0 lh-lg text-muted fs-5">
+                                    @Lang.Get("Delivery Content2")
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Local Delivery -->
+                        <div class="col-md-6">
+                            <div class="delivery-card h-100 bg-white p-4 rounded-4 shadow-sm position-relative overflow-hidden border-top border-4 border-success">
+                                <div class="card-bg-icon position-absolute opacity-10" style="top: -20px; left: -20px;">
+                                    <i class="fas fa-map-location-dot fa-8x text-success"></i>
+                                </div>
+                                <div class="position-relative z-1 text-center">
+                                    <div class="icon-box mb-3 text-success">
+                                        <i class="fas fa-box-open fa-3x"></i>
+                                    </div>
+                                    <h4 class="fw-bold mb-4">@Lang.Get("Local Delivery2")</h4>
+
+                                    <ul class="list-unstyled text-muted">
+                                        <li class="mb-3 d-flex align-items-center justify-content-center">
+                                            <i class="far fa-clock mx-2 text-success"></i>
+                                            <span class="fw-bold mx-1">@Lang.Get("Delivery Time Local2")</span>
+                                        </li>
+                                        <li class="d-flex align-items-center justify-content-center">
+                                            <i class="fas fa-building mx-2 text-success"></i>
+                                            <span>@Lang.Get("Delivery Companies2")</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
 
-                        <hr class="my-4">
+                        <!-- International Delivery -->
+                        <div class="col-md-6">
+                            <div class="delivery-card h-100 bg-white p-4 rounded-4 shadow-sm position-relative overflow-hidden border-top border-4 border-warning">
+                                <div class="card-bg-icon position-absolute opacity-10" style="top: -20px; left: -20px;">
+                                    <i class="fas fa-earth-americas fa-8x text-warning"></i>
+                                </div>
+                                <div class="position-relative z-1 text-center">
+                                    <div class="icon-box mb-3 text-warning">
+                                        <i class="fas fa-plane-departure fa-3x"></i>
+                                    </div>
+                                    <h4 class="fw-bold mb-4">@Lang.Get("International Delivery2")</h4>
 
-                        <div class="row mt-4">
-                            <div class="col-md-6 mb-4">
-                                <h5 class="fw-bold text-dark mb-3">التوصيل داخل المملكة</h5>
-                                <p class="mb-1">مدة التوصيل: من ٤ الى ٧ أيام عمل</p>
-                                <p class="text-muted">شركات الشحن: أرامكس - سمسا</p>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <h5 class="fw-bold text-dark mb-3">التوصيل الدولي</h5>
-                                <p class="mb-1">يستغرق من ١٠ الى ١٥ يوم عمل</p>
-                                <p class="text-muted">شركات الشحن: أرامكس</p>
+                                    <ul class="list-unstyled text-muted">
+                                        <li class="mb-3 d-flex align-items-center justify-content-center">
+                                            <i class="far fa-clock mx-2 text-warning"></i>
+                                            <span class="fw-bold mx-1">@Lang.Get("Delivery Time Int2")</span>
+                                        </li>
+                                        <li class="d-flex align-items-center justify-content-center">
+                                            <i class="fas fa-building mx-2 text-warning"></i>
+                                            <span>@Lang.Get("Int Delivery Company")</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -51,3 +101,18 @@
         </div>
     </section>
 </div>
+
+<style>
+    .opacity-10 {
+        opacity: 0.05;
+    }
+
+    .delivery-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .delivery-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        }
+</style>

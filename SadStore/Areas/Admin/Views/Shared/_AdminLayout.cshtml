@@ -1,9 +1,19 @@
-﻿<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using System.Globalization
+@inject SadStore.Services.LanguageService Lang
+
+@{
+    var isRtl = Lang.IsRtl();
+    var dir = isRtl ? "rtl" : "ltr";
+    var lang = isRtl ? "ar" : "en";
+}
+
+<!DOCTYPE html>
+<html lang="@lang" dir="@dir">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - لوحة التحكم - صاد</title>
+    <title>@ViewData["Title"] - @Lang.Get("Saad Panel")</title>
     <link rel="stylesheet" href="~/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
@@ -66,11 +76,21 @@
                         border-right: 4px solid var(--admin-accent);
                     }
 
-                    #sidebar ul li a i {
-                        margin-left: 10px;
-                        width: 20px;
-                        text-align: center;
-                    }
+        html[dir="ltr"] #sidebar ul li a:hover, html[dir="ltr"] #sidebar ul li a.active {
+            border-right: none;
+            border-left: 4px solid var(--admin-accent);
+        }
+
+        #sidebar ul li a i {
+            margin-left: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        html[dir="ltr"] #sidebar ul li a i {
+            margin-left: 0;
+            margin-right: 10px;
+        }
 
         #content {
             width: 100%;
@@ -123,6 +143,10 @@
             float: left;
         }
 
+        html[dir="ltr"] .stat-icon {
+            float: right;
+        }
+
         .stat-value {
             font-size: 1.8rem;
             font-weight: bold;
@@ -166,53 +190,53 @@
         <!-- Sidebar -->
         <nav id="sidebar">
             <div class="sidebar-header">
-                <h3><i class="fas fa-crown"></i> لوحة صاد</h3>
+                <h3><i class="fas fa-crown"></i> @Lang.Get("Saad Panel")</h3>
             </div>
 
             <ul class="list-unstyled components">
                 <li>
                     <a href="/Admin/Dashboard" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")">
-                        <i class="fas fa-tachometer-alt"></i> الرئيسية
+                        <i class="fas fa-tachometer-alt"></i> @Lang.Get("Dashboard")
                     </a>
                 </li>
                 <li>
                     <a href="/Admin/Products" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Products" ? "active" : "")">
-                        <i class="fas fa-box-open"></i> المنتجات
+                        <i class="fas fa-box-open"></i> @Lang.Get("Products")
                     </a>
                 </li>
                 <li>
                     <a href="/Admin/Categories">
-                        <i class="fas fa-tags"></i> الأقسام
+                        <i class="fas fa-tags"></i> @Lang.Get("Categories")
                     </a>
                 </li>
                 <li>
                     <a href="/Admin/Orders">
-                        <i class="fas fa-shopping-cart"></i> الطلبات
+                        <i class="fas fa-shopping-cart"></i> @Lang.Get("Orders")
                     </a>
                 </li>
                 <li>
                     <a href="/Admin/Users">
-                        <i class="fas fa-users"></i> المستخدمين
+                        <i class="fas fa-users"></i> @Lang.Get("Users")
                     </a>
                 </li>
                 <li>
                     <a href="/Admin/Reviews">
-                        <i class="fas fa-star"></i> آراء العملاء
+                        <i class="fas fa-star"></i> @Lang.Get("Reviews")
                     </a>
                 </li>
                 <li>
                     <a href="/Admin/Shipping">
-                        <i class="fas fa-truck"></i> أماكن الشحن
+                        <i class="fas fa-truck"></i> @Lang.Get("Shipping")
                     </a>
                 </li>
                 <li>
                     <a href="/Admin/Blogs">
-                        <i class="fas fa-blog"></i> المدونة
+                        <i class="fas fa-blog"></i> @Lang.Get("Blog")
                     </a>
                 </li>
                 <li>
                     <a href="/">
-                        <i class="fas fa-globe"></i> عرض الموقع
+                        <i class="fas fa-globe"></i> @Lang.Get("View Site")
                     </a>
                 </li>
             </ul>
@@ -227,14 +251,35 @@
                     </button>
 
                     <div class="ms-auto d-flex align-items-center">
+                        <!-- Language Switcher -->
+                        <div class="dropdown mx-2">
+                            <button class="btn btn-light dropdown-toggle" type="button" id="langDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-globe"></i> @(isRtl ? "العربية" : "English")
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <form id="langFormEnAdmin" asp-controller="Home" asp-action="SetLanguage" asp-area="" asp-route-returnUrl="@Context.Request.Path" method="post">
+                                        <input type="hidden" name="culture" value="en" />
+                                        <a class="dropdown-item" href="#" onclick="document.getElementById('langFormEnAdmin').submit();">English</a>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form id="langFormArAdmin" asp-controller="Home" asp-action="SetLanguage" asp-area="" asp-route-returnUrl="@Context.Request.Path" method="post">
+                                        <input type="hidden" name="culture" value="ar" />
+                                        <a class="dropdown-item" href="#" onclick="document.getElementById('langFormArAdmin').submit();">العربية</a>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+
                         <div class="dropdown">
                             <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle fa-lg"></i> الأدمن
+                                <i class="fas fa-user-circle fa-lg"></i> @User.Identity.Name
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
                                     <form action="/Auth/Logout" method="get">
-                                        <button type="submit" class="dropdown-item text-danger">تسجيل الخروج</button>
+                                        <button type="submit" class="dropdown-item text-danger">@Lang.Get("Logout")</button>
                                     </form>
                                 </li>
                             </ul>
@@ -244,6 +289,7 @@
             </nav>
 
             <div class="container-fluid">
+                <partial name="_Alerts" />
                 @RenderBody()
             </div>
         </div>
@@ -253,10 +299,21 @@
     <script>
         document.getElementById('sidebarCollapse').addEventListener('click', function () {
             document.getElementById('sidebar').classList.toggle('active');
-            if (document.getElementById('sidebar').style.marginLeft === '-250px') {
-                document.getElementById('sidebar').style.marginLeft = '0';
+            const sidebar = document.getElementById('sidebar');
+            const isRtl = document.documentElement.dir === 'rtl';
+
+            if(isRtl) {
+                 if (sidebar.style.marginRight === '-250px') {
+                    sidebar.style.marginRight = '0';
+                } else {
+                    sidebar.style.marginRight = '-250px';
+                }
             } else {
-                document.getElementById('sidebar').style.marginLeft = '-250px';
+                if (sidebar.style.marginLeft === '-250px') {
+                    sidebar.style.marginLeft = '0';
+                } else {
+                    sidebar.style.marginLeft = '-250px';
+                }
             }
         });
     </script>

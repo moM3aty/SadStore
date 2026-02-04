@@ -1,6 +1,8 @@
 ﻿@model List<SadStore.Data.Product>
+@inject SadStore.Services.LanguageService Lang
 @{
-    ViewData["Title"] = "المنتجات";
+    ViewData["Title"] = Lang.Get("Products");
+    var isRtl = Lang.IsRtl();
 }
 
 <div class="product-page">
@@ -8,20 +10,20 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <h1 class="page-title mb-0" data-ar="المنتجات" data-en="Products">المنتجات</h1>
+                    <h1 class="page-title mb-0">@Lang.Get("Products")</h1>
                 </div>
                 <div class="col-md-6">
                     <div class="d-flex justify-content-end align-items-center gap-3">
-                        <span class="text-muted" data-ar="ترتيب" data-en="Sort">ترتيب</span>
+                        <span class="text-muted">@Lang.Get("Sort")</span>
                         <div class="dropdown">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                    id="sortDropdown" data-bs-toggle="dropdown">
-                                مقترحاتنا
+                                    id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                @Lang.Get("Our Suggestions")
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="?sort=newest">الأحدث</a></li>
-                                <li><a class="dropdown-item" href="?sort=price_desc">السعر من الاعلي للاقل</a></li>
-                                <li><a class="dropdown-item" href="?sort=price_asc">السعر من الاقل للاعلي</a></li>
+                                <li><a class="dropdown-item" href="?sort=newest">@Lang.Get("Newest")</a></li>
+                                <li><a class="dropdown-item" href="?sort=price_desc">@Lang.Get("Price: High to Low")</a></li>
+                                <li><a class="dropdown-item" href="?sort=price_asc">@Lang.Get("Price: Low to High")</a></li>
                             </ul>
                         </div>
                     </div>
@@ -34,26 +36,76 @@
         <div class="row">
             <aside class="col-lg-3 mb-4">
                 <div class="filters-section">
-                    <div class="filter-group mb-4">
-                        <h5 class="filter-title" data-ar="بحث" data-en="Search">بحث</h5>
-                        <form action="/Products" method="get">
-                            <input type="search" name="search" class="form-control" placeholder="ابحث عن منتج..." value="@ViewBag.Search" />
-                        </form>
-                    </div>
-                    <div class="filter-group mb-4">
-                        <h5 class="filter-title" data-ar="السعر" data-en="Price">السعر</h5>
-                        <div class="filter-options">
-                            <div class="form-check mb-2">
-                                <label class="form-check-label">أقل من 200 ريال</label>
-                                <input class="form-check-input" type="radio" name="price" value="0-200">
-                            </div>
-                            <div class="form-check mb-2">
-                                <label class="form-check-label">200 - 400 ريال</label>
-                                <input class="form-check-input" type="radio" name="price" value="200-400">
+                    <!-- نموذج الفلترة -->
+                    <form id="filterForm" action="/Products" method="get">
+                        <input type="hidden" name="search" value="@ViewBag.Search" />
+                        <input type="hidden" name="category" value="@Context.Request.Query["category"]" />
+
+                        <!-- فلتر التقييم (شكل فقط حالياً للحفاظ على التصميم) -->
+                        <div class="filter-group mb-4">
+                            <h5 class="filter-title">@Lang.Get("Rating")</h5>
+                            <div class="filter-options">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="rating" id="rating5" value="5">
+                                    <label class="form-check-label" for="rating5">
+                                        <span class="stars">
+                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="rating" id="rating4" value="4">
+                                    <label class="form-check-label" for="rating4">
+                                        <span class="stars">
+                                            <i class="fas fa-star text-muted"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="rating" id="rating3" value="3">
+                                    <label class="form-check-label" for="rating3">
+                                        <span class="stars">
+                                            <i class="fas fa-star text-muted"></i><i class="fas fa-star text-muted"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <a href="/Products" class="btn btn-light w-100 mt-3">مسح الفلاتر</a>
+
+                        <!-- فلتر السعر -->
+                        <div class="filter-group mb-4">
+                            <h5 class="filter-title">@Lang.Get("Price")</h5>
+                            <div class="filter-options">
+                                <div class="form-check mb-2">
+                                    <label class="form-check-label" for="price1">200 @Lang.Get("SAR") @Lang.Get("to") 300 @Lang.Get("SAR")</label>
+                                    <input class="form-check-input" type="radio" name="priceRange" id="price1" value="200-300" onchange="this.form.submit()">
+                                </div>
+                                <div class="form-check mb-2">
+                                    <label class="form-check-label" for="price2">300 @Lang.Get("SAR") @Lang.Get("to") 400 @Lang.Get("SAR")</label>
+                                    <input class="form-check-input" type="radio" name="priceRange" id="price2" value="300-400" onchange="this.form.submit()">
+                                </div>
+                                <div class="form-check mb-2">
+                                    <label class="form-check-label" for="price3">@Lang.Get("More than") 400 @Lang.Get("SAR")</label>
+                                    <input class="form-check-input" type="radio" name="priceRange" id="price3" value="400+" onchange="this.form.submit()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- حقول السعر اليدوي -->
+                        <div class="filter-group">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary w-100" type="button" onclick="document.getElementById('minPriceInput').focus()">@Lang.Get("From") @Lang.Get("SAR")</button>
+                                    <input type="number" id="minPriceInput" name="minPrice" class="form-control mt-1 d-none" placeholder="@Lang.Get("From")">
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary w-100" type="button" onclick="document.getElementById('maxPriceInput').focus()">@Lang.Get("To") @Lang.Get("SAR")</button>
+                                    <input type="number" id="maxPriceInput" name="maxPrice" class="form-control mt-1 d-none" placeholder="@Lang.Get("To")">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-light w-100 mt-3">@Lang.Get("Clear Filters")</button>
+                        </div>
+                    </form>
                 </div>
             </aside>
 
@@ -62,30 +114,56 @@
                     @foreach (var item in Model)
                     {
                         <div class="col-md-6 col-lg-4">
-                            <a href="/Products/Details/@item.Id" class="products-card">
+                            <!-- الرابط الأساسي للمنتج -->
+                            <a href="/Products/Details/@item.Id" class="products-card text-decoration-none">
                                 <div class="products-image-wrapper">
                                     @if (item.IsFeatured)
                                     {
-                                        <span class="new-badge" data-ar="مميز" data-en="Featured">مميز</span>
+                                        <span class="new-badge">@Lang.Get("New")</span>
                                     }
-                                    <img src="@item.ImageUrl" alt="@item.NameAr" class="products-image" onerror="this.src='/images/product.webp'">
+                                    <img src="@item.ImageUrl" alt="@(isRtl? item.NameAr: item.NameEn)" class="products-image" onerror="this.src='/images/product.webp'">
+
                                     <div class="products-actions">
-                                        <span class="action-btn quick-view-btn">
+                                        <button type="button" class="action-btn quick-view-btn" title="@Lang.Get("Quick View")">
                                             <i class="far fa-eye"></i>
-                                        </span>
-                                        <span class="action-btn wishlist-btn">
-                                            <i class="fas fa-heart"></i>
-                                        </span>
+                                        </button>
+
+                                        <form action="/Wishlist/Toggle" method="post" class="d-inline">
+                                            <input type="hidden" name="productId" value="@item.Id" />
+                                            <button type="submit" class="action-btn wishlist-btn" title="@Lang.Get("Wishlist")">
+                                                <i class="fas fa-heart"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
+
                                 <div class="products-info">
-                                    <h3 class="products-title">@item.NameAr</h3>
-                                    <div class="products-price">
-                                        @item.Price <span class="coin">ريال</span>
+                                    <span class="products-title">
+                                        @(isRtl? item.NameAr: item.NameEn)
+                                    </span>
+
+                                    <!-- قائمة المقاسات (شكلية للحفاظ على التصميم) -->
+                                    <div class="size-selector">
+                                        <select class="size-select" onclick="event.preventDefault();">
+                                            <option value="">@Lang.Get("Select Size")</option>
+                                            <option value="S">S</option>
+                                            <option value="M">M</option>
+                                            <option value="L">L</option>
+                                            <option value="XL">XL</option>
+                                        </select>
                                     </div>
-                                    <button class="add-to-cart-btn">
-                                        <i class="fas fa-shopping-cart"></i> إضافة للسلة
-                                    </button>
+
+                                    <div class="products-price">
+                                        @item.Price.ToString("0.##") <span class="coin">@Lang.Get("SAR")</span>
+                                    </div>
+
+                                    <form action="/Cart/Add" method="post" class="w-100">
+                                        <input type="hidden" name="productId" value="@item.Id" />
+                                        <button type="submit" class="add-to-cart-btn">
+                                            <i class="fas fa-shopping-cart"></i>
+                                            @Lang.Get("Add to Cart")
+                                        </button>
+                                    </form>
                                 </div>
                             </a>
                         </div>
@@ -93,8 +171,8 @@
 
                     @if (!Model.Any())
                     {
-                        <div class="col-12 text-center">
-                            <p>لا توجد منتجات مطابقة للبحث.</p>
+                        <div class="col-12 text-center py-5">
+                            <h3>@Lang.Get("No products found matching your search.")</h3>
                         </div>
                     }
                 </div>

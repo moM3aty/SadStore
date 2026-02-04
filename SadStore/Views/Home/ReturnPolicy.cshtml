@@ -1,5 +1,7 @@
-﻿@{
-    ViewData["Title"] = "سياسة الاسترجاع";
+﻿@inject SadStore.Services.LanguageService Lang
+@{
+    ViewData["Title"] = Lang.Get("Return Policy");
+    var isRtl = Lang.IsRtl();
 }
 
 <div class="product-page">
@@ -8,11 +10,11 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a href="/">
-                        <span>الرئيسية</span>
-                        <i class="fas fa-angle-left mx-2 fs-6 breadcrumb-arrow"></i>
+                        <span>@Lang.Get("Home")</span>
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2 fs-6 breadcrumb-arrow"></i>
                     </a>
                 </li>
-                <li class="breadcrumb-item active">سياسة الاسترجاع</li>
+                <li class="breadcrumb-item active">@Lang.Get("Return Policy")</li>
             </ol>
         </div>
     </nav>
@@ -22,34 +24,60 @@
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-10">
                     <div class="content bg-white p-5 rounded-3 shadow-sm">
-                        <h2 class="mb-4 fw-bold text-center">سياسة الاسترجاع</h2>
+                        <h2 class="mb-4 fw-bold text-center">@Lang.Get("Return Policy")</h2>
 
-                        <div class="alert alert-info text-center">
-                            لتجربة تسوق أفضل، أضفنا خيارات جديدة لسياساتنا
+                        <div class="text-center mb-5">
+                            <a href="/Profile" class="btn btn-outline-dark btn-lg px-5">
+                                @Lang.Get("RP_StartLink") <i class="fas @(isRtl ? "fa-arrow-left" : "fa-arrow-right") ms-2"></i>
+                            </a>
                         </div>
 
-                        <p class="fw-bold mb-3">شروط عامة:</p>
-                        <ul class="list-group list-group-flush mb-4">
-                            <li class="list-group-item">يمكنك إرجاع المنتج خلال 7 أيام من تاريخ الاستلام.</li>
-                            <li class="list-group-item">يجب أن يكون المنتج في حالته الأصلية دون تلف ومع كامل ملحقاته.</li>
-                            <li class="list-group-item">عند استرجاع منتج أو الطلب كاملًا، يتم خصم رسوم الاسترجاع وقدرها 29 ريال سعودي من المبلغ المسترد.</li>
-                            <li class="list-group-item text-danger">لا يوجد استرجاع أو استبدال لطلبات الموقع الإلكتروني من الفروع مباشرة.</li>
+                        <div class="alert alert-info border-0 bg-soft-primary">
+                            <i class="fas fa-info-circle me-2"></i> @Lang.Get("RP_Intro")
+                        </div>
+
+                        <ul class="list-group list-group-flush mb-5">
+                            <li class="list-group-item bg-transparent py-3"><i class="fas fa-check-circle text-success me-2"></i> @Lang.Get("RP_Fee")</li>
+                            <li class="list-group-item bg-transparent py-3"><i class="fas fa-check-circle text-success me-2"></i> @Lang.Get("RP_Window")</li>
+                            <li class="list-group-item bg-transparent py-3"><i class="fas fa-check-circle text-success me-2"></i> @Lang.Get("RP_NoStoreReturn")</li>
+                            <li class="list-group-item bg-transparent py-3"><i class="fas fa-check-circle text-success me-2"></i> @Lang.Get("RP_NoExchange")</li>
+                            <li class="list-group-item bg-transparent py-3"><i class="fas fa-check-circle text-success me-2"></i> @Lang.Get("RP_OriginalCondition")</li>
+                            <li class="list-group-item bg-transparent py-3"><i class="fas fa-check-circle text-success me-2"></i> @Lang.Get("RP_Exception")</li>
                         </ul>
 
-                        <h4 class="fw-bold mt-4 mb-3">سياسة العروض الترويجية:</h4>
-                        <p>الطلبات التي تتم ضمن عرض (قطعتين بسعر محدد) تخضع للضوابط التالية:</p>
-                        <ul>
-                            <li>لا يمكن إرجاع أي قطعة بشكل منفصل، ويشترط إرجاع العرض كاملًا.</li>
-                            <li>عند شراء أكثر من قطعتين ضمن نفس العرض، يقتصر الإرجاع على عدد زوجي من القطع.</li>
-                        </ul>
+                        <div class="mb-5">
+                            <h4 class="fw-bold mb-3 border-bottom pb-2">@Lang.Get("RP_PromoTitle")</h4>
+                            <p class="text-muted"><i class="fas fa-star text-warning me-2"></i> @Lang.Get("RP_PromoPoint")</p>
+                        </div>
 
-                        <h4 class="fw-bold mt-4 mb-3">خطوات الإرجاع:</h4>
-                        <ol>
-                            <li>تواصل مع خدمة العملاء عبر الواتساب.</li>
-                            <li>زودنا برقم الطلب وصورة للمنتج.</li>
-                            <li>سيتم إرسال بوليصة الشحن خلال 48 ساعة.</li>
-                            <li>يتم استرداد المبلغ خلال 14 يوم عمل من استلامنا للمنتج وفحصه.</li>
-                        </ol>
+                        <div class="row g-4 mb-5">
+                            <h4 class="fw-bold mb-3 border-bottom pb-2 w-100">@Lang.Get("RP_StepsTitle")</h4>
+                            <div class="col-md-4">
+                                <div class="step-card text-center p-4 border rounded bg-light h-100">
+                                    <div class="step-icon mb-3 text-primary fs-2"><i class="fas fa-user-circle"></i></div>
+                                    <h6 class="fw-bold">1. @Lang.Get("RP_Step1")</h6>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="step-card text-center p-4 border rounded bg-light h-100">
+                                    <div class="step-icon mb-3 text-primary fs-2"><i class="fas fa-file-alt"></i></div>
+                                    <h6 class="fw-bold">2. @Lang.Get("RP_Step2")</h6>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="step-card text-center p-4 border rounded bg-light h-100">
+                                    <div class="step-icon mb-3 text-primary fs-2"><i class="fas fa-envelope-open-text"></i></div>
+                                    <h6 class="fw-bold">3. @Lang.Get("RP_Step3")</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning border-0">
+                            <h5 class="alert-heading fw-bold"><i class="fas fa-exclamation-triangle me-2"></i> @Lang.Get("RP_NotesTitle")</h5>
+                            <hr>
+                            <p class="mb-1">• @Lang.Get("RP_Note1")</p>
+                            <p class="mb-0">• @Lang.Get("RP_Note2")</p>
+                        </div>
                     </div>
                 </div>
             </div>

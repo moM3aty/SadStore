@@ -1,24 +1,26 @@
-﻿@model List<SadStore.Data.Order>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@model List<SadStore.Data.Order>
+@inject SadStore.Services.LanguageService Lang
 @{
-    ViewData["Title"] = "الملف الشخصي";
+    ViewData["Title"] = Lang.Get("My Profile");
+    var isRtl = Lang.IsRtl();
 }
-
+<link href="~/css/profile.css" rel="stylesheet" type="text/css" />
 <div class="full-content">
     <header class="header-pattern">
         <div class="container">
             <div class="logo-section">
-                <h1 class="brand-logo" data-ar="صاد" data-en="Saad">صاد</h1>
+                <h1 class="brand-logo">@Lang.Get("SaadProfile")</h1>
             </div>
         </div>
     </header>
     <section class="profile-section">
         <div class="container">
-            <div class="profile-card pb-3">
+            <div class="profile-card pb-3"> 
                 <div class="profile-avatar overflow-hidden">
                     <img src="~/images/main-product-details.webp" class="img-fluid" alt="" onerror="this.src='https://ui-avatars.com/api/?name=@ViewBag.UserName'">
                 </div>
                 <h2 class="profile-name mt-5">@ViewBag.UserName</h2>
-                <p class="text-muted">@ViewBag.UserEmail</p>
             </div>
         </div>
     </section>
@@ -26,13 +28,37 @@
     <section class="menu-section">
         <div class="container">
             <nav class="profile-nav">
-                <a href="#orders" class="nav-item active" onclick="switchTab('orders')">
-                    <i class="fas fa-box"></i>
-                    <span>الطلبات</span>
+                <a href="#notifications" class="nav-item active" data-page="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span>@Lang.Get("Notifications")</span>
                 </a>
-                <a href="#logout" class="nav-item" onclick="document.getElementById('logoutForm').submit()">
+                <a href="#orders" class="nav-item" data-page="orders">
+                    <i class="fas fa-box"></i>
+                    <span>@Lang.Get("Orders")</span>
+                </a>
+                <a href="#payment-requests" class="nav-item" data-page="payment-requests">
+                    <i class="fas fa-cart-shopping"></i>
+                    <span>@Lang.Get("Pending Payments")</span>
+                </a>
+                <a href="#ads" class="nav-item" data-page="ads">
+                    <i class="fas fa-star"></i>
+                    <span>@Lang.Get("Wishlist")</span>
+                </a>
+                <a href="#wallet" class="nav-item" data-page="wallet">
+                    <i class="fas fa-wallet"></i>
+                    <span>@Lang.Get("My Wallet")</span>
+                </a>
+                <a href="#loyalty" class="nav-item" data-page="loyalty">
+                    <i class="fas fa-gift"></i>
+                    <span>@Lang.Get("Loyalty Points")</span>
+                </a>
+                <a href="#account" class="nav-item" data-page="account">
+                    <i class="fas fa-user"></i>
+                    <span>@Lang.Get("My Account")</span>
+                </a>
+                <a href="#logout" class="nav-item" data-page="logout">
                     <i class="fas fa-right-from-bracket"></i>
-                    <span>تسجيل الخروج</span>
+                    <span>@Lang.Get("Logout")</span>
                 </a>
             </nav>
             <form id="logoutForm" action="/Auth/Logout" method="get" style="display:none;"></form>
@@ -42,36 +68,48 @@
     <section class="content-section">
         <div class="container">
             <div class="content-area">
-                <div id="orders" class="page-content active">
-                    <h3 class="page-title">سجل الطلبات</h3>
+                <div id="notifications-content" class="page-content active">
+                    <h3 class="page-title">@Lang.Get("Notifications")</h3>
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>@Lang.Get("No notifications")</p>
+                    </div>
+                </div>
+
+                <div id="orders-content" class="page-content">
+                    <h3 class="page-title">@Lang.Get("Orders")</h3>
                     @if (Model != null && Model.Any())
                     {
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>رقم الطلب</th>
-                                        <th>التاريخ</th>
-                                        <th>الإجمالي</th>
-                                        <th>الحالة</th>
-                                        <th>التفاصيل</th>
+                                        <th>@Lang.Get("Order ID")</th>
+                                        <th>@Lang.Get("Date")</th>
+                                        <th>@Lang.Get("Total")</th>
+                                        <th>@Lang.Get("Status")</th>
+                                        <th>@Lang.Get("Actions")</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var order in Model)
                                     {
+                                        bool isReturnable = (DateTime.Now - order.OrderDate).TotalDays <= 7;
                                         <tr>
                                             <td>#@order.Id</td>
                                             <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
-                                            <td>@order.TotalAmount.ToString("0.00") ر.س</td>
-                                            <td><span class="badge bg-info text-dark">@order.Status</span></td>
+                                            <td>@order.TotalAmount.ToString("0.00") @Lang.Get("SAR")</td>
+                                            <td><span class="badge bg-info text-dark">@Lang.Get(order.Status)</span></td>
                                             <td>
-                                                <ul class="list-unstyled mb-0 small">
-                                                    @foreach (var item in order.OrderItems)
-                                                    {
-                                                        <li>@item.Product.NameAr (@item.Quantity)</li>
-                                                    }
-                                                </ul>
+                                                @if (isReturnable)
+                                                {
+                                                    <a href="https://wa.me/966565532971?text=I want to return order #@order.Id" target="_blank" class="btn btn-sm btn-outline-danger">@Lang.Get("Return Order")</a>
+                                                    <small class="d-block text-muted">@Lang.Get("Return Eligible until") @order.OrderDate.AddDays(7).ToString("MM-dd")</small>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted small">@Lang.Get("Return window expired")</span>
+                                                }
                                             </td>
                                         </tr>
                                     }
@@ -83,9 +121,77 @@
                     {
                         <div class="empty-state">
                             <i class="fas fa-box"></i>
-                            <p>لا توجد طلبات سابقة</p>
+                            <p>@Lang.Get("No orders")</p>
                         </div>
                     }
+                </div>
+
+                <div id="payment-requests-content" class="page-content">
+                    <h3 class="page-title">@Lang.Get("Pending Payments")</h3>
+                    <div class="empty-state">
+                        <i class="fas fa-cart-shopping"></i>
+                        <p>@Lang.Get("No payment requests")</p>
+                    </div>
+                </div>
+
+                <div id="ads-content" class="page-content">
+                    <h3 class="page-title">@Lang.Get("Wishlist")</h3>
+                    <div class="empty-state">
+                        <i class="fas fa-star"></i>
+                        <p>@Lang.Get("No items")</p>
+                    </div>
+                </div>
+
+                <div id="wallet-content" class="page-content">
+                    <h3 class="page-title">@Lang.Get("My Wallet")</h3>
+                    <div class="wallet-info">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5>@Lang.Get("Current Balance")</h5>
+                                <h2 class="text-primary">0.00 @Lang.Get("SAR")</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="loyalty-content" class="page-content">
+                    <h3 class="page-title">@Lang.Get("Loyalty Points")</h3>
+                    <div class="loyalty-info">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5>@Lang.Get("Loyalty Points")</h5>
+                                <h2 class="text-warning">0 @Lang.Get("Points")</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="account-content" class="page-content">
+                    <h3 class="page-title">@Lang.Get("My Account")</h3>
+                    <form id="accountForm">
+                        <div class="mb-3">
+                            <label class="form-label">@Lang.Get("Name")</label>
+                            <input type="text" class="form-control" value="@ViewBag.UserName">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">@Lang.Get("Email")</label>
+                            <input type="email" class="form-control" value="@ViewBag.UserEmail" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">@Lang.Get("Phone Number")</label>
+                            <input type="tel" class="form-control" value="@ViewBag.UserPhone">
+                        </div>
+                        <button type="submit" class="btn btn-primary">@Lang.Get("Save Changes2")</button>
+                    </form>
+                </div>
+
+                <div id="logout-content" class="page-content">
+                    <div class="logout-confirm">
+                        <h3 class="page-title">@Lang.Get("Logout")</h3>
+                        <p>@Lang.Get("Are you sure you want to logout?")</p>
+                        <button class="btn btn-danger" onclick="document.getElementById('logoutForm').submit()">@Lang.Get("Logout")</button>
+                        <button class="btn btn-secondary" onclick="document.querySelector('.profile-nav .active').click()">@Lang.Get("Cancel")</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -94,13 +200,30 @@
 
 @section Scripts {
     <script>
-        function switchTab(tabId) {
-            // منطق التبديل البسيط للعرض فقط
-            document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.profile-nav .nav-item');
+            const pageContents = document.querySelectorAll('.page-content');
 
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-        }
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+
+                    if(pageId === 'logout') {
+                       // Switch to logout content but don't change nav active state yet
+                       pageContents.forEach(content => content.classList.remove('active'));
+                       document.getElementById('logout-content').classList.add('active');
+                       return;
+                    }
+
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+
+                    pageContents.forEach(content => content.classList.remove('active'));
+                    const targetContent = document.getElementById(`${pageId}-content`);
+                    if(targetContent) targetContent.classList.add('active');
+                });
+            });
+        });
     </script>
 }

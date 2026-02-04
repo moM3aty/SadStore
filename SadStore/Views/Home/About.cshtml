@@ -1,5 +1,7 @@
-﻿@{
-    ViewData["Title"] = "من نحن";
+﻿@inject SadStore.Services.LanguageService Lang
+@{
+    ViewData["Title"] = Lang.Get("About Us");
+    var isRtl = Lang.IsRtl();
 }
 
 <div class="product-page">
@@ -8,11 +10,11 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a href="/">
-                        <span>الرئيسية</span>
-                        <i class="fas fa-angle-left mx-2 fs-6 breadcrumb-arrow"></i>
+                        <span>@Lang.Get("Home")</span>
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2 fs-6 breadcrumb-arrow"></i>
                     </a>
                 </li>
-                <li class="breadcrumb-item active">من نحن</li>
+                <li class="breadcrumb-item active">@Lang.Get("About Us")</li>
             </ol>
         </div>
     </nav>
@@ -21,32 +23,32 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-4 mb-lg-0">
-                    <img src="~/images/main-product-details.webp" alt="عن صاد" class="img-fluid rounded-3 shadow-sm w-100">
+                    <img src="~/images/main-product-details.webp" alt="@Lang.Get("About Saad")" class="img-fluid rounded-3 shadow-sm w-100">
                 </div>
                 <div class="col-lg-6">
-                    <h2 class="fw-bold mb-4">متجر صاد</h2>
-                    <p class="lead text-muted mb-4">الوجهة الأولى لجميع تفاصيل المرأة ✨</p>
+                    <h2 class="fw-bold mb-4">@Lang.Get("Saad Store")</h2>
+                    <p class="lead text-muted mb-4">@Lang.Get("The first destination for all women's details") ✨</p>
 
                     <p style="font-size: 1.1rem; line-height: 1.8;">
-                        نحن في "صاد" نسعى لتقديم أرقى الأزياء النسائية التي تجمع بين الأصالة والعصرية. تأسس متجرنا ليكون ملاذك الأول للبحث عن العبايات الفاخرة، الأقمشة الراقية، والملابس التي تعكس شخصيتك الفريدة.
+                        @Lang.Get("At Saad, we strive to provide the finest women's fashion that combines authenticity and modernity. Our store was established to be your first destination for luxury abayas, high-end fabrics, and clothes that reflect your unique personality.")
                     </p>
 
                     <p style="font-size: 1.1rem; line-height: 1.8;">
-                        نهتم بأدق التفاصيل، من اختيار الخامات إلى دقة التصميم، لنضمن لكِ إطلالة مميزة في كل المناسبات. سواء كنتِ تبحثين عن عباية يومية عملية أو فستان سهرة يخطف الأنظار، ستجدين في صاد ما يرضي ذوقك.
+                        @Lang.Get("We pay attention to the smallest details, from selecting materials to design precision, to ensure you a distinctive look on all occasions. Whether you are looking for a practical daily abaya or an eye-catching evening dress, you will find at Saad what satisfies your taste.")
                     </p>
 
                     <div class="row mt-5 text-center">
                         <div class="col-4">
                             <h3 class="fw-bold text-primary">+1000</h3>
-                            <p class="text-muted">عميل سعيد</p>
+                            <p class="text-muted">@Lang.Get("Happy Customer")</p>
                         </div>
                         <div class="col-4">
                             <h3 class="fw-bold text-primary">+500</h3>
-                            <p class="text-muted">منتج متنوع</p>
+                            <p class="text-muted">@Lang.Get("Various Products")</p>
                         </div>
                         <div class="col-4">
                             <h3 class="fw-bold text-primary">24/7</h3>
-                            <p class="text-muted">دعم فني</p>
+                            <p class="text-muted">@Lang.Get("Technical Support")</p>
                         </div>
                     </div>
                 </div>

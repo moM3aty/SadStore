@@ -1,13 +1,17 @@
 ﻿@model SadStore.Data.Order
+@inject SadStore.Services.LanguageService Lang
 @{
     Layout = null;
+    var isRtl = Lang.IsRtl();
+    var dir = isRtl ? "rtl" : "ltr";
+    var lang = isRtl ? "ar" : "en";
 }
 
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="@lang" dir="@dir">
 <head>
     <meta charset="utf-8" />
-    <title>فاتورة طلب #@Model.Id</title>
+    <title>@Lang.Get("Order Number") #@Model.Id</title>
     <link rel="stylesheet" href="~/css/bootstrap.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -45,50 +49,48 @@
 <body>
     <div class="container">
         <div class="text-start mb-3">
-            <button onclick="window.print()" class="btn btn-primary btn-print">طباعة الفاتورة</button>
-            <a href="/Admin/Orders/Details/@Model.Id" class="btn btn-outline-secondary btn-print">عودة</a>
+            <button onclick="window.print()" class="btn btn-primary btn-print">@Lang.Get("Print Invoice")</button>
+            <a href="/Admin/Orders/Details/@Model.Id" class="btn btn-outline-secondary btn-print">@Lang.Get("Back to List")</a>
         </div>
 
         <div class="invoice-header d-flex justify-content-between align-items-center">
             <div>
                 <img src="~/images/logo.png" alt="Sad Store" class="invoice-logo mb-2">
-                <h5>متجر صاد</h5>
-                <p class="text-muted mb-0">الرياض، المملكة العربية السعودية</p>
-                <p class="text-muted">السجل التجاري: 1010166254</p>
+                <h5>@Lang.Get("Saad Store")</h5>
+                <p class="text-muted mb-0">@Lang.Get("Commercial Registration"): 1010166254</p>
+                <p class="text-muted">@Lang.Get("Tax Number"): 300076485500003</p>
             </div>
             <div class="text-end">
-                <h2 class="fw-bold">فاتورة ضريبية</h2>
-                <p class="mb-1"><strong>رقم الفاتورة:</strong> #@Model.Id</p>
-                <p class="mb-1"><strong>التاريخ:</strong> @Model.OrderDate.ToString("yyyy/MM/dd")</p>
-                <p class="mb-0"><strong>الحالة:</strong> @Model.Status</p>
+                <h2 class="fw-bold">@Lang.Get("Order Details")</h2>
+                <p class="mb-1"><strong>@Lang.Get("Order Number"):</strong> #@Model.Id</p>
+                <p class="mb-1"><strong>@Lang.Get("Date"):</strong> @Model.OrderDate.ToString("yyyy/MM/dd")</p>
+                <p class="mb-0"><strong>@Lang.Get("Status"):</strong> @Lang.Get(Model.Status)</p>
             </div>
         </div>
 
         <div class="row mb-4">
             <div class="col-6">
-                <h5 class="fw-bold border-bottom pb-2">بيانات العميل</h5>
-                <p class="mb-1"><strong>الاسم:</strong> @Model.CustomerName</p>
-                <p class="mb-1"><strong>الهاتف:</strong> @Model.PhoneNumber</p>
-                <p class="mb-1"><strong>العنوان:</strong> @Model.Address</p>
+                <h5 class="fw-bold border-bottom pb-2">@Lang.Get("Customer Info")</h5>
+                <p class="mb-1"><strong>@Lang.Get("Customer"):</strong> @Model.CustomerName</p>
+                <p class="mb-1"><strong>@Lang.Get("Phone"):</strong> @(string.IsNullOrEmpty(Model.PhoneNumber) ? "-" : Model.PhoneNumber)</p>
+                <p class="mb-1"><strong>@Lang.Get("Address"):</strong> @(string.IsNullOrEmpty(Model.Address) ? "-" : Model.Address)</p>
             </div>
         </div>
 
         <table class="table table-bordered text-center">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>المنتج</th>
-                    <th>الكمية</th>
-                    <th>سعر الوحدة</th>
-                    <th>الإجمالي</th>
+                    <th>@Lang.Get("Product Name")</th>
+                    <th>@Lang.Get("Quantity")</th>
+                    <th>@Lang.Get("Unit Price")</th>
+                    <th>@Lang.Get("Subtotal")</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.OrderItems)
                 {
                     <tr>
-                        <td>@item.Id</td>
-                        <td>@item.Product?.NameAr</td>
+                        <td>@(isRtl? item.Product?.NameAr : item.Product?.NameEn)</td>
                         <td>@item.Quantity</td>
                         <td>@item.Price.ToString("N2")</td>
                         <td>@((item.Price * item.Quantity).ToString("N2"))</td>
@@ -97,23 +99,22 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="text-end fw-bold">المجموع (غير شامل الضريبة)</td>
-                    <td>@((Model.TotalAmount / 1.15m).ToString("N2")) ر.س</td>
+                    <td colspan="3" class="text-end fw-bold">@Lang.Get("Subtotal (Excl. Tax)")</td>
+                    <td>@((Model.TotalAmount / 1.15m).ToString("N2")) @Lang.Get("SAR")</td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="text-end fw-bold">ضريبة القيمة المضافة (15%)</td>
-                    <td>@((Model.TotalAmount - (Model.TotalAmount / 1.15m)).ToString("N2")) ر.س</td>
+                    <td colspan="3" class="text-end fw-bold">@Lang.Get("VAT (15%)")</td>
+                    <td>@((Model.TotalAmount - (Model.TotalAmount / 1.15m)).ToString("N2")) @Lang.Get("SAR")</td>
                 </tr>
                 <tr class="bg-light">
-                    <td colspan="4" class="text-end fw-bold fs-5">الإجمالي النهائي</td>
-                    <td class="fw-bold fs-5">@Model.TotalAmount.ToString("N2") ر.س</td>
+                    <td colspan="3" class="text-end fw-bold fs-5">@Lang.Get("Total")</td>
+                    <td class="fw-bold fs-5">@Model.TotalAmount.ToString("N2") @Lang.Get("SAR")</td>
                 </tr>
             </tfoot>
         </table>
 
         <div class="mt-5 text-center text-muted">
-            <p>شكراً لتسوقكم من متجر صاد!</p>
-            <p class="small">هذه الفاتورة تم إصدارها إلكترونياً وهي صالحة بدون توقيع.</p>
+            <p>@Lang.Get("All rights reserved © Sad 2026")</p>
         </div>
     </div>
 </body>

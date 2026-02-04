@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<SadStore.Data.BlogPost>
-
+@inject SadStore.Services.LanguageService Lang
 @{
-    ViewData["Title"] = "إدارة المدونة";
+    ViewData["Title"] = Lang.Get("Blog");
     Layout = "_AdminLayout";
 }
 
@@ -9,19 +9,19 @@
     <div class="col-12">
         <div class="table-card">
             <div class="table-header">
-                <h5 class="mb-0">المقالات المنشورة</h5>
+                <h5 class="mb-0">@Lang.Get("Blog Posts")</h5>
                 <a href="/Admin/Blogs/Create" class="btn btn-custom">
-                    <i class="fas fa-plus"></i> إضافة مقال جديد
+                    <i class="fas fa-plus"></i> @Lang.Get("Add New Post")
                 </a>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th>الصورة</th>
-                            <th>العنوان</th>
-                            <th>تاريخ النشر</th>
-                            <th>الإجراءات</th>
+                            <th>@Lang.Get("Image")</th>
+                            <th>@Lang.Get("Title")</th>
+                            <th>@Lang.Get("Published Date")</th>
+                            <th>@Lang.Get("Actions")</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,26 +34,28 @@
                                 <td class="fw-bold">@item.Title</td>
                                 <td>@item.PublishedDate.ToString("yyyy/MM/dd")</td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteBlogModal-@item.Id">
-                                        <i class="fas fa-trash"></i> حذف
-                                    </button>
+                                    <div class="btn-group">
+                                        <a href="/Admin/Blogs/Edit/@item.Id" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i> @Lang.Get("Edit")</a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteBlogModal-@item.Id">
+                                            <i class="fas fa-trash"></i> @Lang.Get("Delete")
+                                        </button>
+                                    </div>
 
-                                    <!-- Delete Modal -->
                                     <div class="modal fade" id="deleteBlogModal-@item.Id" tabindex="-1">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">حذف المقال</h5>
+                                                    <h5 class="modal-title">@Lang.Get("Confirm Delete")</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    هل أنت متأكد من حذف المقال "@item.Title"؟
+                                                    @Lang.Get("Are you sure you want to delete") "@item.Title"?
                                                 </div>
                                                 <div class="modal-footer">
                                                     <form action="/Admin/Blogs/Delete" method="post">
                                                         <input type="hidden" name="id" value="@item.Id" />
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                                                        <button type="submit" class="btn btn-danger">حذف</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Lang.Get("Cancel")</button>
+                                                        <button type="submit" class="btn btn-danger">@Lang.Get("Delete")</button>
                                                     </form>
                                                 </div>
                                             </div>

@@ -1,41 +1,51 @@
 ﻿@model IEnumerable<SadStore.Data.Category>
+@inject SadStore.Services.LanguageService Lang
 
 @{
-    ViewData["Title"] = "إدارة الأقسام";
+    ViewData["Title"] = Lang.Get("Categories");
     Layout = "_AdminLayout";
+    var isRtl = Lang.IsRtl();
 }
+
+<div class="row mb-3">
+    <div class="col-12 text-end">
+        <a href="/Admin/Categories/Export" class="btn btn-success">
+            <i class="fas fa-file-csv"></i> @Lang.Get("Export to Excel")
+        </a>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-12">
-        <div class="table-card">
+        <div class="table-card shadow-sm">
             <div class="table-header">
-                <h5 class="mb-0">الأقسام</h5>
+                <h5 class="mb-0">@Lang.Get("Category List")</h5>
                 <a href="/Admin/Categories/Create" class="btn btn-custom">
-                    <i class="fas fa-plus"></i> إضافة قسم جديد
+                    <i class="fas fa-plus"></i> @Lang.Get("Add New Category")
                 </a>
             </div>
-            <div class="card-body">
+            <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle mb-0">
                         <thead class="bg-light">
                             <tr>
-                                <th>الاسم (عربي)</th>
-                                <th>الاسم (إنجليزي)</th>
-                                <th>عدد المنتجات</th>
-                                <th>الإجراءات</th>
+                                <th>@Lang.Get("Category Name (Ar)")</th>
+                                <th>@Lang.Get("Category Name (En)")</th>
+                                <th>@Lang.Get("Product Count")</th>
+                                <th>@Lang.Get("Actions")</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@item.NameAr</td>
+                                    <td class="fw-bold">@item.NameAr</td>
                                     <td>@item.NameEn</td>
-                                    <td>@item.Products?.Count()</td>
+                                    <td><span class="badge bg-soft-primary text-primary">@item.Products?.Count()</span></td>
                                     <td>
                                         <div class="btn-group">
-                                            <a href="/Admin/Categories/Edit/@item.Id" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteCatModal-@item.Id">
+                                            <a href="/Admin/Categories/Edit/@item.Id" class="btn btn-sm btn-outline-primary" title="@Lang.Get("Edit")"><i class="fas fa-edit"></i></a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteCatModal-@item.Id" title="@Lang.Get("Delete")">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
@@ -45,16 +55,16 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title">حذف القسم</h5>
+                                                        <h5 class="modal-title">@Lang.Get("Confirm Delete")</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        هل أنت متأكد من حذف القسم "@item.NameAr"؟
+                                                        @Lang.Get("Are you sure you want to delete") "@(isRtl? item.NameAr: item.NameEn)"?
                                                     </div>
                                                     <div class="modal-footer">
                                                         <form action="/Admin/Categories/Delete/@item.Id" method="post">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                                                            <button type="submit" class="btn btn-danger">حذف</button>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Lang.Get("Cancel")</button>
+                                                            <button type="submit" class="btn btn-danger">@Lang.Get("Delete")</button>
                                                         </form>
                                                     </div>
                                                 </div>

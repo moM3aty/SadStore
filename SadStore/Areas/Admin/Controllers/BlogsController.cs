@@ -37,9 +37,7 @@ namespace SadStore.Areas.Admin.Controllers
                     string wwwRootPath = _hostEnvironment.WebRootPath;
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
                     string path = Path.Combine(wwwRootPath + "/images/blogs/", fileName);
-
                     Directory.CreateDirectory(Path.Combine(wwwRootPath, "images/blogs"));
-
                     using (var fileStream = new FileStream(path, FileMode.Create))
                     {
                         await imageFile.CopyToAsync(fileStream);
@@ -54,6 +52,7 @@ namespace SadStore.Areas.Admin.Controllers
                 blogPost.PublishedDate = DateTime.Now;
                 _context.Add(blogPost);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Saved successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(blogPost);
@@ -62,7 +61,6 @@ namespace SadStore.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
-
             var blogPost = await _context.BlogPosts.FindAsync(id);
             if (blogPost == null) return NotFound();
             return View(blogPost);
@@ -83,7 +81,6 @@ namespace SadStore.Areas.Admin.Controllers
                         string wwwRootPath = _hostEnvironment.WebRootPath;
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
                         string path = Path.Combine(wwwRootPath + "/images/blogs/", fileName);
-
                         using (var fileStream = new FileStream(path, FileMode.Create))
                         {
                             await imageFile.CopyToAsync(fileStream);
@@ -96,12 +93,13 @@ namespace SadStore.Areas.Admin.Controllers
                         blogPost.ImageUrl = existingBlog?.ImageUrl;
                     }
 
-                    // Preserve original date or allow edit based on requirement
-                    var currentBlog = await _context.BlogPosts.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
-                    if (currentBlog != null) blogPost.PublishedDate = currentBlog.PublishedDate;
+                    // الحفاظ على التاريخ الأصلي إذا لم نرد تحديثه
+                    var current = await _context.BlogPosts.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
+                    if (current != null) blogPost.PublishedDate = current.PublishedDate;
 
                     _context.Update(blogPost);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Saved successfully";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -122,6 +120,7 @@ namespace SadStore.Areas.Admin.Controllers
             {
                 _context.BlogPosts.Remove(blogPost);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Deleted successfully";
             }
             return RedirectToAction(nameof(Index));
         }

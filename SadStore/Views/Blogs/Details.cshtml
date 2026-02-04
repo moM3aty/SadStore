@@ -1,17 +1,29 @@
 ﻿@model SadStore.Data.BlogPost
+@inject SadStore.Services.LanguageService Lang
 
 @{
     ViewData["Title"] = Model.Title;
     var relatedPosts = ViewBag.RelatedPosts as List<SadStore.Data.BlogPost>;
+    var isRtl = Lang.IsRtl();
 }
 
 <div class="product-page">
     <nav class="breadcrumb-nav py-4">
         <div class="container">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">الرئيسية</a><i class="fas fa-angle-left mx-2"></i></li>
-                <li class="breadcrumb-item"><a href="/Blogs">المدونة</a><i class="fas fa-angle-left mx-2"></i></li>
-                <li class="breadcrumb-item active">تفاصيل المدونة</li>
+                <li class="breadcrumb-item">
+                    <a href="/">
+                        @Lang.Get("Home")
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="/Blogs">
+                        @Lang.Get("Blog")
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">@Lang.Get("Details")</li>
             </ol>
         </div>
     </nav>
@@ -20,15 +32,15 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <a href="/Blogs" class="btn-back mb-4 d-inline-flex align-items-center text-decoration-none text-dark fw-bold">
-                    <i class="fas fa-arrow-right me-2"></i> العودة إلى المدونة
+                    <i class="fas @(isRtl ? "fa-arrow-right" : "fa-arrow-left") mx-2"></i> @Lang.Get("Back to List")
                 </a>
-
+                
                 <div class="blog-details-header mb-4 text-center">
                     <h1 class="blog-details-title fw-bold mb-3">@Model.Title</h1>
                     <div class="blog-meta text-muted">
                         <span class="date"><i class="fas fa-calendar-alt me-1"></i> @Model.PublishedDate.ToString("dd MMMM yyyy")</span>
                         <span class="mx-2">|</span>
-                        <span class="author"><i class="fas fa-user me-1"></i> أدمن</span>
+                        <span class="author"><i class="fas fa-user me-1"></i> @Lang.Get("Saad")</span>
                     </div>
                 </div>
 
@@ -45,9 +57,9 @@
 
     <section class="related-posts py-5 bg-light mt-5">
         <div class="container">
-            <h3 class="text-center mb-4 fw-bold">مقالات ذات صلة</h3>
+            <h3 class="text-center mb-4 fw-bold">@Lang.Get("Related Products")</h3> <!-- Using generic Related key -->
             <div class="row g-4">
-                @if (relatedPosts != null && relatedPosts.Any())
+                @if(relatedPosts != null && relatedPosts.Any())
                 {
                     foreach (var item in relatedPosts)
                     {
@@ -68,7 +80,7 @@
                 }
                 else
                 {
-                    <p class="text-center text-muted">لا توجد مقالات أخرى حالياً.</p>
+                    <p class="text-center text-muted">@Lang.Get("No products found matching your search.")</p> <!-- Generic empty message -->
                 }
             </div>
         </div>

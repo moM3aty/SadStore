@@ -1,14 +1,22 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using System.Globalization
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject SadStore.Services.LanguageService Lang
+
+@{
+    var isRtl = Lang.IsRtl();
+    var dir = isRtl ? "rtl" : "ltr";
+    var lang = isRtl ? "ar" : "en";
+}
 
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="@lang" dir="@dir">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] - متجر صاد</title>
+    <title>@ViewData["Title"] - @Lang.Get("Saad Store")</title>
     <link rel="stylesheet" href="~/css/all.min.css">
     <link rel="stylesheet" href="~/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -21,9 +29,8 @@
 <body>
     <div class="logos">
         <div class="track" id="track">
-            <span class="content" data-ar="تمتعي بخصم مميز 10% كود [صاد] - شحن مجاني للطلبات فوق 499SR"
-                  data-en="Enjoy a special 10% discount with code [SAD] - Free shipping on orders over 499 SR">
-                تمتعي بخصم مميز 10% كود [صاد] - شحن مجاني للطلبات فوق 499SR
+            <span class="content">
+                @Lang.Get("PromoBar")
             </span>
         </div>
     </div>
@@ -41,38 +48,65 @@
                 </div>
 
                 <div class="top-bar-right d-flex align-items-center">
-                    <a href="/Blogs" data-ar="المدونة" data-en="Blog">المدونة</a>
+                    <a href="/Blogs">@Lang.Get("Blog")</a>
                     <span class="mx-2">|</span>
-                    <a href="/Home/ReturnPolicy" data-ar="سياسة الاسترجاع" data-en="Return Policy">سياسة الاسترجاع</a>
+                    <a href="/Home/ReturnPolicy">@Lang.Get("Return Policy")</a>
                     <span class="mx-2">|</span>
-                    <a href="/Home/Terms" data-ar="الشروط والاحكام" data-en="Terms & Conditions">الشروط والاحكام</a>
+                    <a href="/Home/Terms">@Lang.Get("Terms & Conditions")</a>
                     <span class="mx-2">|</span>
 
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        <div class="dropdown mx-3 border-end px-3">
-                            <a class="dropdown-toggle text-white text-decoration-none" href="#" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle"></i> مرحبًا @User.Identity.Name
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/Profile">ملفي الشخصي</a></li>
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <li><a class="dropdown-item" href="/Admin/Dashboard">لوحة التحكم</a></li>
-                                }
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="/Auth/Logout">تسجيل خروج</a></li>
-                            </ul>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="auth-links">
-                            <a href="/Auth" data-ar=" تسجيل دخول / انشاء حساب" data-en="login / signup">
-                                تسجيل دخول / انشاء حساب
-                            </a>
-                        </div>
-                    }
+                    <div class="dropdown mx-3 border-end px-3">
+                        <a class="dropdown-toggle" id="langToggle" href="#" data-bs-toggle="dropdown">
+                            @if (isRtl)
+                            {
+                                <img id="langFlag" src="https://flagcdn.com/w20/sa.png" class="ms-1">
+                                <span id="langText">العربية</span>
+                            }
+                            else
+                            {
+                                <img id="langFlag" src="https://flagcdn.com/w20/us.png" class="ms-1">
+                                <span id="langText">English</span>
+                            }
+                        </a>
+                        <ul class="dropdown-menu p-0 text-center">
+                            <li class="m-0" >
+                                <form  id="langFormEn" asp-controller="Home" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post">
+                                    <input type="hidden" name="culture" value="en" />
+                                    <a style ="border-radius:5px; " class="dropdown-item p-0" onclick="document.getElementById('langFormEn').submit();">English</a>
+                                </form>
+                            </li>
+                            <li class="m-0 ">
+                                <form id="langFormAr" asp-controller="Home" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post">
+                                    <input type="hidden" name="culture" value="ar" />
+                                    <a style="border-radius:5px;" class="dropdown-item p-0"  onclick="document.getElementById('langFormAr').submit();">العربية</a>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="dropdown mx-3 border-end px-3">
+                        <a class="dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            @Lang.Get("Saudi Riyal")
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">@Lang.Get("UAE Dirham")</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="auth-links">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a href="/Admin/Dashboard" class="text-danger fw-bold mx-2">@Lang.Get("Dashboard")</a>
+                                <span>|</span>
+                            }
+                        }
+                        else
+                        {
+                            <a href="/Auth">@Lang.Get("Login / Register")</a>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
@@ -84,14 +118,16 @@
                 </button>
                 <div class="search-box d-none d-md-block">
                     <form action="/Products" method="get">
-                        <input type="search" name="search" class="form-control px-5" placeholder="ابحث في المتجر...">
+                        <input type="search" name="search" class="form-control px-5" placeholder="@Lang.Get("Search the store...")">
                         <i class="fas fa-search mx-2"></i>
                     </form>
                 </div>
             </div>
+
             <a class="navbar-brand m-0" href="/">
                 <img src="~/images/logo.png" class="brand-logo" height="65">
             </a>
+
             <div class="d-flex align-items-center justify-content-end flex-1">
                 <a href="/Wishlist" class="nav-icon position-relative d-none d-md-block ms-3">
                     <i class="fas fa-heart"></i>
@@ -101,15 +137,18 @@
                     <i class="fas fa-bag-shopping"></i>
                     <span class="badge">@((Context.Session.GetString("Cart") != null && Context.Session.GetString("Cart") != "{}") ? "!" : "0")</span>
                 </a>
-                <a href="/Profile" class="nav-icon mx-2">
-                    <i class="fas fa-user"></i>
-                </a>
+                 @if (SignInManager.IsSignedIn(User))
+                        {
+                    
+                        <a href="/Profile" class="nav-icon mx-2">
+                            <i class="fas fa-user"></i>
+                        </a>
+                        }
             </div>
         </div>
 
         <div class="nav-links-bar d-none d-lg-block w-100">
             <div class="container">
-                <!-- استدعاء القائمة الديناميكية -->
                 @await Component.InvokeAsync("NavbarCategories")
             </div>
         </div>
@@ -117,26 +156,46 @@
 
     <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
         <div class="offcanvas-header border-bottom">
-            <h5 class="offcanvas-title fw-bold" data-ar="القائمة" data-en="Menu">القائمة</h5>
+            <h5 class="offcanvas-title fw-bold">@Lang.Get("Menu")</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body p-0">
             <div class="p-3 d-md-none border-bottom">
                 <div class="search-box w-100">
                     <form action="/Products" method="get">
-                        <input type="search" name="search" class="form-control" placeholder="ابحث...">
+                        <input type="search" name="search" class="form-control" placeholder="@Lang.Get("Search...")">
                         <i class="fas fa-search"></i>
                     </form>
                 </div>
             </div>
             <ul class="list-unstyled sidebar-list">
-                <li><a href="/" class="sidebar-link active"><i class="fas fa-home ms-2"></i> الرئيسية</a></li>
-                <li><a href="/Products" class="sidebar-link"><i class="fas fa-fire ms-2"></i> كل المنتجات</a></li>
-                <li><a href="/Profile" class="sidebar-link"><i class="fas fa-user ms-2"></i> حسابي</a></li>
-                <li><a href="/Home/Contact" class="sidebar-link"><i class="fas fa-envelope ms-2"></i> تواصل معنا</a></li>
+                <li>
+                    <a href="/" class="sidebar-link active">
+                        <i class="fas fa-home ms-2"></i> @Lang.Get("Home")
+                    </a>
+                </li>
+                <li>
+                    <a href="/Products" class="sidebar-link">
+                        <i class="fas fa-fire ms-2"></i> @Lang.Get("New Arrivals")
+                    </a>
+                </li>
+                <li>
+                    <a href="/Home/Contact" class="sidebar-link">
+                        <i class="fas fa-envelope ms-2"></i> @Lang.Get("Contact Us")
+                    </a>
+                </li>
             </ul>
+            <div class="p-3 bg-light border-top mt-auto d-lg-none">
+                <a href="/Auth" class="btn btn-dark w-100 mb-3">
+                    <i class="fas fa-sign-in-alt ms-2"></i>
+                    @Lang.Get("Login / Register")
+                </a>
+            </div>
         </div>
     </div>
+
+    <!-- Notifications Partial -->
+    <partial name="_Alerts" />
 
     @RenderBody()
 
@@ -146,37 +205,64 @@
                 <div class="col-md-6 col-xl-3">
                     <div class="logo">
                         <img src="~/images/logo.png" alt="logo">
-                        <p>الوجهة الأولى لجميع تفاصيل المرأة✨</p>
+                        <p>@Lang.Get("The first destination for all women's details ✨")</p>
                         <div class="d-flex flex-row gap-2 logo-section">
                             <div>
-                                <img src="~/images/footer-1.avif" alt="footer">
-                                <div><p class="fw-bold">السجل التجاري</p><p>1010166254</p></div>
+                                <img src="~/images/footer-1.jpg" alt="footer">
+                                <div>
+                                    <p class="fw-bold">@Lang.Get("Commercial Registration")</p>
+                                    <p>1010166254</p>
+                                </div>
                             </div>
                             <div>
                                 <img src="~/images/footer-2.webp" alt="footer">
-                                <div><p class="fw-bold">الرقم الضريبي</p><p>300076485500003</p></div>
+                                <div>
+                                    <p class="fw-bold">@Lang.Get("Tax Number")</p>
+                                    <p>300076485500003</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-xl-3 justify-content-center px-lg-5">
                     <div class="links">
-                        <h3>روابط مهمة</h3>
+                        <h3>@Lang.Get("Important Links")</h3>
                         <div class="links-browse d-flex flex-wrap gap-3">
                             <ul class="first">
-                                <li><a href="/Blogs">المدونة</a></li>
-                                <li><a href="/Home/ReturnPolicy">سياسة الاسترجاع</a></li>
-                                <li><a href="/Home/Terms">الشروط والاحكام</a></li>
+                                <li><a href="/Blogs">@Lang.Get("Blog")</a></li>
+                                <li><a href="/Home/ReturnPolicy">@Lang.Get("Return Policy")</a></li>
+                                <li><a href="/Home/Terms">@Lang.Get("Terms & Conditions")</a></li>
+                                <li><a href="/Home/Delivery">@Lang.Get("Delivery Service")</a></li>
+                                <li><a href="/Home/Privacy">@Lang.Get("Privacy Policy")</a></li>
+                            </ul>
+                            <ul class="second">
+                                <li><a href="/Home/Contact">@Lang.Get("Contact Us")</a></li>
+                                <li><a href="/Home/ReturnMethod">@Lang.Get("Return Method")</a></li>
+                                <li><a href="/Home/GiftPolicy">@Lang.Get("Gift Policy")</a></li>
+                                <li><a href="/Home/VipPoints">@Lang.Get("Sad VIP Points")</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-xl-3">
                     <div class="contact-us">
-                        <h3>تواصل معنا</h3>
+                        <h3>@Lang.Get("Contact Us")</h3>
                         <div class="d-flex gap-2">
-                            <a href=""><i class="fas fa-phone"></i> الهاتف</a>
-                            <a href=""><i class="fas fa-envelope"></i> البريد الالكتروني</a>
+                            <a href=""><i class="fas fa-phone"></i> @Lang.Get("Phone")</a>
+                            <a href=""><i class="fas fa-envelope"></i> @Lang.Get("Email")</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <h3 class="text-center">@Lang.Get("Download Mobile App")</h3>
+                    <div class="apps d-flex flex-column align-items-center gap-2">
+                        <div class="d-flex gap-2">
+                            <a href=""><img src="~/images/appstore.webp" alt=""></a>
+                            <a href=""><img src="~/images/googleplay.webp" alt=""></a>
+                        </div>
+                        <div>
+                            <a href=""><img src="~/images/sbc.webp" alt=""></a>
+                            <p><a href="">@Lang.Get("Certified on the Business Platform")</a></p>
                         </div>
                     </div>
                 </div>
@@ -185,7 +271,29 @@
                 <div class="row g-4">
                     <div class="col-lg-3">
                         <div class="text">
-                            <p>جميع الحقوق محفوظة © صاد 2026</p>
+                            <p>@Lang.Get("All rights reserved © Sad 2026")</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="images">
+                            <img src="~/images/mada_mini.jpg" alt="">
+                            <img src="~/images/credit_card_mini.jpg" alt="">
+                            <img src="~/images/apple_pay_mini.jpg" alt="">
+                            <img src="~/images/tabby_installment_mini.jpg" alt="">
+                            <img src="~/images/tamara_installment_mini.jpg" alt="">
+                            <img src="~/images/mispay_installment_mini.jpg" alt="">
+                            <img src="~/images/customer_wallet_mini.png" alt="">
+                            <img src="~/images/sbc.webp" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="icons">
+                            <a href=""><i class="fab fa-instagram"></i></a>
+                            <a href=""><i class="fab fa-x-twitter"></i></a>
+                            <a href=""><i class="fab fa-snapchat"></i></a>
+                            <a href=""><i class="fab fa-tiktok"></i></a>
+                            <a href=""><i class="fab fa-youtube"></i></a>
+                            <a href=""><i class="fab fa-facebook-f"></i></a>
                         </div>
                     </div>
                 </div>
@@ -206,9 +314,13 @@
         const track = document.getElementById("track");
         if(track){
             const originalSpan = track.querySelector(".content");
-            while (track.offsetWidth < window.innerWidth + originalSpan.offsetWidth) {
-                const clone = originalSpan.cloneNode(true);
-                track.appendChild(clone);
+            if(originalSpan) {
+                while (track.offsetWidth < window.innerWidth + originalSpan.offsetWidth) {
+                    const clone = originalSpan.cloneNode(true);
+                    track.appendChild(clone);
+                }
+                const currentContent = track.innerHTML;
+                track.innerHTML = currentContent + currentContent;
             }
         }
     </script>
