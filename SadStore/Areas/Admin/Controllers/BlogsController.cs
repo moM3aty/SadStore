@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SadStore.Data;
+using SadStore.Services;
+using System.Text;
 
 namespace SadStore.Areas.Admin.Controllers
 {
@@ -9,16 +11,60 @@ namespace SadStore.Areas.Admin.Controllers
     {
         private readonly StoreContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly LanguageService _lang;
 
-        public BlogsController(StoreContext context, IWebHostEnvironment hostEnvironment)
+        public BlogsController(StoreContext context, IWebHostEnvironment hostEnvironment, LanguageService lang)
         {
             _context = context;
             _hostEnvironment = hostEnvironment;
+            _lang = lang;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search, int page = 1)
         {
-            return View(await _context.BlogPosts.ToListAsync());
+            int pageSize = 10;
+            var query = _context.BlogPosts.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.Trim();
+                query = query.Where(b => b.TitleAr.Contains(search) || b.TitleEn.Contains(search));
+            }
+
+            query = query.OrderByDescending(b => b.PublishedDate);
+
+            int totalItems = await query.CountAsync();
+            var posts = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            ViewBag.Search = search;
+            ViewBag.TotalCount = totalItems;
+
+            return View(posts);
+        }
+
+        public async Task<IActionResult> Export()
+        {
+            var posts = await _context.BlogPosts.OrderByDescending(b => b.PublishedDate).ToListAsync();
+            var isRtl = _lang.IsRtl();
+            var builder = new StringBuilder();
+
+            builder.Append('\uFEFF');
+
+            if (isRtl)
+                builder.AppendLine("المعرف,العنوان (عربي),العنوان (إنجليزي),تاريخ النشر");
+            else
+                builder.AppendLine("ID,Title (Ar),Title (En),Published Date");
+
+            foreach (var item in posts)
+            {
+                var titleAr = item.TitleAr?.Replace(",", " ") ?? "";
+                var titleEn = item.TitleEn?.Replace(",", " ") ?? "";
+                builder.AppendLine($"{item.Id},{titleAr},{titleEn},{item.PublishedDate:yyyy-MM-dd}");
+            }
+
+            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"blogs_{DateTime.Now:yyyyMMdd}.csv");
         }
 
         public IActionResult Create()
@@ -37,7 +83,10 @@ namespace SadStore.Areas.Admin.Controllers
                     string wwwRootPath = _hostEnvironment.WebRootPath;
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
                     string path = Path.Combine(wwwRootPath + "/images/blogs/", fileName);
-                    Directory.CreateDirectory(Path.Combine(wwwRootPath, "images/blogs"));
+
+                    if (!Directory.Exists(Path.Combine(wwwRootPath, "images/blogs")))
+                        Directory.CreateDirectory(Path.Combine(wwwRootPath, "images/blogs"));
+
                     using (var fileStream = new FileStream(path, FileMode.Create))
                     {
                         await imageFile.CopyToAsync(fileStream);
@@ -81,6 +130,7 @@ namespace SadStore.Areas.Admin.Controllers
                         string wwwRootPath = _hostEnvironment.WebRootPath;
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
                         string path = Path.Combine(wwwRootPath + "/images/blogs/", fileName);
+
                         using (var fileStream = new FileStream(path, FileMode.Create))
                         {
                             await imageFile.CopyToAsync(fileStream);
@@ -93,7 +143,6 @@ namespace SadStore.Areas.Admin.Controllers
                         blogPost.ImageUrl = existingBlog?.ImageUrl;
                     }
 
-                    // الحفاظ على التاريخ الأصلي إذا لم نرد تحديثه
                     var current = await _context.BlogPosts.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
                     if (current != null) blogPost.PublishedDate = current.PublishedDate;
 

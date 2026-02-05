@@ -5,56 +5,55 @@
     Layout = "_AdminLayout";
 }
 
-<div class="row mb-3">
-    <div class="col-12 text-end">
-        <a href="/Admin/Reviews/Export" class="btn btn-success">
-            <i class="fas fa-file-csv"></i> @Lang.Get("Export to Excel")
-        </a>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0 text-dark">@Lang.Get("Reviews")</h4>
+    <a href="/Admin/Reviews/Export" class="btn btn-success text-white">
+        <i class="fas fa-file-csv me-1"></i> @Lang.Get("Export to Excel")
+    </a>
 </div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="table-card shadow-sm">
-            <div class="table-header">
-                <h5 class="mb-0">@Lang.Get("Reviews")</h5>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-light">
-                        <tr>
-                            <th>@Lang.Get("Customer")</th>
-                            <th>@Lang.Get("Rating")</th>
-                            <th>@Lang.Get("Description")</th>
-                            <th>@Lang.Get("Status")</th>
-                            <th>@Lang.Get("Actions")</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-muted">
+                    <tr>
+                        <th class="ps-4">@Lang.Get("Customer")</th>
+                        <th>@Lang.Get("Rating")</th>
+                        <th style="width: 40%;">@Lang.Get("Description")</th>
+                        <th>@Lang.Get("Status")</th>
+                        <th class="text-end pe-4">@Lang.Get("Actions")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model)
                         {
                             <tr>
-                                <td class="fw-bold">@item.CustomerName</td>
+                                <td class="ps-4 fw-bold">@item.CustomerName</td>
                                 <td>
-                                    @for (int i = 0; i < item.Rating; i++)
-                                    {
-                                        <i class="fas fa-star text-warning small"></i>
-                                    }
+                                    <div class="text-warning">
+                                        @for (int i = 0; i < item.Rating; i++)
+                                        {
+                                            <i class="fas fa-star small"></i>
+                                        }
+                                    </div>
                                 </td>
                                 <td>
-                                    <p class="text-muted mb-0 small" style="max-width: 300px;">@item.ReviewText</p>
+                                    <p class="text-muted mb-0 small text-truncate" style="max-width: 300px;">@item.ReviewText</p>
                                 </td>
                                 <td>
                                     @if (item.IsApproved)
                                     {
-                                        <span class="badge bg-success">@Lang.Get("Published")</span>
+                                        <span class="badge bg-soft-success text-success">@Lang.Get("Published")</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-warning text-dark">@Lang.Get("Pending")</span>
+                                        <span class="badge bg-soft-warning text-warning">@Lang.Get("Pending")</span>
                                     }
                                 </td>
-                                <td>
+                                <td class="text-end pe-4">
                                     <div class="btn-group">
                                         <form action="/Admin/Reviews/ToggleStatus" method="post" class="d-inline">
                                             <input type="hidden" name="id" value="@item.Id" />
@@ -76,18 +75,18 @@
                                     <div class="modal fade" id="deleteReviewModal-@item.Id" tabindex="-1">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">@Lang.Get("Confirm Delete")</h5>
+                                                <div class="modal-header border-0 pb-0">
+                                                    <h5 class="modal-title text-danger">@Lang.Get("Confirm Delete")</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
-                                                <div class="modal-body">
-                                                    @Lang.Get("Are you sure you want to delete")?
+                                                <div class="modal-body text-center py-4">
+                                                    <p>@Lang.Get("Are you sure you want to delete")?</p>
                                                 </div>
-                                                <div class="modal-footer">
+                                                <div class="modal-footer border-0 pt-0 justify-content-center">
                                                     <form action="/Admin/Reviews/Delete" method="post">
                                                         <input type="hidden" name="id" value="@item.Id" />
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Lang.Get("Cancel")</button>
-                                                        <button type="submit" class="btn btn-danger">@Lang.Get("Delete")</button>
+                                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">@Lang.Get("Cancel")</button>
+                                                        <button type="submit" class="btn btn-danger px-4">@Lang.Get("Delete")</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -96,9 +95,15 @@
                                 </td>
                             </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">@Lang.Get("No reviews yet for this product.")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
-</div>
+</div>  

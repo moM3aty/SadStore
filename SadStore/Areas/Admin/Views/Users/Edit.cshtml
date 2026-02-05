@@ -1,0 +1,70 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityUser
+@inject SadStore.Services.LanguageService Lang
+@{
+    ViewData["Title"] = Lang.Get("Edit User");
+    Layout = "_AdminLayout";
+    var detail = ViewBag.UserDetail as SadStore.Data.UserDetail;
+}
+
+<div class="row justify-content-center">
+    <!-- كارت تعديل البيانات المالية -->
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-3 mb-4">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-user-edit me-2"></i> @Lang.Get("User Details"): @Model.UserName</h6>
+            </div>
+            <div class="card-body p-4">
+                <form asp-area="Admin" asp-controller="Users" asp-action="Edit"  method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label">@Lang.Get("Email")</label>
+                        <input type="text" class="form-control bg-light" value="@Model.Email" readonly disabled />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-success">@Lang.Get("Wallet Balance") (@Lang.Get("SAR"))</label>
+                        <input type="number" name="walletBalance" class="form-control" step="0.01" value="@detail?.WalletBalance" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-warning">@Lang.Get("Loyalty Points")</label>
+                        <input type="number" name="loyaltyPoints" class="form-control" value="@detail?.LoyaltyPoints" />
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">@Lang.Get("Save Changes")</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- كارت إرسال الإشعارات -->
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h6 class="mb-0 fw-bold text-info"><i class="fas fa-bell me-2"></i> @Lang.Get("Send Notification")</h6>
+            </div>
+            <div class="card-body p-4">
+                <form asp-area="Admin" asp-controller="Users" asp-action="SendNotification" method="post">
+                    <input type="hidden" name="userId" value="@Model.Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">@Lang.Get("Notification Title")</label>
+                        <input type="text" name="title" class="form-control" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">@Lang.Get("Notification Body")</label>
+                        <textarea name="message" class="form-control" rows="4" required></textarea>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-info text-white">@Lang.Get("Send Notification") <i class="fas fa-paper-plane ms-2"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

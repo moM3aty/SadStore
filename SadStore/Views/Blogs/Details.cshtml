@@ -2,9 +2,9 @@
 @inject SadStore.Services.LanguageService Lang
 
 @{
-    ViewData["Title"] = Model.Title;
-    var relatedPosts = ViewBag.RelatedPosts as List<SadStore.Data.BlogPost>;
     var isRtl = Lang.IsRtl();
+    ViewData["Title"] = isRtl ? Model.TitleAr : Model.TitleEn;
+    var relatedPosts = ViewBag.RelatedPosts as List<SadStore.Data.BlogPost>;
 }
 
 <div class="product-page">
@@ -32,11 +32,11 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <a href="/Blogs" class="btn-back mb-4 d-inline-flex align-items-center text-decoration-none text-dark fw-bold">
-                    <i class="fas @(isRtl ? "fa-arrow-right" : "fa-arrow-left") mx-2"></i> @Lang.Get("Back to List")
+                    <i class="fas @(isRtl ? "fa-arrow-right" : "fa-arrow-left") mx-2"></i> @Lang.Get("Back to Blog")
                 </a>
-                
+
                 <div class="blog-details-header mb-4 text-center">
-                    <h1 class="blog-details-title fw-bold mb-3">@Model.Title</h1>
+                    <h1 class="blog-details-title fw-bold mb-3">@(isRtl? Model.TitleAr: Model.TitleEn)</h1>
                     <div class="blog-meta text-muted">
                         <span class="date"><i class="fas fa-calendar-alt me-1"></i> @Model.PublishedDate.ToString("dd MMMM yyyy")</span>
                         <span class="mx-2">|</span>
@@ -45,11 +45,11 @@
                 </div>
 
                 <div class="blog-featured-image mb-5 rounded overflow-hidden shadow-sm">
-                    <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid w-100" onerror="this.src='/images/blog-default.jpg'">
+                    <img src="@Model.ImageUrl" alt="@(isRtl? Model.TitleAr: Model.TitleEn)" class="img-fluid w-100" onerror="this.src='/images/blog-default.jpg'">
                 </div>
 
                 <div class="blog-details-content lh-lg text-secondary">
-                    @Html.Raw(Model.Content.Replace("\n", "<br>"))
+                    @Html.Raw((isRtl ? Model.ContentAr : Model.ContentEn)?.Replace("\n", "<br>"))
                 </div>
             </div>
         </div>
@@ -57,9 +57,9 @@
 
     <section class="related-posts py-5 bg-light mt-5">
         <div class="container">
-            <h3 class="text-center mb-4 fw-bold">@Lang.Get("Related Products")</h3> <!-- Using generic Related key -->
+            <h3 class="text-center mb-4 fw-bold">@Lang.Get("Related Products")</h3>
             <div class="row g-4">
-                @if(relatedPosts != null && relatedPosts.Any())
+                @if (relatedPosts != null && relatedPosts.Any())
                 {
                     foreach (var item in relatedPosts)
                     {
@@ -70,7 +70,7 @@
                                         <img src="@item.ImageUrl" class="w-100 h-100 object-fit-cover" onerror="this.src='/images/blog-default.jpg'">
                                     </div>
                                     <div class="blog-content p-3">
-                                        <h5 class="blog-title text-dark fw-bold" style="font-size: 1rem;">@item.Title</h5>
+                                        <h5 class="blog-title text-dark fw-bold" style="font-size: 1rem;">@(isRtl? item.TitleAr: item.TitleEn)</h5>
                                         <small class="text-muted">@item.PublishedDate.ToString("yyyy/MM/dd")</small>
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                 }
                 else
                 {
-                    <p class="text-center text-muted">@Lang.Get("No products found matching your search.")</p> <!-- Generic empty message -->
+                    <p class="text-center text-muted">@Lang.Get("No posts found")</p>
                 }
             </div>
         </div>

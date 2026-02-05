@@ -12,108 +12,210 @@
 <head>
     <meta charset="utf-8" />
     <title>@Lang.Get("Order Number") #@Model.Id</title>
+    <link rel="icon" type="image/x-icon" href="~/images/logo.png">
+
     <link rel="stylesheet" href="~/css/bootstrap.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Cairo', sans-serif;
             background: #fff;
-            padding: 20px;
+            padding: 40px;
+            color: #333;
+        }
+
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            border: 1px solid #eee;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
         }
 
         .invoice-header {
-            border-bottom: 2px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #f8f9fa;
             padding-bottom: 20px;
-            margin-bottom: 20px;
         }
 
         .invoice-logo {
-            max-width: 150px;
+            max-width: 140px;
+            margin-bottom: 10px;
         }
 
-        .table th {
-            background-color: #f8f9fa;
+        .invoice-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .info-group h6 {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #555;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .info-group p {
+            margin-bottom: 3px;
+            color: #777;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+            .table th {
+                background-color: #f8f9fa;
+                color: #333;
+                font-weight: 700;
+                border-bottom: 2px solid #eee;
+                text-transform: uppercase;
+                font-size: 0.9rem;
+                padding: 12px;
+            }
+
+            .table td {
+                vertical-align: middle;
+                padding: 12px;
+            }
+
+        .total-row td {
+            background-color: #2c3e50;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+        }
+
+        .btn-print {
+            margin-bottom: 30px;
         }
 
         @@media print {
             .btn-print {
-                display: none;
+                display: none !important;
             }
 
             body {
                 padding: 0;
+                background: #fff;
+            }
+
+            .invoice-box {
+                border: none;
+                box-shadow: none;
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="text-start mb-3">
-            <button onclick="window.print()" class="btn btn-primary btn-print">@Lang.Get("Print Invoice")</button>
-            <a href="/Admin/Orders/Details/@Model.Id" class="btn btn-outline-secondary btn-print">@Lang.Get("Back to List")</a>
-        </div>
+    <div class="text-center btn-print">
+        <button onclick="window.print()" class="btn btn-primary px-4 me-2 shadow-sm"><i class="fas fa-print me-2"></i> @Lang.Get("Print Invoice")</button>
+        <button onclick="window.close()" class="btn btn-outline-secondary px-4">@Lang.Get("Close")</button>
+    </div>
 
-        <div class="invoice-header d-flex justify-content-between align-items-center">
+    <div class="invoice-box">
+        <div class="invoice-header">
             <div>
-                <img src="~/images/logo.png" alt="Sad Store" class="invoice-logo mb-2">
-                <h5>@Lang.Get("Saad Store")</h5>
-                <p class="text-muted mb-0">@Lang.Get("Commercial Registration"): 1010166254</p>
-                <p class="text-muted">@Lang.Get("Tax Number"): 300076485500003</p>
+                <img src="~/images/logo.png" alt="Sad Store" class="invoice-logo">
+                <h5 class="mb-1 fw-bold">@Lang.Get("Saad Store")</h5>
+                <small class="text-muted d-block">@Lang.Get("Commercial Registration"): 1010166254</small>
+                <small class="text-muted d-block">@Lang.Get("Tax Number"): 300076485500003</small>
             </div>
             <div class="text-end">
-                <h2 class="fw-bold">@Lang.Get("Order Details")</h2>
-                <p class="mb-1"><strong>@Lang.Get("Order Number"):</strong> #@Model.Id</p>
-                <p class="mb-1"><strong>@Lang.Get("Date"):</strong> @Model.OrderDate.ToString("yyyy/MM/dd")</p>
-                <p class="mb-0"><strong>@Lang.Get("Status"):</strong> @Lang.Get(Model.Status)</p>
+                <div class="invoice-title">@Lang.Get("INVOICE")</div>
+                <div class="mt-3">
+                    <p class="mb-1"><strong>@Lang.Get("Order Number"):</strong> #@Model.Id</p>
+                    <p class="mb-1"><strong>@Lang.Get("Date"):</strong> @Model.OrderDate.ToString("yyyy/MM/dd")</p>
+                    <p class="mb-0"><strong>@Lang.Get("Status"):</strong> <span class="badge bg-light text-dark border">@Lang.Get(Model.Status)</span></p>
+                </div>
             </div>
         </div>
 
-        <div class="row mb-4">
+        <div class="row mb-5">
             <div class="col-6">
-                <h5 class="fw-bold border-bottom pb-2">@Lang.Get("Customer Info")</h5>
-                <p class="mb-1"><strong>@Lang.Get("Customer"):</strong> @Model.CustomerName</p>
-                <p class="mb-1"><strong>@Lang.Get("Phone"):</strong> @(string.IsNullOrEmpty(Model.PhoneNumber) ? "-" : Model.PhoneNumber)</p>
-                <p class="mb-1"><strong>@Lang.Get("Address"):</strong> @(string.IsNullOrEmpty(Model.Address) ? "-" : Model.Address)</p>
+                <div class="info-group">
+                    <h6>@Lang.Get("Bill To"):</h6>
+                    <p class="fw-bold text-dark">@Model.CustomerName</p>
+                    <p>@(string.IsNullOrEmpty(Model.PhoneNumber) ? "-" : Model.PhoneNumber)</p>
+                    <p>@(string.IsNullOrEmpty(Model.Address) ? "-" : Model.Address)</p>
+                </div>
+            </div>
+            <div class="col-6 text-end">
+                <div class="info-group">
+                    <h6>@Lang.Get("From"):</h6>
+                    <p class="fw-bold text-dark">@Lang.Get("Saad Store")</p>
+                    <p>Riyadh, Saudi Arabia</p>
+                    <p>info@store.com</p>
+                </div>
             </div>
         </div>
 
-        <table class="table table-bordered text-center">
+        <table class="table table-bordered text-center mb-0">
             <thead>
                 <tr>
-                    <th>@Lang.Get("Product Name")</th>
-                    <th>@Lang.Get("Quantity")</th>
-                    <th>@Lang.Get("Unit Price")</th>
-                    <th>@Lang.Get("Subtotal")</th>
+                    <th class="text-start">@Lang.Get("Product Name")</th>
+                    <th width="15%">@Lang.Get("Quantity")</th>
+                    <th width="20%">@Lang.Get("Unit Price")</th>
+                    <th width="20%">@Lang.Get("Total")</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.OrderItems)
                 {
                     <tr>
-                        <td>@(isRtl? item.Product?.NameAr : item.Product?.NameEn)</td>
+                        <td class="text-start">
+                            @(isRtl? item.Product?.NameAr : item.Product?.NameEn)
+                            @if (!string.IsNullOrEmpty(item.Product?.ModelNumber))
+                            {
+                                <br>
+                                <small class="text-muted">#@item.Product.ModelNumber</small>
+     }
+                        </td>
                         <td>@item.Quantity</td>
-                        <td>@item.Price.ToString("N2")</td>
-                        <td>@((item.Price * item.Quantity).ToString("N2"))</td>
+                        <td>@item.Price.ToString("N0")</td>
+                        <td>@((item.Price * item.Quantity).ToString("N0"))</td>
                     </tr>
                 }
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="3" class="text-end fw-bold">@Lang.Get("Subtotal (Excl. Tax)")</td>
-                    <td>@((Model.TotalAmount / 1.15m).ToString("N2")) @Lang.Get("SAR")</td>
+                    <td colspan="3" class="text-end border-0">@Lang.Get("Subtotal (Excl. Tax)")</td>
+                    <td class="border-0">@((Model.TotalAmount / 1.15m).ToString("N2"))</td>
                 </tr>
                 <tr>
-                    <td colspan="3" class="text-end fw-bold">@Lang.Get("VAT (15%)")</td>
-                    <td>@((Model.TotalAmount - (Model.TotalAmount / 1.15m)).ToString("N2")) @Lang.Get("SAR")</td>
+                    <td colspan="3" class="text-end border-0">@Lang.Get("VAT (15%)")</td>
+                    <td class="border-0">@((Model.TotalAmount - (Model.TotalAmount / 1.15m)).ToString("N2"))</td>
                 </tr>
-                <tr class="bg-light">
-                    <td colspan="3" class="text-end fw-bold fs-5">@Lang.Get("Total")</td>
-                    <td class="fw-bold fs-5">@Model.TotalAmount.ToString("N2") @Lang.Get("SAR")</td>
+                <tr class="total-row">
+                    <td colspan="3" class="text-end border-0">@Lang.Get("Total")</td>
+                    <td class="border-0">@Model.TotalAmount.ToString("N2") @Lang.Get("SAR")</td>
                 </tr>
             </tfoot>
         </table>
 
-        <div class="mt-5 text-center text-muted">
+        <div class="footer">
+            <p class="fw-bold mb-2">@Lang.Get("Thank you for shopping with us!")</p>
             <p>@Lang.Get("All rights reserved © Sad 2026")</p>
         </div>
     </div>

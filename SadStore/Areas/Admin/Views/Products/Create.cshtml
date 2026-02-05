@@ -6,89 +6,208 @@
 }
 
 <div class="row justify-content-center">
-    <div class="col-md-10">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">@Lang.Get("Add New Product")</h5>
-                <a href="/Admin/Products" class="btn btn-outline-secondary btn-sm">@Lang.Get("Back to List")</a>
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0">@Lang.Get("Add New Product")</h4>
+            <a href="/Admin/Products" class="btn btn-outline-secondary">@Lang.Get("Back to List")</a>
+        </div>
+
+        <form asp-area="Admin" asp-controller="Products" asp-action="Create"  method="post" enctype="multipart/form-data">
+
+            <!-- Basic Info Card -->
+            <div class="card shadow-sm border-0 mb-4 rounded-3">
+                <div class="card-header bg-white py-3">
+                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-info-circle me-2"></i> @Lang.Get("Basic Information")</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">@Lang.Get("Product Name (Ar)") <span class="text-danger">*</span></label>
+                            <input type="text" name="NameAr" class="form-control bg-light" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">@Lang.Get("Product Name (En)") <span class="text-danger">*</span></label>
+                            <input type="text" name="NameEn" class="form-control bg-light" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">@Lang.Get("Category") <span class="text-danger">*</span></label>
+                            <select name="CategoryId" class="form-select bg-light" asp-items="ViewBag.CategoryId" required></select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">@Lang.Get("Model Number")</label>
+                            <input type="text" name="ModelNumber" class="form-control bg-light" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">@Lang.Get("Description (Ar)")</label>
+                        <textarea name="DescriptionAr" class="form-control bg-light" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">@Lang.Get("Description (En)")</label>
+                        <textarea name="DescriptionEn" class="form-control bg-light" rows="3"></textarea>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <form action="/Admin/Products/Create" method="post" enctype="multipart/form-data">
-                    <!-- البيانات الأساسية -->
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">@Lang.Get("Product Name (Ar)")</label>
-                            <input type="text" name="NameAr" class="form-control" required />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">@Lang.Get("Product Name (En)")</label>
-                            <input type="text" name="NameEn" class="form-control" required />
-                        </div>
-                    </div>
 
+            <!-- Pricing & Stock Card -->
+            <div class="card shadow-sm border-0 mb-4 rounded-3">
+                <div class="card-header bg-white py-3">
+                    <h6 class="mb-0 fw-bold text-success"><i class="fas fa-tag me-2"></i> @Lang.Get("Pricing & Stock")</h6>
+                </div>
+                <div class="card-body p-4">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">@Lang.Get("Category")</label>
-                            <select name="CategoryId" class="form-select" asp-items="ViewBag.CategoryId"></select>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-bold">@Lang.Get("Current Price") <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="number" name="Price" class="form-control" step="0.01" required />
+                                <span class="input-group-text">@Lang.Get("SAR")</span>
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">@Lang.Get("Model Number")</label>
-                            <input type="text" name="ModelNumber" class="form-control" />
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-bold">@Lang.Get("Old Price")</label>
+                            <div class="input-group">
+                                <input type="number" name="OldPrice" class="form-control" step="0.01" />
+                                <span class="input-group-text">@Lang.Get("SAR")</span>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- الأسعار -->
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label text-success">@Lang.Get("Current Price")</label>
-                            <input type="number" name="Price" class="form-control border-success" step="0.01" required />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label text-muted">@Lang.Get("Old Price")</label>
-                            <input type="number" name="OldPrice" class="form-control" step="0.01" />
-                        </div>
-                    </div>
-
-                    <!-- المخزون والمقاسات -->
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">@Lang.Get("Stock")</label>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-bold">@Lang.Get("Stock") <span class="text-danger">*</span></label>
                             <input type="number" name="StockQuantity" class="form-control" required />
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">@Lang.Get("Available Sizes")</label>
-                            <input type="text" name="AvailableSizes" class="form-control" placeholder="S,M,L,XL" />
-                            <div class="form-text">@Lang.Get("Sizes Note")</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">@Lang.Get("Available Sizes")</label>
+                        <input type="text" name="AvailableSizes" class="form-control" placeholder="S,M,L,XL" />
+                        <div class="form-text text-muted">@Lang.Get("Sizes Note")</div>
+                    </div>
+                    <div class="form-check form-switch mt-3">
+                        <input class="form-check-input" type="checkbox" name="IsFeatured" value="true" id="IsFeatured">
+                        <label class="form-check-label fw-bold" for="IsFeatured">@Lang.Get("Display on Home Page")</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Images Card -->
+            <div class="card shadow-sm border-0 mb-4 rounded-3">
+                <div class="card-header bg-white py-3">
+                    <h6 class="mb-0 fw-bold text-warning"><i class="fas fa-images me-2"></i> @Lang.Get("Product Images")</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">@Lang.Get("Upload New Images")</label>
+                        <input type="file" name="imageFiles" class="form-control" accept="image/*" multiple />
+                        <div class="form-text">@Lang.Get("You can select multiple images")</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Specifications (Full Details) -->
+            <div class="card shadow-sm border-0 mb-4 rounded-3">
+                <div class="card-header bg-white py-3" data-bs-toggle="collapse" href="#specsCollapse" role="button" aria-expanded="true">
+                    <h6 class="mb-0 fw-bold text-info"><i class="fas fa-list me-2"></i> @Lang.Get("Product Specifications") <i class="fas fa-chevron-down float-end"></i></h6>
+                </div>
+                <div class="collapse show" id="specsCollapse">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <!-- Design Type -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Design Type") (Ar)</label>
+                                <input type="text" name="DesignTypeAr" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Design Type") (En)</label>
+                                <input type="text" name="DesignTypeEn" class="form-control">
+                            </div>
+
+                            <!-- Cut Type -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Cut Type") (Ar)</label>
+                                <input type="text" name="CutTypeAr" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Cut Type") (En)</label>
+                                <input type="text" name="CutTypeEn" class="form-control">
+                            </div>
+
+                            <!-- Occasion -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Occasion") (Ar)</label>
+                                <input type="text" name="OccasionAr" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Occasion") (En)</label>
+                                <input type="text" name="OccasionEn" class="form-control">
+                            </div>
+
+                            <!-- Fit Type -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Fit Type") (Ar)</label>
+                                <input type="text" name="FitTypeAr" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Fit Type") (En)</label>
+                                <input type="text" name="FitTypeEn" class="form-control">
+                            </div>
+
+                            <!-- Lining -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Lining") (Ar)</label>
+                                <input type="text" name="LiningAr" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Lining") (En)</label>
+                                <input type="text" name="LiningEn" class="form-control">
+                            </div>
+
+                            <!-- Sleeves -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Sleeves") (Ar)</label>
+                                <input type="text" name="SleevesAr" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Sleeves") (En)</label>
+                                <input type="text" name="SleevesEn" class="form-control">
+                            </div>
+
+                            <!-- Stretch -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Stretch") (Ar)</label>
+                                <input type="text" name="StretchAr" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Stretch") (En)</label>
+                                <input type="text" name="StretchEn" class="form-control">
+                            </div>
+
+                            <!-- Material -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Material") (Ar)</label>
+                                <input type="text" name="MaterialAr" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Material") (En)</label>
+                                <input type="text" name="MaterialEn" class="form-control">
+                            </div>
+
+                            <!-- Care Instructions -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Care Instructions") (Ar)</label>
+                                <input type="text" name="CareInstructionsAr" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted">@Lang.Get("Care Instructions") (En)</label>
+                                <input type="text" name="CareInstructionsEn" class="form-control">
+                            </div>
                         </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">@Lang.Get("Product Images") (اختر صور متعددة)</label>
-                        <input type="file" name="imageFiles" class="form-control" accept="image/*" multiple />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">@Lang.Get("Description (Ar)")</label>
-                        <textarea name="DescriptionAr" class="form-control" rows="4"></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">@Lang.Get("Description (En)")</label>
-                        <textarea name="DescriptionEn" class="form-control" rows="4"></textarea>
-                    </div>
-
-                    <div class="form-check mb-4">
-                        <input class="form-check-input" type="checkbox" name="IsFeatured" value="true" id="IsFeatured">
-                        <label class="form-check-label" for="IsFeatured">
-                            @Lang.Get("Display on Home Page")
-                        </label>
-                    </div>
-
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-custom">@Lang.Get("Save Product")</button>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
+
+            <div class="d-grid mb-5">
+                <button type="submit" class="btn btn-primary btn-lg shadow">@Lang.Get("Save Product")</button>
+            </div>
+        </form>
     </div>
 </div>

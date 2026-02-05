@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SadStore.Data;
+using SadStore.Services;
+using System.Text;
 
 namespace SadStore.Areas.Admin.Controllers
 {
@@ -8,15 +10,40 @@ namespace SadStore.Areas.Admin.Controllers
     public class ShippingController : Controller
     {
         private readonly StoreContext _context;
+        private readonly LanguageService _lang;
 
-        public ShippingController(StoreContext context)
+        public ShippingController(StoreContext context, LanguageService lang)
         {
             _context = context;
+            _lang = lang;
         }
 
         public async Task<IActionResult> Index()
         {
             return View(await _context.ShippingLocations.ToListAsync());
+        }
+
+        public async Task<IActionResult> Export()
+        {
+            var locations = await _context.ShippingLocations.ToListAsync();
+            var isRtl = _lang.IsRtl();
+            var builder = new StringBuilder();
+
+            builder.Append('\uFEFF');
+
+            if (isRtl)
+                builder.AppendLine("المعرف,المدينة / المنطقة (عربي),المدينة / المنطقة (إنجليزي),تكلفة الشحن");
+            else
+                builder.AppendLine("ID,City (Ar),City (En),Shipping Cost");
+
+            foreach (var item in locations)
+            {
+                var cityAr = item.CityNameAr?.Replace(",", " ") ?? "";
+                var cityEn = item.CityNameEn?.Replace(",", " ") ?? "";
+                builder.AppendLine($"{item.Id},{cityAr},{cityEn},{item.ShippingCost}");
+            }
+
+            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"shipping_{DateTime.Now:yyyyMMdd}.csv");
         }
 
         public IActionResult Create()

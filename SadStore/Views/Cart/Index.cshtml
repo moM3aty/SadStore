@@ -43,11 +43,10 @@
                             <span>@Model.GrandTotal.ToString("0.00") @Lang.Get("SAR")</span>
                         </div>
 
-                        <form action="/Checkout/Process" method="post">
-                            <button type="submit" class="btn-checkout">
-                                @Lang.Get("Complete Order via WhatsApp") <i class="fab fa-whatsapp"></i>
-                            </button>
-                        </form>
+                        <!-- تم التحديث: التوجيه لصفحة الـ Checkout بدلاً من الواتساب مباشرة -->
+                        <a href="/Checkout" class="btn-checkout text-decoration-none text-center d-block">
+                            @Lang.Get("Proceed to Checkout")
+                        </a>
                     </div>
                 </div>
 
@@ -69,7 +68,7 @@
                                 <div class="col-md-6 col-8">
                                     <h6 class="fw-bold mb-1">@(isRtl? item.Product.NameAr : item.Product.NameEn)</h6>
                                     <div class="mt-3 fw-bold">
-                                        <span>@item.Product.Price</span> <span>@Lang.Get("SAR")</span>
+                                        <span>@item.Product.Price.ToString("N0")</span> <span>@Lang.Get("SAR")</span>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mt-3 mt-md-0">
@@ -80,7 +79,7 @@
                                             <span>@item.Quantity</span>
                                             <button type="submit" name="quantity" value="@(item.Quantity + 1)">+</button>
                                         </form>
-                                        <span class="text-muted small">@Lang.Get("Total"): @item.Total @Lang.Get("SAR")</span>
+                                        <span class="text-muted small">@Lang.Get("Total"): @item.Total.ToString("N0") @Lang.Get("SAR")</span>
                                     </div>
                                 </div>
                             </div>

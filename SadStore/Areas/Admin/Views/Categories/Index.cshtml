@@ -1,82 +1,145 @@
 ﻿@model IEnumerable<SadStore.Data.Category>
 @inject SadStore.Services.LanguageService Lang
-
 @{
     ViewData["Title"] = Lang.Get("Categories");
     Layout = "_AdminLayout";
     var isRtl = Lang.IsRtl();
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
 }
 
-<div class="row mb-3">
-    <div class="col-12 text-end">
-        <a href="/Admin/Categories/Export" class="btn btn-success">
-            <i class="fas fa-file-csv"></i> @Lang.Get("Export to Excel")
-        </a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-1 text-dark">@Lang.Get("Category List")</h4>
+        <p class="text-muted small mb-0">@Lang.Get("Manage product categories")</p>
+    </div>
+    <a href="/Admin/Categories/Create" class="btn btn-primary shadow-sm px-4">
+        <i class="fas fa-plus me-2"></i> @Lang.Get("Add New Category")
+    </a>
+</div>
+
+<!-- Filters -->
+<div class="card shadow-sm border-0 mb-4 rounded-3">
+    <div class="card-body p-4">
+        <form method="get" action="/Admin/Categories" class="row g-3 align-items-end">
+            <div class="col-md-8">
+                <label class="form-label fw-bold small text-muted">@Lang.Get("Search")</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 bg-light" value="@ViewBag.Search" placeholder="@Lang.Get("Search by Name")...">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-dark w-100">
+                    <i class="fas fa-filter me-1"></i> @Lang.Get("Filter")
+                </button>
+            </div>
+            <div class="col-md-2">
+                <a href="/Admin/Categories/Export" class="btn btn-success w-100 text-white">
+                    <i class="fas fa-file-excel me-1"></i> @Lang.Get("Export")
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="table-card shadow-sm">
-            <div class="table-header">
-                <h5 class="mb-0">@Lang.Get("Category List")</h5>
-                <a href="/Admin/Categories/Create" class="btn btn-custom">
-                    <i class="fas fa-plus"></i> @Lang.Get("Add New Category")
-                </a>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="bg-light">
-                            <tr>
-                                <th>@Lang.Get("Category Name (Ar)")</th>
-                                <th>@Lang.Get("Category Name (En)")</th>
-                                <th>@Lang.Get("Product Count")</th>
-                                <th>@Lang.Get("Actions")</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td class="fw-bold">@item.NameAr</td>
-                                    <td>@item.NameEn</td>
-                                    <td><span class="badge bg-soft-primary text-primary">@item.Products?.Count()</span></td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <a href="/Admin/Categories/Edit/@item.Id" class="btn btn-sm btn-outline-primary" title="@Lang.Get("Edit")"><i class="fas fa-edit"></i></a>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteCatModal-@item.Id" title="@Lang.Get("Delete")">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
+<!-- Table -->
+<div class="card shadow-sm border-0 rounded-3 overflow-hidden p-2">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th class="py-3">@Lang.Get("Category Name (Ar)")</th>
+                    <th class="py-3">@Lang.Get("Category Name (En)")</th>
+                    <th class="py-3 text-center">@Lang.Get("Product Count")</th>
+                    <th class="py-3 text-end pe-4" style="min-width: 120px;">@Lang.Get("Actions")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                           
+                            <td class="fw-bold text-dark">@item.NameAr</td>
+                            <td class="text-muted">@item.NameEn</td>
+                            <td class="text-center">
+                                <span class="badge bg-soft-info text-info px-3 py-2 rounded-pill">
+                                    <i class="fas fa-box me-1"></i> @item.Products?.Count()
+                                </span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <!-- أزرار مباشرة بدلاً من القائمة -->
+                                <div class="btn-group shadow-sm" role="group">
+                                    <a href="/Admin/Categories/Edit/@item.Id" class="btn btn-sm btn-outline-primary" title="@Lang.Get("Edit")">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteCatModal-@item.Id" title="@Lang.Get("Delete")">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
 
-                                        <!-- Delete Modal -->
-                                        <div class="modal fade" id="deleteCatModal-@item.Id" tabindex="-1">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">@Lang.Get("Confirm Delete")</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        @Lang.Get("Are you sure you want to delete") "@(isRtl? item.NameAr: item.NameEn)"?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <form action="/Admin/Categories/Delete/@item.Id" method="post">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Lang.Get("Cancel")</button>
-                                                            <button type="submit" class="btn btn-danger">@Lang.Get("Delete")</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="deleteCatModal-@item.Id" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0">
+                                            <div class="modal-header border-bottom-0 pb-0">
+                                                <h5 class="modal-title text-danger">@Lang.Get("Confirm Delete")</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body text-center py-4">
+                                                <i class="fas fa-exclamation-triangle text-warning fa-3x mb-3"></i>
+                                                <p class="mb-0">@Lang.Get("Are you sure you want to delete")</p>
+                                                <h5 class="fw-bold mt-2">"@(isRtl? item.NameAr: item.NameEn)"</h5>
+                                            </div>
+                                            <div class="modal-footer border-top-0 pt-0 justify-content-center">
+                                                <form asp-area="Admin" asp-controller="Categories" asp-action="Delete" asp-route-id="@item.Id" method="post">
+                                                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">@Lang.Get("Cancel")</button>
+                                                    <button type="submit" class="btn btn-danger px-4">@Lang.Get("Delete")</button>
+                                                </form>
                                             </div>
                                         </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <i class="fas fa-folder-open fa-3x mb-3 opacity-25"></i>
+                            <p>@Lang.Get("No categories found")</p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
+
+    <!-- Pagination -->
+    @if (totalPages > 1)
+    {
+        <div class="p-3 border-top bg-light d-flex justify-content-center">
+            <nav>
+                <ul class="pagination mb-0 shadow-sm">
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="/Admin/Categories?page=@(currentPage - 1)&search=@ViewBag.Search">
+                            <i class="fas @(isRtl ? "fa-chevron-right" : "fa-chevron-left")"></i>
+                        </a>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link fw-bold text-dark">@Lang.Get("Page") @currentPage @Lang.Get("Of") @totalPages</span>
+                    </li>
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a class="page-link" href="/Admin/Categories?page=@(currentPage + 1)&search=@ViewBag.Search">
+                            <i class="fas @(isRtl ? "fa-chevron-left" : "fa-chevron-right")"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
 </div>

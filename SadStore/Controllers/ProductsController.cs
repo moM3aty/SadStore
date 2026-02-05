@@ -15,21 +15,34 @@ namespace SadStore.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(string category, string search, string sort)
+        public async Task<IActionResult> Index(string category, string search, string sort, decimal? minPrice, decimal? maxPrice, int? rating)
         {
-            // ... (نفس الكود السابق للاندكس)
             var query = _context.Products.Include(p => p.Category).AsQueryable();
 
+            // 1. فلترة القسم
             if (!string.IsNullOrEmpty(category))
             {
                 query = query.Where(p => p.Category.NameEn == category || p.Category.NameAr == category);
             }
 
+            // 2. البحث
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(p => p.NameAr.Contains(search) || p.NameEn.Contains(search));
+                query = query.Where(p => p.NameAr.Contains(search) || p.NameEn.Contains(search) || p.DescriptionAr.Contains(search) || p.DescriptionEn.Contains(search));
             }
 
+            // 3. فلترة السعر (الإصلاح المطلوب)
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value);
+            }
+
+            // 4. الترتيب
             switch (sort)
             {
                 case "price_asc":
@@ -38,12 +51,15 @@ namespace SadStore.Controllers
                 case "price_desc":
                     query = query.OrderByDescending(p => p.Price);
                     break;
+                case "newest":
                 default:
                     query = query.OrderByDescending(p => p.CreatedAt);
                     break;
             }
 
             var products = await query.ToListAsync();
+
+            // إعادة تمرير القيم للـ View للحفاظ على الحالة
             ViewBag.CurrentCategory = category;
             ViewBag.Search = search;
 

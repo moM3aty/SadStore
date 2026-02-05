@@ -1,62 +1,100 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
-@model List<SadStore.Data.Order>
+﻿@model List<SadStore.Data.Order>
 @inject SadStore.Services.LanguageService Lang
 @{
     ViewData["Title"] = Lang.Get("My Profile");
     var isRtl = Lang.IsRtl();
+
+    // استلام البيانات
+    var wishlist = ViewBag.Wishlist as List<SadStore.Data.Product>;
+    var notifications = ViewBag.Notifications as List<SadStore.Data.Notification>;
+    var pendingOrders = ViewBag.PendingOrders as List<SadStore.Data.Order>;
+    var walletBalance = (decimal)ViewBag.WalletBalance;
+    var loyaltyPoints = (int)ViewBag.LoyaltyPoints;
 }
-<link href="~/css/profile.css" rel="stylesheet" type="text/css" />
-<div class="full-content">
-    <header class="header-pattern">
+
+<div class="full-content bg-light" style="min-height: 100vh;">
+
+    <!-- Header Section -->
+    <header class="header-pattern" style="background-color: #4b3b1f; padding: 40px 0;">
         <div class="container">
-            <div class="logo-section">
-                <h1 class="brand-logo">@Lang.Get("SaadProfile")</h1>
+            <div class="logo-section text-center">
+                <h1 class="brand-logo text-white fw-bold" style="font-family: 'Cairo', sans-serif;">@Lang.Get("Saad Store")</h1>
             </div>
         </div>
     </header>
-    <section class="profile-section">
+
+    <!-- Profile Info Card -->
+    <section class="profile-section" style="margin-top: -50px;">
         <div class="container">
-            <div class="profile-card pb-3"> 
-                <div class="profile-avatar overflow-hidden">
-                    <img src="~/images/main-product-details.webp" class="img-fluid" alt="" onerror="this.src='https://ui-avatars.com/api/?name=@ViewBag.UserName'">
+            <div class="profile-card bg-white rounded-3 shadow-sm p-4 my-2 text-center mx-auto" style="max-width: 600px;">
+
+                <!-- Avatar Upload Section -->
+                <div class="profile-avatar-wrapper mx-auto mb-3 position-relative" style="width: 100px; height: 100px;">
+                    <form id="avatarForm" asp-area="" asp-controller="Profile" asp-action="UpdateImage" method="post" enctype="multipart/form-data" class="w-100 h-100">
+                        <div class="profile-avatar w-100 h-100 rounded-circle overflow-hidden border border-3 border-white shadow-sm position-relative">
+                            <!-- Image Source: Check ViewBag or fallback -->
+                            <img src="@(ViewBag.ProfileImageUrl ?? "/images/main-product-details.webp")"
+                                 class="img-fluid w-100 h-100 object-fit-cover"
+                                 alt="Profile"
+                                 id="currentAvatar"
+                                 onerror="this.src='https://ui-avatars.com/api/?name=@ViewBag.UserName&background=c89f72&color=fff'">
+
+                            <!-- Edit Overlay (Camera Icon) -->
+                            <label for="imageFile" class="avatar-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 text-white" style="opacity: 0; cursor: pointer; transition: opacity 0.3s;">
+                                <i class="fas fa-camera fa-lg"></i>
+                            </label>
+                        </div>
+                        <!-- Hidden Input -->
+                        <input type="file" id="imageFile" name="imageFile" class="d-none" accept="image/*" onchange="document.getElementById('avatarForm').submit()" />
+                    </form>
                 </div>
-                <h2 class="profile-name mt-5">@ViewBag.UserName</h2>
+
+                <h2 class="profile-name fw-bold text-dark h4">@ViewBag.UserName</h2>
+                <p class="text-muted small">@ViewBag.UserEmail</p>
             </div>
         </div>
     </section>
 
-    <section class="menu-section">
+    <!-- Navigation Menu -->
+    <section class="menu-section py-4">
         <div class="container">
-            <nav class="profile-nav">
+            <nav class="profile-nav d-flex flex-wrap justify-content-center gap-2 mb-4">
                 <a href="#notifications" class="nav-item active" data-page="notifications">
                     <i class="fas fa-bell"></i>
                     <span>@Lang.Get("Notifications")</span>
                 </a>
+
                 <a href="#orders" class="nav-item" data-page="orders">
                     <i class="fas fa-box"></i>
                     <span>@Lang.Get("Orders")</span>
                 </a>
+
                 <a href="#payment-requests" class="nav-item" data-page="payment-requests">
                     <i class="fas fa-cart-shopping"></i>
                     <span>@Lang.Get("Pending Payments")</span>
                 </a>
+
                 <a href="#ads" class="nav-item" data-page="ads">
                     <i class="fas fa-star"></i>
                     <span>@Lang.Get("Wishlist")</span>
                 </a>
+
                 <a href="#wallet" class="nav-item" data-page="wallet">
                     <i class="fas fa-wallet"></i>
                     <span>@Lang.Get("My Wallet")</span>
                 </a>
+
                 <a href="#loyalty" class="nav-item" data-page="loyalty">
                     <i class="fas fa-gift"></i>
                     <span>@Lang.Get("Loyalty Points")</span>
                 </a>
+
                 <a href="#account" class="nav-item" data-page="account">
                     <i class="fas fa-user"></i>
                     <span>@Lang.Get("My Account")</span>
                 </a>
-                <a href="#logout" class="nav-item" data-page="logout">
+
+                <a href="#logout" class="nav-item text-danger" data-page="logout">
                     <i class="fas fa-right-from-bracket"></i>
                     <span>@Lang.Get("Logout")</span>
                 </a>
@@ -65,24 +103,43 @@
         </div>
     </section>
 
-    <section class="content-section">
+    <!-- Content Sections -->
+    <section class="content-section pb-5">
         <div class="container">
-            <div class="content-area">
+            <div class="content-area bg-white rounded-3 shadow-sm p-4" style="min-height: 300px;">
+
+                <!-- 1. Notifications -->
                 <div id="notifications-content" class="page-content active">
-                    <h3 class="page-title">@Lang.Get("Notifications")</h3>
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <p>@Lang.Get("No notifications")</p>
-                    </div>
+                    <h3 class="page-title fw-bold border-bottom pb-3 mb-4">@Lang.Get("Notifications")</h3>
+                    @if (notifications != null && notifications.Any())
+                    {
+                        <div class="d-flex flex-column gap-3">
+                            @foreach (var note in notifications)
+                            {
+                                <div class="alert alert-light border shadow-sm mb-0">
+                                    <h6 class="fw-bold text-primary">@note.Title <small class="text-muted float-end" style="font-size:0.7rem">@note.Date.ToString("yyyy-MM-dd")</small></h6>
+                                    <p class="mb-0 small">@note.Message</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state text-center py-5">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3 opacity-25"></i>
+                            <p class="text-muted">@Lang.Get("No notifications")</p>
+                        </div>
+                    }
                 </div>
 
+                <!-- 2. Orders -->
                 <div id="orders-content" class="page-content">
-                    <h3 class="page-title">@Lang.Get("Orders")</h3>
+                    <h3 class="page-title fw-bold border-bottom pb-3 mb-4">@Lang.Get("Orders")</h3>
                     @if (Model != null && Model.Any())
                     {
                         <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
+                            <table class="table table-hover align-middle">
+                                <thead class="bg-light">
                                     <tr>
                                         <th>@Lang.Get("Order ID")</th>
                                         <th>@Lang.Get("Date")</th>
@@ -96,19 +153,17 @@
                                     {
                                         bool isReturnable = (DateTime.Now - order.OrderDate).TotalDays <= 7;
                                         <tr>
-                                            <td>#@order.Id</td>
+                                            <td class="fw-bold">#@order.Id</td>
                                             <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
-                                            <td>@order.TotalAmount.ToString("0.00") @Lang.Get("SAR")</td>
-                                            <td><span class="badge bg-info text-dark">@Lang.Get(order.Status)</span></td>
+                                            <td class="text-primary fw-bold">@order.TotalAmount.ToString("N2") @Lang.Get("SAR")</td>
+                                            <td><span class="badge bg-light text-dark border">@Lang.Get(order.Status)</span></td>
                                             <td>
-                                                @if (isReturnable)
+                                                <a href="/Profile/OrderDetails/@order.Id" class="btn btn-sm btn-dark">@Lang.Get("Details")</a>
+                                                @if (isReturnable && order.Status == "مكتمل")
                                                 {
-                                                    <a href="https://wa.me/966565532971?text=I want to return order #@order.Id" target="_blank" class="btn btn-sm btn-outline-danger">@Lang.Get("Return Order")</a>
-                                                    <small class="d-block text-muted">@Lang.Get("Return Eligible until") @order.OrderDate.AddDays(7).ToString("MM-dd")</small>
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-muted small">@Lang.Get("Return window expired")</span>
+                                                    <a href="https://wa.me/966565532971?text=Return Order #@order.Id" target="_blank" class="btn btn-sm btn-outline-danger ms-1">
+                                                        <i class="fas fa-undo"></i>
+                                                    </a>
                                                 }
                                             </td>
                                         </tr>
@@ -119,84 +174,202 @@
                     }
                     else
                     {
-                        <div class="empty-state">
-                            <i class="fas fa-box"></i>
-                            <p>@Lang.Get("No orders")</p>
+                        <div class="empty-state text-center py-5">
+                            <i class="fas fa-box fa-3x text-muted mb-3 opacity-25"></i>
+                            <p class="text-muted">@Lang.Get("No orders")</p>
                         </div>
                     }
                 </div>
 
+                <!-- 3. Pending Payments -->
                 <div id="payment-requests-content" class="page-content">
-                    <h3 class="page-title">@Lang.Get("Pending Payments")</h3>
-                    <div class="empty-state">
-                        <i class="fas fa-cart-shopping"></i>
-                        <p>@Lang.Get("No payment requests")</p>
-                    </div>
+                    <h3 class="page-title fw-bold border-bottom pb-3 mb-4">@Lang.Get("Pending Payments")</h3>
+                    @if (pendingOrders != null && pendingOrders.Any())
+                    {
+                        <div class="row g-3">
+                            @foreach (var order in pendingOrders)
+                            {
+                                <div class="col-md-6">
+                                    <div class="card border-warning rounded-3">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold">@Lang.Get("Order") #@order.Id</h6>
+                                            <p class="text-danger fw-bold">@order.TotalAmount.ToString("N2") @Lang.Get("SAR")</p>
+                                            <a href="https://wa.me/966565532971" class="btn btn-success btn-sm w-100"><i class="fab fa-whatsapp"></i> @Lang.Get("Pay via WhatsApp")</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state text-center py-5">
+                            <i class="fas fa-cart-shopping fa-3x text-muted mb-3 opacity-25"></i>
+                            <p class="text-muted">@Lang.Get("No payment requests")</p>
+                        </div>
+                    }
                 </div>
 
+                <!-- 4. Wishlist -->
                 <div id="ads-content" class="page-content">
-                    <h3 class="page-title">@Lang.Get("Wishlist")</h3>
-                    <div class="empty-state">
-                        <i class="fas fa-star"></i>
-                        <p>@Lang.Get("No items")</p>
-                    </div>
+                    <h3 class="page-title fw-bold border-bottom pb-3 mb-4">@Lang.Get("Wishlist")</h3>
+                    @if (wishlist != null && wishlist.Any())
+                    {
+                        <div class="row g-3">
+                            @foreach (var item in wishlist)
+                            {
+                                <div class="col-6 col-md-4">
+                                    <div class="card h-100 border rounded-3 overflow-hidden shadow-sm">
+                                        <img src="@item.ImageUrl" class="card-img-top object-fit-cover" style="height: 150px;" onerror="this.src='/images/product.webp'">
+                                        <div class="card-body p-2 text-center">
+                                            <h6 class="card-title text-truncate small fw-bold">@(isRtl? item.NameAr: item.NameEn)</h6>
+                                            <p class="text-primary small fw-bold mb-2">@item.Price.ToString("N0") @Lang.Get("SAR")</p>
+                                            <a href="/Products/Details/@item.Id" class="btn btn-dark btn-sm w-100">@Lang.Get("View")</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state text-center py-5">
+                            <i class="fas fa-star fa-3x text-muted mb-3 opacity-25"></i>
+                            <p class="text-muted">@Lang.Get("No items")</p>
+                        </div>
+                    }
                 </div>
 
+                <!-- 5. Wallet -->
                 <div id="wallet-content" class="page-content">
-                    <h3 class="page-title">@Lang.Get("My Wallet")</h3>
-                    <div class="wallet-info">
-                        <div class="card">
-                            <div class="card-body text-center">
-                                <h5>@Lang.Get("Current Balance")</h5>
-                                <h2 class="text-primary">0.00 @Lang.Get("SAR")</h2>
-                            </div>
-                        </div>
+                    <h3 class="page-title fw-bold border-bottom pb-3 mb-4">@Lang.Get("My Wallet")</h3>
+                    <div class="wallet-info text-center py-5 bg-light rounded-3">
+                        <i class="fas fa-wallet fa-4x text-primary mb-3"></i>
+                        <h5 class="text-muted">@Lang.Get("Current Balance")</h5>
+                        <h1 class="fw-bold text-dark display-4">@walletBalance.ToString("N2") <small class="fs-5">@Lang.Get("SAR")</small></h1>
                     </div>
                 </div>
 
+                <!-- 6. Loyalty Points -->
                 <div id="loyalty-content" class="page-content">
-                    <h3 class="page-title">@Lang.Get("Loyalty Points")</h3>
-                    <div class="loyalty-info">
-                        <div class="card">
-                            <div class="card-body text-center">
-                                <h5>@Lang.Get("Loyalty Points")</h5>
-                                <h2 class="text-warning">0 @Lang.Get("Points")</h2>
-                            </div>
-                        </div>
+                    <h3 class="page-title fw-bold border-bottom pb-3 mb-4">@Lang.Get("Loyalty Points")</h3>
+                    <div class="loyalty-info text-center py-5 bg-light rounded-3">
+                        <i class="fas fa-gift fa-4x text-warning mb-3"></i>
+                        <h5 class="text-muted">@Lang.Get("Loyalty Points")</h5>
+                        <h1 class="fw-bold text-dark display-4">@loyaltyPoints <small class="fs-5">@Lang.Get("Points")</small></h1>
+                        <a href="/Home/VipPoints" class="btn btn-outline-warning mt-3 rounded-pill px-4 fw-bold">@Lang.Get("Redeem Points")</a>
                     </div>
                 </div>
 
+                <!-- 7. Account Settings -->
                 <div id="account-content" class="page-content">
-                    <h3 class="page-title">@Lang.Get("My Account")</h3>
-                    <form id="accountForm">
-                        <div class="mb-3">
-                            <label class="form-label">@Lang.Get("Name")</label>
-                            <input type="text" class="form-control" value="@ViewBag.UserName">
+                    <h3 class="page-title fw-bold border-bottom pb-3 mb-4">@Lang.Get("My Account")</h3>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <form action="/Profile/UpdateInfo" method="post">
+                                <div class="mb-3">
+                                    <label class="form-label">@Lang.Get("Name")</label>
+                                    <input type="text" name="name" class="form-control" value="@ViewBag.UserName">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">@Lang.Get("Email")</label>
+                                    <input type="email" class="form-control bg-light" value="@ViewBag.UserEmail" readonly disabled>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">@Lang.Get("Phone Number")</label>
+                                    <input type="tel" name="phone" class="form-control" value="@ViewBag.UserPhone">
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">@Lang.Get("Save Changes")</button>
+                            </form>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">@Lang.Get("Email")</label>
-                            <input type="email" class="form-control" value="@ViewBag.UserEmail" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">@Lang.Get("Phone Number")</label>
-                            <input type="tel" class="form-control" value="@ViewBag.UserPhone">
-                        </div>
-                        <button type="submit" class="btn btn-primary">@Lang.Get("Save Changes2")</button>
-                    </form>
-                </div>
-
-                <div id="logout-content" class="page-content">
-                    <div class="logout-confirm">
-                        <h3 class="page-title">@Lang.Get("Logout")</h3>
-                        <p>@Lang.Get("Are you sure you want to logout?")</p>
-                        <button class="btn btn-danger" onclick="document.getElementById('logoutForm').submit()">@Lang.Get("Logout")</button>
-                        <button class="btn btn-secondary" onclick="document.querySelector('.profile-nav .active').click()">@Lang.Get("Cancel")</button>
                     </div>
                 </div>
+
+                <!-- 8. Logout -->
+                <div id="logout-content" class="page-content">
+                    <div class="logout-confirm text-center py-5">
+                        <i class="fas fa-right-from-bracket fa-4x text-danger mb-3 opacity-50"></i>
+                        <h3 class="page-title mb-3">@Lang.Get("Logout")</h3>
+                        <p class="text-muted mb-4">@Lang.Get("Are you sure you want to logout?")</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <button class="btn btn-secondary px-5" onclick="document.querySelector('.profile-nav .nav-item[data-page=orders]').click()">@Lang.Get("Cancel")</button>
+                            <button class="btn btn-danger px-5" onclick="document.getElementById('logoutForm').submit()">@Lang.Get("Logout")</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
 </div>
+
+<style>
+    /* Styling to match your preferred look */
+    .profile-nav {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+        .profile-nav .nav-item {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: #555;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid #eee;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .profile-nav .nav-item:hover, .profile-nav .nav-item.active {
+                background: #4b3b1f; /* Your preferred brown color */
+                color: white;
+                border-color: #4b3b1f;
+            }
+
+    .page-content {
+        display: none;
+    }
+
+        .page-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .btn-primary {
+        background-color: #4b3b1f;
+        border-color: #4b3b1f;
+    }
+
+        .btn-primary:hover {
+            background-color: #3d3019;
+            border-color: #3d3019;
+        }
+
+    .text-primary {
+        color: #4b3b1f !important;
+    }
+
+    /* Avatar Hover Effect */
+    .profile-avatar-wrapper:hover .avatar-overlay {
+        opacity: 1 !important;
+    }
+</style>
 
 @section Scripts {
     <script>
@@ -208,13 +381,6 @@
                 item.addEventListener('click', function(e) {
                     e.preventDefault();
                     const pageId = this.getAttribute('data-page');
-
-                    if(pageId === 'logout') {
-                       // Switch to logout content but don't change nav active state yet
-                       pageContents.forEach(content => content.classList.remove('active'));
-                       document.getElementById('logout-content').classList.add('active');
-                       return;
-                    }
 
                     navItems.forEach(nav => nav.classList.remove('active'));
                     this.classList.add('active');

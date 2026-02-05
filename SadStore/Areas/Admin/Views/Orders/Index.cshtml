@@ -3,108 +3,182 @@
 @{
     ViewData["Title"] = Lang.Get("Orders");
     Layout = "_AdminLayout";
+    var isRtl = Lang.IsRtl();
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
 }
 
-<div class="row mb-3">
-    <div class="col-12">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <form method="get" action="/Admin/Orders" class="row g-3 align-items-end">
-                    <div class="col-md-4">
-                        <label class="form-label">@Lang.Get("Search")</label>
-                        <input type="text" name="search" class="form-control" value="@ViewBag.Search" placeholder="@Lang.Get("Order ID"), @Lang.Get("Customer")...">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">@Lang.Get("Status")</label>
-                        <select name="status" class="form-select">
-                            <option value="">@Lang.Get("All")</option>
-                            <option value="جديد" selected="@(ViewBag.CurrentStatus == "جديد")">@Lang.Get("جديد")</option>
-                            <option value="قيد التنفيذ" selected="@(ViewBag.CurrentStatus == "قيد التنفيذ")">@Lang.Get("قيد التنفيذ")</option>
-                            <option value="تم الشحن" selected="@(ViewBag.CurrentStatus == "تم الشحن")">@Lang.Get("تم الشحن")</option>
-                            <option value="مكتمل" selected="@(ViewBag.CurrentStatus == "مكتمل")">@Lang.Get("مكتمل")</option>
-                            <option value="ملغي" selected="@(ViewBag.CurrentStatus == "ملغي")">@Lang.Get("ملغي")</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-filter"></i> @Lang.Get("Filter")
-                        </button>
-                    </div>
-                    <div class="col-md-2">
-                        <a href="/Admin/Orders/Export" class="btn btn-success w-100">
-                            <i class="fas fa-file-csv"></i> @Lang.Get("Export to Excel")
-                        </a>
-                    </div>
-                </form>
-            </div>
-        </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-1 text-dark">@Lang.Get("Order List")</h4>
+        <p class="text-muted small mb-0">@Lang.Get("Manage customer orders")</p>
+    </div>
+    <div class="badge bg-dark fs-6 px-3 py-2 shadow-sm rounded-pill">
+        @Lang.Get("Total"): @ViewBag.TotalCount
     </div>
 </div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="table-card shadow-sm">
-            <div class="table-header">
-                <h5 class="mb-0">@Lang.Get("Order List")</h5>
-                <span class="badge bg-secondary">@Model.Count()</span>
+<!-- Filters -->
+<div class="card shadow-sm border-0 mb-4 rounded-3">
+    <div class="card-body p-4">
+        <form method="get" action="/Admin/Orders" class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label fw-bold small text-muted">@Lang.Get("Search")</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 bg-light" value="@ViewBag.Search" placeholder="@Lang.Get("Order Number"), @Lang.Get("Customer")...">
+                </div>
             </div>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-light">
+            <div class="col-md-3">
+                <label class="form-label fw-bold small text-muted">@Lang.Get("Status")</label>
+                <select name="status" class="form-select bg-light">
+                    <option value="">@Lang.Get("All")</option>
+                    <!option value="جديد" @(ViewBag.CurrentStatus == "جديد" ? "selected" : "")>@Lang.Get("جديد")</!option>
+                    <!option value="قيد التنفيذ" @(ViewBag.CurrentStatus == "قيد التنفيذ" ? "selected" : "")>@Lang.Get("قيد التنفيذ")</!option>
+                    <!option value="تم الشحن" @(ViewBag.CurrentStatus == "تم الشحن" ? "selected" : "")>@Lang.Get("تم الشحن")</!option>
+                    <!option value="مكتمل" @(ViewBag.CurrentStatus == "مكتمل" ? "selected" : "")>@Lang.Get("مكتمل")</!option>
+                    <!option value="ملغي" @(ViewBag.CurrentStatus == "ملغي" ? "selected" : "")>@Lang.Get("ملغي")</!option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-filter me-1"></i> @Lang.Get("Filter")
+                </button>
+            </div>
+            <div class="col-md-2">
+                <a href="/Admin/Orders/Export" class="btn btn-success w-100 text-white">
+                    <i class="fas fa-file-excel me-1"></i> @Lang.Get("Export")
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light text-muted">
+                <tr>
+                    <th class="py-3 ps-4">@Lang.Get("Order Number")</th>
+                    <th class="py-3">@Lang.Get("Customer")</th>
+                    <th class="py-3">@Lang.Get("Date")</th>
+                    <th class="py-3">@Lang.Get("Amount")</th>
+                    <th class="py-3 text-center">@Lang.Get("Status")</th>
+                    <th class="py-3 text-end pe-4" style="min-width: 140px;">@Lang.Get("Actions")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
                         <tr>
-                            <th>@Lang.Get("Order Number")</th>
-                            <th>@Lang.Get("Customer")</th>
-                            <th>@Lang.Get("Date")</th>
-                            <th>@Lang.Get("Amount")</th>
-                            <th>@Lang.Get("Status")</th>
-                            <th>@Lang.Get("Actions")</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td class="fw-bold">#@item.Id</td>
-                                <td>@item.CustomerName</td>
-                                <td>@item.OrderDate.ToString("yyyy/MM/dd HH:mm")</td>
-                                <td>@item.TotalAmount.ToString("N2") @Lang.Get("SAR")</td>
-                                <td>
-                                    @if (item.Status == "جديد")
+                            <td class="ps-4">
+                                <span class="fw-bold text-dark">#@item.Id</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle bg-soft-secondary text-secondary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px;">
+                                        <i class="fas fa-user small"></i>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <span class="fw-bold text-dark">@item.CustomerName</span>
+                                        <small class="text-muted">@item.PhoneNumber</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-muted">@item.OrderDate.ToString("yyyy/MM/dd") <small class="d-block text-muted" style="font-size: 0.75rem;">@item.OrderDate.ToString("HH:mm")</small></td>
+                            <td class="fw-bold text-success">@item.TotalAmount.ToString("N0") <small>@Lang.Get("SAR")</small></td>
+                            <td class="text-center">
+                                @{
+                                    var badgeClass = item.Status switch
                                     {
-                                        <span class="badge bg-primary">@Lang.Get(item.Status)</span>
-                                    }
-                                    else if (item.Status == "مكتمل")
-                                    {
-
-                                        <span class="badge bg-success">@Lang.Get(item.Status)</span>
-                                    }
-                                    else if (item.Status == "ملغي")
-                                    {
-
-                                        <span class="badge bg-danger">@Lang.Get(item.Status)</span>
-                                    }
-                                    else
-                                    {
-
-                                        <span class="badge bg-secondary">@Lang.Get(item.Status)</span>
-                                    }
-                                </td>
-                                <td>
-                                    <a href="/Admin/Orders/Details/@item.Id" class="btn btn-sm btn-info text-white">
-                                        <i class="fas fa-eye"></i> @Lang.Get("Details")
+                                        "جديد" => "bg-soft-primary text-primary",
+                                        "مكتمل" => "bg-soft-success text-success",
+                                        "ملغي" => "bg-soft-danger text-danger",
+                                        "تم الشحن" => "bg-soft-info text-info",
+                                        "قيد التنفيذ" => "bg-soft-warning text-warning",
+                                        _ => "bg-light text-dark"
+                                    };
+                                }
+                                <span class="badge @badgeClass px-3 py-2 rounded-pill">@Lang.Get(item.Status)</span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <!-- أزرار مباشرة بدلاً من القائمة -->
+                                <div class="btn-group shadow-sm" role="group">
+                                    <a href="/Admin/Orders/Details/@item.Id" class="btn btn-sm btn-outline-primary" title="@Lang.Get("Details")">
+                                        <i class="fas fa-eye"></i>
                                     </a>
-                                </td>
-                            </tr>
-                        }
-                        @if (!Model.Any())
-                        {
-                            <tr>
-                                <td colspan="6" class="text-center text-muted py-4">@Lang.Get("No previous orders found")</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                                    <a href="/Admin/Orders/Invoice/@item.Id" target="_blank" class="btn btn-sm btn-outline-dark" title="@Lang.Get("Print Invoice")">
+                                        <i class="fas fa-print"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteOrderModal-@item.Id" title="@Lang.Get("Delete")">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="deleteOrderModal-@item.Id" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0">
+                                            <div class="modal-header border-bottom-0 pb-0">
+                                                <h5 class="modal-title text-danger">@Lang.Get("Confirm Delete")</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body text-center py-4">
+                                                <i class="fas fa-exclamation-triangle text-warning fa-3x mb-3"></i>
+                                                <p class="mb-0">@Lang.Get("Are you sure you want to delete")</p>
+                                                <h5 class="fw-bold mt-2">#@item.Id</h5>
+                                            </div>
+                                            <div class="modal-footer border-top-0 pt-0 justify-content-center">
+                                                <form asp-area="Admin" asp-controller="Orders" asp-action="Delete"  method="post">
+                                                    <input type="hidden" name="id" value="@item.Id" />
+                                                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">@Lang.Get("Cancel")</button>
+                                                    <button type="submit" class="btn btn-danger px-4">@Lang.Get("Delete")</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="fas fa-receipt fa-3x mb-3 opacity-25"></i>
+                            <p>@Lang.Get("No previous orders found")</p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-</div>
+
+    <!-- Pagination -->
+    @if (totalPages > 1)
+    {
+        <div class="p-3 border-top bg-light d-flex justify-content-center">
+            <nav>
+                <ul class="pagination mb-0 shadow-sm">
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="/Admin/Orders?page=@(currentPage - 1)&search=@ViewBag.Search&status=@ViewBag.CurrentStatus">
+                            <i class="fas @(isRtl ? "fa-chevron-right" : "fa-chevron-left")"></i>
+                        </a>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link fw-bold text-dark">@Lang.Get("Page") @currentPage @Lang.Get("Of") @totalPages</span>
+                    </li>
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a class="page-link" href="/Admin/Orders?page=@(currentPage + 1)&search=@ViewBag.Search&status=@ViewBag.CurrentStatus">
+                            <i class="fas @(isRtl ? "fa-chevron-left" : "fa-chevron-right")"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
+</div>  

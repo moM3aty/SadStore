@@ -10,53 +10,64 @@ namespace SadStore.Areas.Admin.Controllers
     public class CategoriesController : Controller
     {
         private readonly StoreContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
         private readonly LanguageService _lang;
 
-        public CategoriesController(StoreContext context, LanguageService lang)
+        public CategoriesController(StoreContext context, IWebHostEnvironment hostEnvironment, LanguageService lang)
         {
             _context = context;
+            _hostEnvironment = hostEnvironment;
             _lang = lang;
         }
 
-        public async Task<IActionResult> Index()
+        // عرض الأقسام (بحث + ترتيب + تقسيم)
+        public async Task<IActionResult> Index(string search, int page = 1)
         {
-            return View(await _context.Categories.Include(c => c.Products).ToListAsync());
+            int pageSize = 10;
+            var query = _context.Categories.Include(c => c.Products).AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.Trim();
+                query = query.Where(c => c.NameAr.Contains(search) || c.NameEn.Contains(search));
+            }
+
+            // ترتيب حسب عدد المنتجات (الأكثر امتلاءً أولاً) ثم الاسم
+            query = query.OrderByDescending(c => c.Products.Count).ThenBy(c => c.NameAr);
+
+            int totalItems = await query.CountAsync();
+            var categories = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            ViewBag.Search = search;
+
+            return View(categories);
         }
 
-        // تصدير الأقسام إلى Excel (CSV)
+        // تصدير إلى Excel
         public async Task<IActionResult> Export()
         {
             var categories = await _context.Categories.Include(c => c.Products).ToListAsync();
             var isRtl = _lang.IsRtl();
             var builder = new StringBuilder();
 
-            var preamble = Encoding.UTF8.GetPreamble();
+            builder.Append('\uFEFF'); // BOM
 
             if (isRtl)
-            {
                 builder.AppendLine("المعرف,الاسم (عربي),الاسم (إنجليزي),عدد المنتجات");
-            }
             else
-            {
                 builder.AppendLine("ID,Name (Ar),Name (En),Product Count");
-            }
 
             foreach (var c in categories)
             {
-                var nameAr = c.NameAr?.Replace(",", " ") ?? "";
-                var nameEn = c.NameEn?.Replace(",", " ") ?? "";
+                var nameAr = c.NameAr?.Replace(",", " ");
+                var nameEn = c.NameEn?.Replace(",", " ");
                 var count = c.Products?.Count ?? 0;
-
                 builder.AppendLine($"{c.Id},{nameAr},{nameEn},{count}");
             }
 
-            var contentBytes = Encoding.UTF8.GetBytes(builder.ToString());
-            var resultBytes = new byte[preamble.Length + contentBytes.Length];
-            Array.Copy(preamble, 0, resultBytes, 0, preamble.Length);
-            Array.Copy(contentBytes, 0, resultBytes, preamble.Length, contentBytes.Length);
-
-            string fileName = isRtl ? "categories_report_ar.csv" : "categories_report_en.csv";
-            return File(resultBytes, "text/csv", fileName);
+            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"categories_{DateTime.Now:yyyyMMdd}.csv");
         }
 
         public IActionResult Create()
@@ -66,11 +77,31 @@ namespace SadStore.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(Category category, IFormFile? imageFile)
         {
             if (ModelState.IsValid)
             {
-                category.ImageUrl = "/images/cat-default.jpg";
+                // رفع الصورة
+                if (imageFile != null)
+                {
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                    string uploadDir = Path.Combine(wwwRootPath, "images", "categories");
+
+                    if (!Directory.Exists(uploadDir)) Directory.CreateDirectory(uploadDir);
+
+                    string path = Path.Combine(uploadDir, fileName);
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(fileStream);
+                    }
+                    category.ImageUrl = "/images/categories/" + fileName;
+                }
+                else
+                {
+                    category.ImageUrl = "/images/cat-default.jpg"; // صورة افتراضية
+                }
+
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Saved successfully";
@@ -89,7 +120,7 @@ namespace SadStore.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Category category)
+        public async Task<IActionResult> Edit(int id, Category category, IFormFile? imageFile)
         {
             if (id != category.Id) return NotFound();
 
@@ -97,8 +128,27 @@ namespace SadStore.Areas.Admin.Controllers
             {
                 try
                 {
-                    var existing = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
-                    category.ImageUrl = existing?.ImageUrl ?? "/images/cat-default.jpg";
+                    if (imageFile != null)
+                    {
+                        string wwwRootPath = _hostEnvironment.WebRootPath;
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                        string uploadDir = Path.Combine(wwwRootPath, "images", "categories");
+
+                        if (!Directory.Exists(uploadDir)) Directory.CreateDirectory(uploadDir);
+
+                        string path = Path.Combine(uploadDir, fileName);
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(fileStream);
+                        }
+                        category.ImageUrl = "/images/categories/" + fileName;
+                    }
+                    else
+                    {
+                        // الحفاظ على الصورة القديمة
+                        var existing = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+                        category.ImageUrl = existing?.ImageUrl ?? "/images/cat-default.jpg";
+                    }
 
                     _context.Update(category);
                     await _context.SaveChangesAsync();

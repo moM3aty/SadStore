@@ -1,0 +1,178 @@
+﻿@model SadStore.Controllers.CheckoutViewModel
+@inject SadStore.Services.LanguageService Lang
+@{
+    ViewData["Title"] = Lang.Get("Checkout");
+    var isRtl = Lang.IsRtl();
+
+    // تجهيز البيانات للجافاسكريبت
+    var shippingLocationsJson = System.Text.Json.JsonSerializer.Serialize(
+        Model.ShippingLocations.Select(l => new { id = l.Id, cost = l.ShippingCost })
+    );
+
+    // تحويل الأرقام إلى نصوص بتنسيق إنجليزي (نقطة بدلاً من فاصلة) لتجنب أخطاء JS
+    var subTotalStr = Model.SubTotal.ToString(System.Globalization.CultureInfo.InvariantCulture);
+    var taxStr = Model.Tax.ToString(System.Globalization.CultureInfo.InvariantCulture);
+}
+
+<div class="product-page">
+    <nav class="breadcrumb-nav py-4 bg-light border-bottom">
+        <div class="container">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="/" class="text-decoration-none text-muted">@Lang.Get("Home")</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="/Cart" class="text-decoration-none text-muted">@Lang.Get("Shopping Cart")</a>
+                </li>
+                <li class="breadcrumb-item active fw-bold text-dark">@Lang.Get("Checkout")</li>
+            </ol>
+        </div>
+    </nav>
+
+    <section class="checkout-section py-5">
+        <div class="container">
+            <form asp-action="Process" method="post">
+                <div class="row g-5">
+                    <!-- Billing Details -->
+                    <div class="col-lg-7">
+                        <h4 class="mb-4 fw-bold text-dark">@Lang.Get("Billing Details")</h4>
+                        <div class="card shadow-sm border-0 rounded-4">
+                            <div class="card-body p-4">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold small text-muted">@Lang.Get("Full Name") <span class="text-danger">*</span></label>
+                                        <input type="text" asp-for="FullName" class="form-control bg-light border-0 py-2" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-muted">@Lang.Get("Phone") <span class="text-danger">*</span></label>
+                                        <input type="tel" asp-for="Phone" class="form-control bg-light border-0 py-2" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-muted">@Lang.Get("Email") <span class="text-muted small">(@Lang.Get("Optional"))</span></label>
+                                        <input type="email" asp-for="Email" class="form-control bg-light border-0 py-2">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-muted">@Lang.Get("City") <span class="text-danger">*</span></label>
+                                        <select asp-for="ShippingLocationId" class="form-select bg-light border-0 py-2" id="citySelect" required>
+                                            <option value="" selected disabled>@Lang.Get("Select City / Region")</option>
+                                            @foreach (var loc in Model.ShippingLocations)
+                                            {
+                                                <option value="@loc.Id">@(isRtl? loc.CityNameAr: loc.CityNameEn) (@loc.ShippingCost.ToString("N0") @Lang.Get("SAR"))</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-muted">@Lang.Get("Address") <span class="text-danger">*</span></label>
+                                        <input type="text" asp-for="Address" class="form-control bg-light border-0 py-2" placeholder="@Lang.Get("Address")" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold small text-muted">@Lang.Get("Order Notes (Optional)")</label>
+                                        <textarea asp-for="Note" class="form-control bg-light border-0 py-2" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="col-lg-5">
+                        <h4 class="mb-4 fw-bold text-dark">@Lang.Get("Your Order")</h4>
+                        <div class="card shadow-sm border-0 rounded-4">
+                            <div class="card-body p-4">
+                                <ul class="list-group list-group-flush mb-3">
+                                    @foreach (var item in Model.CartItems)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between lh-sm py-3 px-0 border-bottom-dashed">
+                                            <div class="d-flex align-items-center">
+                                                <div class="position-relative me-3 ms-2">
+                                                    <img src="@item.Product.ImageUrl" class="rounded border" style="width: 50px; height: 50px; object-fit: cover;" onerror="this.src='/images/product.webp'">
+                                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+                                                        @item.Quantity
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="my-0 small fw-bold">@(isRtl? item.Product.NameAr : item.Product.NameEn)</h6>
+                                                    <small class="text-muted">@item.Product.Price.ToString("N0") @Lang.Get("SAR")</small>
+                                                </div>
+                                            </div>
+                                            <span class="text-dark fw-bold">@item.Total.ToString("N0") @Lang.Get("SAR")</span>
+                                        </li>
+                                    }
+                                </ul>
+
+                                <div class="d-flex justify-content-between py-2">
+                                    <span class="text-muted">@Lang.Get("Subtotal (Excl. Tax)")</span>
+                                    <span class="fw-bold">@Model.SubTotal.ToString("N2") @Lang.Get("SAR")</span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2">
+                                    <span class="text-muted">@Lang.Get("VAT (15%)")</span>
+                                    <span class="fw-bold">@Model.Tax.ToString("N2") @Lang.Get("SAR")</span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2 border-bottom mb-3">
+                                    <span class="text-muted">@Lang.Get("Shipping Cost")</span>
+                                    <span class="text-success fw-bold" id="shippingDisplay">--</span>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <span class="h5 fw-bold text-dark mb-0">@Lang.Get("Total")</span>
+                                    <span class="h4 fw-bold text-primary mb-0" id="grandTotalDisplay">--</span>
+                                </div>
+
+                                <div class="payment-method mb-4 p-3 bg-light rounded-3 border">
+                                    <h6 class="fw-bold mb-2"><i class="fab fa-whatsapp text-success me-2"></i> @Lang.Get("Payment Method")</h6>
+                                    <p class="small text-muted mb-0">@Lang.Get("Pay via WhatsApp")</p>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm hover-lift">
+                                    @Lang.Get("Place Order") <i class="fas @(isRtl ? "fa-arrow-left" : "fa-arrow-right") ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+
+<style>
+    .border-bottom-dashed {
+        border-bottom: 1px dashed #dee2e6 !important;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+    }
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: none;
+        border: 1px solid #c89f72 !important;
+        background-color: #fff !important;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        const shippingLocations = @Html.Raw(shippingLocationsJson);
+
+        const initialSubTotal = parseFloat('@subTotalStr');
+        const initialTax = parseFloat('@taxStr');
+
+        document.getElementById('citySelect').addEventListener('change', function() {
+            const selectedId = parseInt(this.value);
+            const location = shippingLocations.find(l => l.id === selectedId);
+
+            if (location) {
+                const cost = location.cost;
+                const total = initialSubTotal + initialTax + cost;
+
+                document.getElementById('shippingDisplay').textContent = cost.toFixed(2);
+                document.getElementById('grandTotalDisplay').textContent = total.toFixed(2) ;
+            }
+        });
+    </script>
+}

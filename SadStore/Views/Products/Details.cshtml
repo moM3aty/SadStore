@@ -1,11 +1,32 @@
 ﻿@model SadStore.Data.Product
 @inject SadStore.Services.LanguageService Lang
+@using System.Text.Json
 
 @{
     var isRtl = Lang.IsRtl();
     ViewData["Title"] = isRtl ? Model.NameAr : Model.NameEn;
     var related = ViewBag.RelatedProducts as List<SadStore.Data.Product>;
     var reviews = ViewBag.Reviews as List<SadStore.Data.CustomerReview>;
+
+    // حساب نسبة الخصم
+    int discountPercentage = 0;
+    if (Model.OldPrice.HasValue && Model.OldPrice > Model.Price)
+    {
+        discountPercentage = (int)((1 - (Model.Price / Model.OldPrice.Value)) * 100);
+    }
+
+    // التحقق من حالة المفضلة
+    bool isInWishlist = false;
+    var wishlistCookie = Context.Request.Cookies["SadStore_Wishlist"];
+    if (!string.IsNullOrEmpty(wishlistCookie))
+    {
+        try
+        {
+            var wishlistIds = JsonSerializer.Deserialize<List<int>>(wishlistCookie);
+            if (wishlistIds != null && wishlistIds.Contains(Model.Id)) isInWishlist = true;
+        }
+        catch { }
+    }
 }
 
 <div class="product-details-page product-page">
@@ -14,14 +35,14 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a href="/">
-                        @Lang.Get("Home")
-                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2"></i>
+                        <span>@Lang.Get("Home")</span>
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2 fs-6 breadcrumb-arrow"></i>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
                     <a href="/Products">
-                        @Lang.Get("Products")
-                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2"></i>
+                        <span>@Lang.Get("Products")</span>
+                        <i class="fas @(isRtl ? "fa-angle-left" : "fa-angle-right") mx-2 fs-6 breadcrumb-arrow"></i>
                     </a>
                 </li>
                 <li class="breadcrumb-item active">@(isRtl? Model.NameAr: Model.NameEn)</li>
@@ -54,12 +75,20 @@
 
                         <!-- Main Image -->
                         <div class="main-image-container">
-                            @if (Model.IsFeatured)
+                           
+                            @if (discountPercentage > 0)
                             {
-                                <span class="badge-new">@Lang.Get("New")</span>
+                                <span class="badge-new" style="background-color: #dc3545; top: 20px;justify-content:left;">-@discountPercentage%</span>
                             }
-                            <button class="btn-wishlist"><i class="far fa-heart"></i></button>
-                            <button class="btn-share"><i class="fas fa-share-alt"></i></button>
+
+                            <!-- Wishlist Form inside the button logic -->
+                            <form action="/Wishlist/Toggle" method="post" class="d-inline">
+                                <input type="hidden" name="productId" value="@Model.Id" />
+                                <button type="submit" class="btn-wishlist" style="border:none; background:white; cursor:pointer;top:20px;">
+                                    <i class="@(isInWishlist ? "fas text-danger" : "far") fa-heart"></i>
+                                </button>
+                            </form>
+
 
                             <img id="mainImage"
                                  src="@(Model.Images != null && Model.Images.Any() ? Model.Images.First().Url : Model.ImageUrl)"
@@ -74,7 +103,6 @@
                     <div class="product-info">
                         <h2 class="product-title">@(isRtl? Model.NameAr: Model.NameEn)</h2>
 
-                        <!-- الأسعار: قبل وبعد الخصم -->
                         <div class="product-price">
                             @if (Model.OldPrice.HasValue && Model.OldPrice > Model.Price)
                             {
@@ -82,7 +110,7 @@
                                     @Model.OldPrice.Value.ToString("N0") @Lang.Get("SAR")
                                 </span>
                             }
-                            <span class="price">@Model.Price.ToString("N0") @Lang.Get("SAR")</span>
+                            <span class="price">@Model.Price.ToString("N0") <span class="coin">@Lang.Get("SAR")</span></span>
                         </div>
 
                         <p class="price-note">@Lang.Get("Price includes VAT")</p>
@@ -112,19 +140,31 @@
                                     }
                                 </p>
                             </div>
+                            <div class="payment-item">
+                                <div class="payment-logo tabby-logo">
+                                    <img src="~/images/tabby_installment_mini.avif" alt="tabby" onerror="this.style.display='none'">
+                                </div>
+                                <p>
+                                    @if (isRtl)
+                                    {
+                                        <text>ابتداءً من <strong>@((Model.Price / 4).ToString("N2")) @Lang.Get("SAR")</strong> شهرياً. متوافق مع الشريعة.</text>
+                                    }
+                                    else
+                                    {
+                                        <text>Starting from <strong>@((Model.Price / 4).ToString("N2")) @Lang.Get("SAR")</strong> monthly. Sharia compliant.</text>
+                                    }
+                                </p>
+                            </div>
                         </div>
 
-                        <p class="mt-3">@(isRtl? Model.DescriptionAr: Model.DescriptionEn)</p>
-
-                        <div class="product-number">
+                        <div class="product-number my-3">
                             <span>@Lang.Get("Product Number")</span>
-                            <strong>@Model.ModelNumber ?? "#@Model.Id"</strong>
+                            <strong>@Model.ModelNumber </strong>
                         </div>
 
-                        <form action="/Cart/Add" method="post" class="mt-4">
+                        <form action="/Cart/Add" method="post">
                             <input type="hidden" name="productId" value="@Model.Id" />
 
-                            <!-- قائمة المقاسات الديناميكية -->
                             @if (!string.IsNullOrEmpty(Model.AvailableSizes))
                             {
                                 <div class="size-selector mb-3 d-flex justify-content-between align-items-center">
@@ -161,7 +201,6 @@
                 </div>
             </div>
 
-            <!-- Tabs Section -->
             <div class="row mt-5">
                 <div class="col-12">
                     <ul class="nav nav-tabs product-tabs" id="productTabs" role="tablist">
@@ -178,11 +217,35 @@
                             <h3>@Lang.Get("Description")</h3>
                             <p>@(isRtl? Model.DescriptionAr: Model.DescriptionEn)</p>
 
-                            <!-- عرض المواصفات الإضافية -->
+                            <!-- عرض المواصفات الإضافية بنفس الستايل -->
                             <ul class="product-specs mt-3">
                                 @if (!string.IsNullOrEmpty(isRtl ? Model.DesignTypeAr : Model.DesignTypeEn))
                                 {
                                     <li><strong>@Lang.Get("Design Type"):</strong> @(isRtl? Model.DesignTypeAr: Model.DesignTypeEn)</li>
+                                }
+                                @if (!string.IsNullOrEmpty(isRtl ? Model.CutTypeAr : Model.CutTypeEn))
+                                {
+                                    <li><strong>@Lang.Get("Cut Type"):</strong> @(isRtl? Model.CutTypeAr: Model.CutTypeEn)</li>
+                                }
+                                @if (!string.IsNullOrEmpty(isRtl ? Model.OccasionAr : Model.OccasionEn))
+                                {
+                                    <li><strong>@Lang.Get("Occasion"):</strong> @(isRtl? Model.OccasionAr: Model.OccasionEn)</li>
+                                }
+                                @if (!string.IsNullOrEmpty(isRtl ? Model.FitTypeAr : Model.FitTypeEn))
+                                {
+                                    <li><strong>@Lang.Get("Fit Type"):</strong> @(isRtl? Model.FitTypeAr: Model.FitTypeEn)</li>
+                                }
+                                @if (!string.IsNullOrEmpty(isRtl ? Model.LiningAr : Model.LiningEn))
+                                {
+                                    <li><strong>@Lang.Get("Lining"):</strong> @(isRtl? Model.LiningAr: Model.LiningEn)</li>
+                                }
+                                @if (!string.IsNullOrEmpty(isRtl ? Model.SleevesAr : Model.SleevesEn))
+                                {
+                                    <li><strong>@Lang.Get("Sleeves"):</strong> @(isRtl? Model.SleevesAr: Model.SleevesEn)</li>
+                                }
+                                @if (!string.IsNullOrEmpty(isRtl ? Model.StretchAr : Model.StretchEn))
+                                {
+                                    <li><strong>@Lang.Get("Stretch"):</strong> @(isRtl? Model.StretchAr: Model.StretchEn)</li>
                                 }
                                 @if (!string.IsNullOrEmpty(isRtl ? Model.MaterialAr : Model.MaterialEn))
                                 {
@@ -217,40 +280,93 @@
                             {
                                 <p class="text-muted">@Lang.Get("No reviews yet for this product.")</p>
                             }
+
+                            <!-- Review Form -->
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <hr>
+                                <form asp-area="" asp-controller="Products" asp-action="AddReview" method="post" class="mt-4">
+                                    <input type="hidden" name="productId" value="@Model.Id" />
+                                    <h5 class="mb-3">@Lang.Get("Add Your Review")</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label d-block fw-bold mb-2">@Lang.Get("Rating")</label>
+                                        <div class="star-rating d-inline-flex flex-row-reverse justify-content-center">
+                                            <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+                                            <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+                                            <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+                                            <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+                                            <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <textarea name="reviewText" class="form-control" rows="3" placeholder="@Lang.Get("Write your review here...")"></textarea>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm">@Lang.Get("Submit Review")</button>
+                                </form>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Related Products -->
-            <div class="row mt-5">
-                <div class="col-12">
-                    <h3 class="section-title">@Lang.Get("Related Products")</h3>
-                    <div class="related-products row g-3">
-                        @if (related != null && related.Any())
-                        {
-                            foreach (var item in related)
-                            {
-                                <div class="col-6 col-md-3">
-                                    <a href="/Products/Details/@item.Id" class="products-card text-decoration-none text-dark d-block">
-                                        <div class="products-image-wrapper position-relative" style="height: 250px; overflow: hidden; border-radius: 8px;">
-                                            <img src="@item.ImageUrl" class="products-image w-100 h-100 object-fit-cover" onerror="this.src='/images/product.webp'">
-                                        </div>
-                                        <div class="products-info p-2 text-center">
-                                            <h6 class="products-title fw-bold">@(isRtl? item.NameAr: item.NameEn)</h6>
-                                            <div class="products-price text-primary fw-bold">@item.Price.ToString("N0") <span class="coin">@Lang.Get("SAR")</span></div>
-                                        </div>
-                                    </a>
-                                </div>
-                            }
-                        }
+            @if (related != null && related.Any())
+            {
+                <div class="row mt-5 pt-5 border-top">
+                    <div class="col-12 mb-5 d-flex justify-content-between align-items-center">
+                        <h3 class="section-title fw-bold mb-0 text-dark border-start border-5 ps-3" style="border:#a67c52;">@Lang.Get("Related Products")</h3>
+                        <a href="/Products" class="btn btn-outline-dark rounded-pill px-4">@Lang.Get("View All")</a>
                     </div>
+                    @foreach (var item in related)
+                    {
+                        <div class="col-6 col-md-3">
+                            <div class="product-card-premium h-100 bg-white rounded-4 shadow-hover position-relative overflow-hidden group-hover">
+                                <a href="/Products/Details/@item.Id" class="text-decoration-none">
+                                    <div class="image-container position-relative overflow-hidden" style="height: 320px;">
+                                        <img src="@item.ImageUrl" class="w-100 h-100 object-fit-cover transition-transform" onerror="this.src='/images/product.webp'">
+
+                                        <!-- Quick add button overlay -->
+                                        <div class="overlay-quick-add position-absolute bottom-0 start-0 w-100 p-2 z-2 opacity-0 transition-all">
+                                            <button class="btn btn-light w-100 rounded-3 shadow-sm text-primary fw-bold">@Lang.Get("Quick View")</button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body p-3 text-center">
+                                        <h6 class="text-dark fw-bold text-truncate mb-1">@(isRtl? item.NameAr: item.NameEn)</h6>
+                                        <div class="d-flex justify-content-center align-items-center gap-2">
+                                            <span style="color:#a67c52;" class="fw-bold">@item.Price.ToString("N0") @Lang.Get("SAR")</span>
+                                            @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                                            {
+                                                <small class="text-muted text-decoration-line-through">@item.OldPrice.Value.ToString("N0")</small>
+                                            }
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
                 </div>
-            </div>
+            }
         </div>
     </section>
 </div>
+<style>
+    .star-rating input {
+        display: none;
+    }
 
+    .star-rating label {
+        font-size: 2rem;
+        color: #ddd;
+        cursor: pointer;
+        padding: 0 5px;
+        transition: color 0.2s;
+    }
+
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffc107;
+        }
+        </style>
 @section Scripts {
     <script src="~/js/product-details.js"></script>
 }

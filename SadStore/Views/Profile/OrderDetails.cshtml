@@ -1,0 +1,181 @@
+﻿@model SadStore.Data.Order
+@inject SadStore.Services.LanguageService Lang
+@{
+    ViewData["Title"] = Lang.Get("Order Details") + " #" + Model.Id;
+    var isRtl = Lang.IsRtl();
+
+    // منطق شريط التقدم (Stepper)
+    int step = 1;
+    if (Model.Status == "قيد التنفيذ") { step = 2; }
+    else if (Model.Status == "تم الشحن") { step = 3; }
+    else if (Model.Status == "مكتمل") { step = 4; }
+    else if (Model.Status == "ملغي") { step = 0; }
+}
+
+<div class="product-page bg-light-gray" style="background-color: #f9f9f9; min-height: 100vh;">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-nav py-4 bg-white border-bottom shadow-sm">
+        <div class="container">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="/Profile" class="text-decoration-none text-muted">@Lang.Get("My Profile")</a>
+                </li>
+                <li class="breadcrumb-item active fw-bold text-dark">@Lang.Get("Order Details") #@Model.Id</li>
+            </ol>
+        </div>
+    </nav>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+
+                    <!-- Header Actions -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-bold mb-0">@Lang.Get("Order") <span class="text-primary">#@Model.Id</span></h3>
+                        <a href="/Profile" class="btn btn-outline-dark rounded-pill px-4">
+                            <i class="fas @(isRtl ? "fa-arrow-right" : "fa-arrow-left") me-2"></i> @Lang.Get("Back to Orders")
+                        </a>
+                    </div>
+
+                    <!-- Order Status Stepper -->
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-body p-5">
+                            @if (step > 0)
+                            {
+                                <div class="position-relative m-4">
+                                    <div class="progress" style="height: 2px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: @((step - 1) * 33)%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
+                                    <div class="position-absolute top-0 start-0 translate-middle btn btn-sm rounded-pill @(step >= 1 ? "btn-primary" : "btn-secondary")" style="width: 2rem; height:2rem;">1</div>
+                                    <div class="position-absolute top-0 start-33 translate-middle btn btn-sm rounded-pill @(step >= 2 ? "btn-primary" : "btn-secondary")" style="width: 2rem; height:2rem; left: 33%;">2</div>
+                                    <div class="position-absolute top-0 start-66 translate-middle btn btn-sm rounded-pill @(step >= 3 ? "btn-primary" : "btn-secondary")" style="width: 2rem; height:2rem; left: 66%;">3</div>
+                                    <div class="position-absolute top-0 start-100 translate-middle btn btn-sm rounded-pill @(step >= 4 ? "btn-success" : "btn-secondary")" style="width: 2rem; height:2rem;">4</div>
+                                </div>
+                                <div class="d-flex justify-content-between text-muted small mt-2">
+                                    <span>@Lang.Get("Order Placed")</span>
+                                    <span>@Lang.Get("Processing")</span>
+                                    <span>@Lang.Get("Shipped")</span>
+                                    <span>@Lang.Get("Delivered")</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-danger mb-0 text-center rounded-3">
+                                    <i class="fas fa-times-circle me-2"></i> @Lang.Get("This order has been cancelled")
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Order Items -->
+                        <div class="col-lg-8">
+                            <div class="card border-0 shadow-sm rounded-4 h-100">
+                                <div class="card-header bg-white py-3 border-bottom">
+                                    <h6 class="mb-0 fw-bold"><i class="fas fa-box-open me-2 text-primary"></i> @Lang.Get("Order Items")</h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle mb-0">
+                                            <thead class="bg-light text-muted small">
+                                                <tr>
+                                                    <th class="ps-4">@Lang.Get("Product")</th>
+                                                    <th class="text-center">@Lang.Get("Quantity")</th>
+                                                    <th class="text-end pe-4">@Lang.Get("Total")</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model.OrderItems)
+                                                {
+                                                    <tr>
+                                                        <td class="ps-4">
+                                                            <div class="d-flex align-items-center">
+                                                                <img src="@item.Product?.ImageUrl" class="rounded border me-3 ms-0" style="width: 50px; height: 50px; object-fit: cover;" onerror="this.src='/images/product.webp'">
+                                                                <div>
+                                                                    <div class="fw-bold text-dark">@(isRtl? item.Product?.NameAr : item.Product?.NameEn)</div>
+                                                                    <small class="text-muted">@item.Product?.ModelNumber</small>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">x @item.Quantity</td>
+                                                        <td class="text-end pe-4 fw-bold">@((item.Price * item.Quantity).ToString("N0")) @Lang.Get("SAR")</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Summary -->
+                        <div class="col-lg-4">
+                            <!-- Shipping Info -->
+                            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                                <div class="card-header bg-white py-3 border-bottom">
+                                    <h6 class="mb-0 fw-bold"><i class="fas fa-truck me-2 text-warning"></i> @Lang.Get("Shipping Address")</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-1 fw-bold">@Model.CustomerName</p>
+                                    <p class="mb-1 text-muted">@Model.PhoneNumber</p>
+                                    <p class="mb-0 text-muted">@Model.Address</p>
+                                </div>
+                            </div>
+
+                            <!-- Payment Summary -->
+                            <div class="card border-0 shadow-sm rounded-4 bg-gradient-primary text-white">
+                                <div class="card-body p-4">
+                                    <h6 class="fw-bold mb-4 opacity-75">@Lang.Get("Payment Summary")</h6>
+
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>@Lang.Get("Subtotal")</span>
+                                        <span>@((Model.TotalAmount / 1.15m).ToString("N2")) @Lang.Get("SAR")</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>@Lang.Get("VAT (15%)")</span>
+                                        <span>@((Model.TotalAmount - (Model.TotalAmount / 1.15m)).ToString("N2")) @Lang.Get("SAR")</span>
+                                    </div>
+                                    <hr class="border-white opacity-25">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="h5 mb-0 fw-bold">@Lang.Get("Total")</span>
+                                        <span class="h4 mb-0 fw-bold">@Model.TotalAmount.ToString("N2") @Lang.Get("SAR")</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if ((DateTime.Now - Model.OrderDate).TotalDays <= 7 && Model.Status == "مكتمل")
+                            {
+                                <div class="mt-3">
+                                    <a href="https://wa.me/966565532971?text=I want to return order #@Model.Id" target="_blank" class="btn btn-outline-danger w-100 rounded-pill py-2">
+                                        <i class="fas fa-undo me-2"></i> @Lang.Get("Return Order")
+                                    </a>
+                                    <small class="text-muted text-center d-block mt-2">
+                                        @Lang.Get("Return Eligible until") @Model.OrderDate.AddDays(7).ToString("dd/MM/yyyy")
+                                    </small>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #c89f72 0%, #a67c52 100%);
+    }
+
+    .btn-primary {
+        background-color: #c89f72;
+        border-color: #c89f72;
+    }
+
+    .text-primary {
+        color: #c89f72 !important;
+    }
+</style>

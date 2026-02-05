@@ -1,30 +1,53 @@
 ﻿@model SadStore.Data.ShippingLocation
 @inject SadStore.Services.LanguageService Lang
-
 @{
     ViewData["Title"] = Lang.Get("Add New Location");
     Layout = "_AdminLayout";
 }
 
 <div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">@Lang.Get("Add New Location")</h5>
-                <a href="/Admin/Shipping" class="btn btn-outline-secondary btn-sm">@Lang.Get("Back to List")</a>
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0 text-dark">@Lang.Get("Add New Location")</h4>
+            <a asp-area="Admin" asp-controller="Shipping" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i> @Lang.Get("Back to List")
+            </a>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-map-pin me-2"></i> @Lang.Get("Location Details")</h6>
             </div>
-            <div class="card-body">
-                <form action="/Admin/Shipping/Create" method="post">
-                    <div class="mb-3">
-                        <label class="form-label">@Lang.Get("City / Region")</label>
-                        <input type="text" name="CityName" class="form-control" required />
+            <div class="card-body p-4">
+                <form asp-area="Admin" asp-controller="Shipping" asp-action="Create" method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-bold small text-muted">@Lang.Get("City / Region (Ar)") <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-city text-muted"></i></span>
+                                <input type="text" asp-for="CityNameAr" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-bold small text-muted">@Lang.Get("City / Region (En)") <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-city text-muted"></i></span>
+                                <input type="text" asp-for="CityNameEn" class="form-control" required />
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">@Lang.Get("Cost") (@Lang.Get("SAR"))</label>
-                        <input type="number" name="ShippingCost" class="form-control" step="0.01" required />
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted">@Lang.Get("Cost") <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fas fa-money-bill text-muted"></i></span>
+                            <input type="number" asp-for="ShippingCost" class="form-control" step="0.01" required />
+                            <span class="input-group-text">@Lang.Get("SAR")</span>
+                        </div>
                     </div>
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-custom">@Lang.Get("Save Location")</button>
+
+                    <div class="d-grid pt-2">
+                        <button type="submit" class="btn btn-primary btn-lg shadow-sm">@Lang.Get("Save Location")</button>
                     </div>
                 </form>
             </div>

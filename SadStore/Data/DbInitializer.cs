@@ -93,16 +93,7 @@ namespace SadStore.Data
                     await context.SaveChangesAsync();
                 }
 
-                // Shipping
-                if (!context.ShippingLocations.Any())
-                {
-                    context.ShippingLocations.AddRange(
-                        new ShippingLocation { CityName = "الرياض", ShippingCost = 25.00m },
-                        new ShippingLocation { CityName = "جدة", ShippingCost = 25.00m },
-                        new ShippingLocation { CityName = "باقي المدن", ShippingCost = 35.00m }
-                    );
-                    await context.SaveChangesAsync();
-                }
+               
             }
             catch (Exception)
             {

@@ -14,7 +14,7 @@
                 <a href="/Admin/Categories" class="btn btn-outline-secondary btn-sm">@Lang.Get("Back to List")</a>
             </div>
             <div class="card-body">
-                <form action="/Admin/Categories/Edit/@Model.Id" method="post">
+                <form asp-area="Admin" asp-controller="Categories" asp-action="Edit" asp-route-id="@Model.Id" method="post">
                     <input type="hidden" asp-for="Id" />
 
                     <div class="mb-3">

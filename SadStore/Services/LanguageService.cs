@@ -10,7 +10,20 @@ namespace SadStore.Services
         {
             _resources = new Dictionary<string, Dictionary<string, string>>
             {
-                // ... (Keep all existing keys)
+                { "Checkout", new Dictionary<string, string> { { "ar", "إتمام الطلب" }, { "en", "Checkout" } } },
+                { "Billing Details", new Dictionary<string, string> { { "ar", "بيانات الشحن والفاتورة" }, { "en", "Billing & Shipping Details" } } },
+                { "Full Name", new Dictionary<string, string> { { "ar", "الاسم الكامل" }, { "en", "Full Name" } } },
+                { "City", new Dictionary<string, string> { { "ar", "المدينة" }, { "en", "City" } } },
+                { "Select City / Region", new Dictionary<string, string> { { "ar", "اختر المدينة / المنطقة" }, { "en", "Select City / Region" } } },
+                { "Shipping Cost", new Dictionary<string, string> { { "ar", "تكلفة الشحن" }, { "en", "Shipping Cost" } } },
+                { "Note", new Dictionary<string, string> { { "ar", "ملاحظات" }, { "en", "Note" } } },
+                { "Order Notes (Optional)", new Dictionary<string, string> { { "ar", "ملاحظات حول الطلب (اختياري)" }, { "en", "Order Notes (Optional)" } } },
+                { "Place Order", new Dictionary<string, string> { { "ar", "تأكيد الطلب" }, { "en", "Place Order" } } },
+                { "Payment Method", new Dictionary<string, string> { { "ar", "طريقة الدفع" }, { "en", "Payment Method" } } },
+                { "Pay via WhatsApp", new Dictionary<string, string> { { "ar", "الدفع وتأكيد الطلب عبر واتساب" }, { "en", "Pay & Confirm via WhatsApp" } } },
+                { "Your Order", new Dictionary<string, string> { { "ar", "طلبك" }, { "en", "Your Order" } } },
+                { "Free", new Dictionary<string, string> { { "ar", "مجاني" }, { "en", "Free" } } },
+                { "Proceed to Checkout", new Dictionary<string, string> { { "ar", "التقدم لإتمام الطلب" }, { "en", "Proceed to Checkout" } } },
                 { "Home", new Dictionary<string, string> { { "ar", "الرئيسية" }, { "en", "Home" } } },
                 { "Products", new Dictionary<string, string> { { "ar", "المنتجات" }, { "en", "Products" } } },
                 { "Blog", new Dictionary<string, string> { { "ar", "المدونة" }, { "en", "Blog" } } },
@@ -25,6 +38,9 @@ namespace SadStore.Services
                 { "Saudi Riyal", new Dictionary<string, string> { { "ar", "ريال سعودي" }, { "en", "Saudi Riyal" } } },
                 { "UAE Dirham", new Dictionary<string, string> { { "ar", "درهم إماراتي" }, { "en", "UAE Dirham" } } },
                 { "SAR", new Dictionary<string, string> { { "ar", "ر.س" }, { "en", "SAR" } } },
+                { "Change Main Image", new Dictionary<string, string> { { "ar", "تغيير الصورة الرئيسية" }, { "en", "Change Main Image" } } },
+                { "Upload Additional Images", new Dictionary<string, string> { { "ar", "رفع صور إضافية (معرض الصور)" }, { "en", "Upload Additional Images (Gallery)" } } },
+                { "Main Image", new Dictionary<string, string> { { "ar", "الصورة الرئيسية" }, { "en", "Main Image" } } },
                 { "Phone", new Dictionary<string, string> { { "ar", "الهاتف" }, { "en", "Phone" } } },
                 { "Saad Store", new Dictionary<string, string> { { "ar", "متجر صاد" }, { "en", "Saad Store" } } },
                 { "Saad", new Dictionary<string, string> { { "ar", "صاد" }, { "en", "Saad" } } },
@@ -47,11 +63,10 @@ namespace SadStore.Services
                 { "Oct", new Dictionary<string, string> { { "ar", "أكتوبر" }, { "en", "Oct" } } },
                 { "Nov", new Dictionary<string, string> { { "ar", "نوفمبر" }, { "en", "Nov" } } },
                 { "Dec", new Dictionary<string, string> { { "ar", "ديسمبر" }, { "en", "Dec" } } },
-{ "Product ID", new Dictionary<string, string> { { "ar", "رقم المنتج" }, { "en", "Product ID" } } },
+                { "Product ID", new Dictionary<string, string> { { "ar", "رقم المنتج" }, { "en", "Product ID" } } },
                 { "Category Name", new Dictionary<string, string> { { "ar", "القسم" }, { "en", "Category" } } },
                 { "Created At", new Dictionary<string, string> { { "ar", "تاريخ الإضافة" }, { "en", "Created At" } } },
-                 { "Dashboard", new Dictionary<string, string> { { "ar", "لوحة التحكم" }, { "en", "Dashboard" } } },
-                // Footer & Static Pages
+                { "Dashboard", new Dictionary<string, string> { { "ar", "لوحة التحكم" }, { "en", "Dashboard" } } },
                 { "Important Links", new Dictionary<string, string> { { "ar", "روابط مهمة" }, { "en", "Important Links" } } },
                 { "Return Policy", new Dictionary<string, string> { { "ar", "سياسة الاسترجاع" }, { "en", "Return Policy" } } },
                 { "Terms & Conditions", new Dictionary<string, string> { { "ar", "الشروط والاحكام" }, { "en", "Terms & Conditions" } } },
@@ -62,21 +77,18 @@ namespace SadStore.Services
                 { "Tax Number", new Dictionary<string, string> { { "ar", "الرقم الضريبي" }, { "en", "Tax Number" } } },
                 { "Download Mobile App", new Dictionary<string, string> { { "ar", "تحميل تطبيق الجوال" }, { "en", "Download Mobile App" } } },
                 { "Certified on the Business Platform", new Dictionary<string, string> { { "ar", "موثق لدى منصة الأعمال" }, { "en", "Certified on the Business Platform" } } },
-                { "All rights reserved © Sad 2026", new Dictionary<string, string> { { "ar", "جميع الحقوق محفوظة © صاد 2026" }, { "en", "All rights reserved © Sad 2026" } } },
-               
+                { "All rights reserved © Sad 2026", new Dictionary<string, string> { { "ar", "جميع الحقوق محفوظة © صاد 2026" }, { "en", "All rights reserved © Sad 2026" } } },          
                 { "Vip_Desc1", new Dictionary<string, string> { { "ar", "اجمع النقاط مع كل طلب واستبدلها كخصم على مشترياتك القادمة بكل سهولة اشتري بـ1 ريال" }, { "en", "Collect points with every order and redeem them as a discount on your next purchases easily — shop starting from 1 SAR" } } },
                 { "Vip_Desc2", new Dictionary<string, string> { { "ar", "تحصل على 1 نقطة، للاستفادة من المكافآت والخصومات يجب توفر 500 نقطة أو أكثر في حسابك" }, { "en", "You earn 1 point. To benefit from rewards and discounts, you must have 500 points or more in your account" } } },
                 { "Vip_Promo", new Dictionary<string, string> { { "ar", "500 نقطة = خصم 50 ريال، 1000 نقطة = خصم 100 ريال" }, { "en", "500 points = 50 SAR discount, 1000 points = 100 SAR discount" } } },
                 { "Receive Points", new Dictionary<string, string> { { "ar", "إستقبال النقاط" }, { "en", "Receive Points" } } },
                 { "Ways to Earn Points", new Dictionary<string, string> { { "ar", "طرق الحصول على النقاط" }, { "en", "Ways to Earn Points" } } },
                 { "1 Point", new Dictionary<string, string> { { "ar", "1 نقطة" }, { "en", "1 Point" } } },
-
                 { "Order from Store", new Dictionary<string, string> { { "ar", "الطلب من المتجر" }, { "en", "Order from Store" } } },
                 { "100 Points", new Dictionary<string, string> { { "ar", "100 نقطة" }, { "en", "100 Points" } } },
                 { "Rate Your Order", new Dictionary<string, string> { { "ar", "قيم طلبك" }, { "en", "Rate Your Order" } } },
                 { "Rate Order", new Dictionary<string, string> { { "ar", "تقييم الطلب" }, { "en", "Rate Order" } } },
-                { "25 Points", new Dictionary<string, string> { { "ar", "25 نقطة" }, { "en", "25 Points" } } },
-          
+                { "25 Points", new Dictionary<string, string> { { "ar", "25 نقطة" }, { "en", "25 Points" } } },          
                 { "Share Link", new Dictionary<string, string> { { "ar", "رابط المشاركة" }, { "en", "Share Link" } } },
                 { "Copy Link", new Dictionary<string, string> { { "ar", "نسخ الرابط" }, { "en", "Copy Link" } } },
                 { "Discounts", new Dictionary<string, string> { { "ar", "الخصومات" }, { "en", "Discounts" } } },
@@ -89,8 +101,6 @@ namespace SadStore.Services
                 { "50 SAR Discount Coupon", new Dictionary<string, string> { { "ar", "كوبون خصم 50 ريال" }, { "en", "50 SAR Discount Coupon" } } },
                 { "SAR50 Discount Code", new Dictionary<string, string> { { "ar", "كود خصم SAR50" }, { "en", "SAR50 Discount Code" } } },
                 { "500 Points", new Dictionary<string, string> { { "ar", "500 نقطة" }, { "en", "500 Points" } } },
-
-                // Notifications
                 { "Item added to cart", new Dictionary<string, string> { { "ar", "تمت إضافة المنتج للسلة بنجاح" }, { "en", "Item added to cart successfully" } } },
                 { "Item removed from cart", new Dictionary<string, string> { { "ar", "تم حذف المنتج من السلة" }, { "en", "Item removed from cart" } } },
                 { "Cart updated", new Dictionary<string, string> { { "ar", "تم تحديث السلة" }, { "en", "Cart updated" } } },
@@ -101,8 +111,6 @@ namespace SadStore.Services
                 { "Error occurred", new Dictionary<string, string> { { "ar", "حدث خطأ ما" }, { "en", "An error occurred" } } },
                 { "Invalid login attempt", new Dictionary<string, string> { { "ar", "محاولة تسجيل دخول غير صحيحة" }, { "en", "Invalid login attempt" } } },
                 { "Image Deleted", new Dictionary<string, string> { { "ar", "تم حذف الصورة بنجاح" }, { "en", "Image deleted successfully" } } },
-
-                // Product & Categories
                 { "Abayas", new Dictionary<string, string> { { "ar", "عبايات" }, { "en", "Abayas" } } },
                 { "Abaya Fabrics & Accessories", new Dictionary<string, string> { { "ar", "أقمشة عبايات وكلف" }, { "en", "Abaya Fabrics & Accessories" } } },
                 { "Clothes", new Dictionary<string, string> { { "ar", "ملابس" }, { "en", "Clothes" } } },
@@ -156,8 +164,6 @@ namespace SadStore.Services
                 { "No reviews yet for this product.", new Dictionary<string, string> { { "ar", "لا توجد تقييمات بعد لهذا المنتج." }, { "en", "No reviews yet for this product." } } },
                 { "Related Products", new Dictionary<string, string> { { "ar", "منتجات ذات صلة" }, { "en", "Related Products" } } },
                 { "No similar products.", new Dictionary<string, string> { { "ar", "لا توجد منتجات مشابهة." }, { "en", "No similar products." } } },
-
-                // Cart & Auth
                 { "Order Summary", new Dictionary<string, string> { { "ar", "ملخص الطلب" }, { "en", "Order Summary" } } },
                 { "Subtotal (Excl. Tax)", new Dictionary<string, string> { { "ar", "مجموع المنتجات (بدون ضريبة)" }, { "en", "Subtotal (Excl. Tax)" } } },
                 { "VAT (15%)", new Dictionary<string, string> { { "ar", "ضريبة القيمة المضافة (15%)" }, { "en", "VAT (15%)" } } },
@@ -180,10 +186,6 @@ namespace SadStore.Services
                 { "Enter your personal details and start journey with us", new Dictionary<string, string> { { "ar", "أدخل بياناتك وابدأ إنشاء حسابك معنا" }, { "en", "Enter your personal details and start journey with us" } } },
                 { "or use your email for registration", new Dictionary<string, string> { { "ar", "أو استخدم بريدك الإلكتروني للتسجيل" }, { "en", "or use your email for registration" } } },
                 { "or use your account", new Dictionary<string, string> { { "ar", "أو سجّل الدخول باستخدام حسابك" }, { "en", "or use your account" } } },
-
-                // ==========================================
-                // Profile Page (Updated)
-                // ==========================================
                 { "Notifications", new Dictionary<string, string> { { "ar", "الإشعارات" }, { "en", "Notifications" } } },
                 { "No notifications", new Dictionary<string, string> { { "ar", "لا توجد إشعارات" }, { "en", "No notifications" } } },
                 { "Orders", new Dictionary<string, string> { { "ar", "الطلبات" }, { "en", "Orders" } } },
@@ -192,7 +194,6 @@ namespace SadStore.Services
                 { "No payment requests", new Dictionary<string, string> { { "ar", "لا توجد طلبات دفع" }, { "en", "No payment requests" } } },
                 { "No items", new Dictionary<string, string> { { "ar", "لا توجد عناصر" }, { "en", "No items" } } },
                 { "My Wallet", new Dictionary<string, string> { { "ar", "محفظتي" }, { "en", "My Wallet" } } },
-                { "Current Balance", new Dictionary<string, string> { { "ar", "الرصيد الحالي" }, { "en", "Current Balance" } } },
                 { "Loyalty Points", new Dictionary<string, string> { { "ar", "نقاط الولاء" }, { "en", "Loyalty Points" } } },
                 { "My Account", new Dictionary<string, string> { { "ar", "حسابي" }, { "en", "My Account" } } },
                 { "Phone Number", new Dictionary<string, string> { { "ar", "رقم الهاتف" }, { "en", "Phone Number" } } },
@@ -208,11 +209,8 @@ namespace SadStore.Services
                 { "No previous orders found", new Dictionary<string, string> { { "ar", "لا توجد طلبات سابقة" }, { "en", "No previous orders found" } } },
                 { "جديد", new Dictionary<string, string> { { "ar", "جديد" }, { "en", "New" } } },
                 { "قيد التنفيذ", new Dictionary<string, string> { { "ar", "قيد التنفيذ" }, { "en", "In Progress" } } },
-                { "تم الشحن", new Dictionary<string, string> { { "ar", "تم الشحن" }, { "en", "Shipped" } } },
                 { "مكتمل", new Dictionary<string, string> { { "ar", "مكتمل" }, { "en", "Completed" } } },
                 { "ملغي", new Dictionary<string, string> { { "ar", "ملغي" }, { "en", "Cancelled" } } },
-                
-                // ... (Content pages & Admin keys)
                 { "About Us", new Dictionary<string, string> { { "ar", "من نحن" }, { "en", "About Us" } } },
                 { "About Saad", new Dictionary<string, string> { { "ar", "عن صاد" }, { "en", "About Saad" } } },
                 { "Happy Customer", new Dictionary<string, string> { { "ar", "عميل سعيد" }, { "en", "Happy Customer" } } },
@@ -233,11 +231,9 @@ namespace SadStore.Services
                 { "Delivery Time Int", new Dictionary<string, string> { { "ar", "يستغرق من ١٠ الى ١٥ يوم عمل" }, { "en", "Takes 10 to 15 working days" } } },
                 { "Return Method Content", new Dictionary<string, string> { { "ar", "تواصل معنا عبر الواتساب لبدء الاسترجاع" }, { "en", "Contact us via WhatsApp to start the return" } } },
                 { "Return Response", new Dictionary<string, string> { { "ar", "سيقوم فريق خدمة العملاء بالرد عليكم وتزويدكم ببوليصة الشحن خلال 48 ساعة." }, { "en", "Our customer service team will respond to you and provide the shipping policy within 48 hours." } } },
-  
                 { "Invite Your Friends", new Dictionary<string, string> { { "ar", "شارك أصدقائك" }, { "en", "Invite Your Friends" } } },
                 { "Shop Now", new Dictionary<string, string> { { "ar", "تسوق الآن" }, { "en", "Shop Now" } } },
-                { "Points", new Dictionary<string, string> { { "ar", "نقطة" }, { "en", "Points" } } },
-               
+                { "Points", new Dictionary<string, string> { { "ar", "نقطة" }, { "en", "Points" } } },              
                 { "Collect points...", new Dictionary<string, string> { { "ar", "اجمع النقاط مع كل طلب واستبدلها كخصم على مشترياتك القادمة بكل سهولة اشتري بـ1 ريال" }, { "en", "Collect points with every order and redeem them as a discount on your next purchases easily — shop starting from 1 SAR" } } },
                 { "You earn 1 point...", new Dictionary<string, string> { { "ar", "تحصل على 1 نقطة، للاستفادة من المكافآت والخصومات يجب توفر 500 نقطة أو أكثر في حسابك" }, { "en", "You earn 1 point. To benefit from rewards and discounts, you must have 500 points or more in your account" } } },
                 { "500 points...", new Dictionary<string, string> { { "ar", "500 نقطة = خصم 50 ريال، 1000 نقطة = خصم 100 ريال" }, { "en", "500 points = 50 SAR discount, 1000 points = 100 SAR discount" } } },
@@ -250,13 +246,11 @@ namespace SadStore.Services
                 { "Orders up to 599 riyals: One free...", new Dictionary<string, string> { { "ar", "الطلبات حتى 599 ريال : هدية قطعة واحدة مجانية من صاد ." }, { "en", "Orders up to 599 riyals: One free piece of saad as a gift." } } },
                 { "Orders of 600...", new Dictionary<string, string> { { "ar", "الطلبات من 600 ريال و أكثر : هدية قطعة واحدة مجانية من صاد + اكسسوار هدية ." }, { "en", "Orders of 600 riyals and more: One free piece of saad gift + a gift accessory." } } },
                 { "At Saad, we strive...", new Dictionary<string, string> {
-                      { "ar", "نحن في \"صاد\" نسعى لتقديم أرقى الأزياء النسائية التي تجمع بين الأصالة والعصرية. تأسس متجرنا ليكون ملاذك الأول للبحث عن العبايات الفاخرة، الأقمشة الراقية، والملابس التي تعكس شخصيتك الفريدة." },
-                      { "en", "At Saad, we strive to provide the finest women's fashion that combines authenticity and modernity. Our store was established to be your first destination for luxury abayas, high-end fabrics, and clothes that reflect your unique personality." }
-                } },
+                { "ar", "نحن في \"صاد\" نسعى لتقديم أرقى الأزياء النسائية التي تجمع بين الأصالة والعصرية. تأسس متجرنا ليكون ملاذك الأول للبحث عن العبايات الفاخرة، الأقمشة الراقية، والملابس التي تعكس شخصيتك الفريدة." },
+                { "en", "At Saad, we strive to provide the finest women's fashion that combines authenticity and modernity. Our store was established to be your first destination for luxury abayas, high-end fabrics, and clothes that reflect your unique personality." } } },
                 { "We pay attention...", new Dictionary<string, string> {
-                      { "ar", "نهتم بأدق التفاصيل، من اختيار الخامات إلى دقة التصميم، لنضمن لكِ إطلالة مميزة في كل المناسبات. سواء كنتِ تبحثين عن عباية يومية عملية أو فستان سهرة يخطف الأنظار، ستجدين في صاد ما يرضي ذوقك." },
-                      { "en", "We pay attention to the smallest details, from selecting materials to design precision, to ensure you a distinctive look on all occasions. Whether you are looking for a practical daily abaya or an eye-catching evening dress, you will find at Saad what satisfies your taste." }
-                } },
+                { "ar", "نهتم بأدق التفاصيل، من اختيار الخامات إلى دقة التصميم، لنضمن لكِ إطلالة مميزة في كل المناسبات. سواء كنتِ تبحثين عن عباية يومية عملية أو فستان سهرة يخطف الأنظار، ستجدين في صاد ما يرضي ذوقك." },
+                { "en", "We pay attention to the smallest details, from selecting materials to design precision, to ensure you a distinctive look on all occasions. Whether you are looking for a practical daily abaya or an eye-catching evening dress, you will find at Saad what satisfies your taste." } } },
                 { "View Site", new Dictionary<string, string> { { "ar", "عرض الموقع" }, { "en", "View Site" } } },
                 { "Saad Panel", new Dictionary<string, string> { { "ar", "لوحة صاد" }, { "en", "Saad Panel" } } },
                 { "Total Orders", new Dictionary<string, string> { { "ar", "إجمالي الطلبات" }, { "en", "Total Orders" } } },
@@ -313,7 +307,6 @@ namespace SadStore.Services
                 { "Print Invoice", new Dictionary<string, string> { { "ar", "طباعة الفاتورة" }, { "en", "Print Invoice" } } },
                 { "Order Details", new Dictionary<string, string> { { "ar", "تفاصيل الطلب" }, { "en", "Order Details" } } },
                 { "Customer Info", new Dictionary<string, string> { { "ar", "معلومات العميل" }, { "en", "Customer Info" } } },
-                { "Order Items", new Dictionary<string, string> { { "ar", "المنتجات المطلوبة" }, { "en", "Order Items" } } },
                 { "Unit Price", new Dictionary<string, string> { { "ar", "سعر الوحدة" }, { "en", "Unit Price" } } },
                 { "Subtotal", new Dictionary<string, string> { { "ar", "المجموع الفرعي" }, { "en", "Subtotal" } } },
                 { "Address", new Dictionary<string, string> { { "ar", "العنوان" }, { "en", "Address" } } },
@@ -359,7 +352,6 @@ namespace SadStore.Services
                 { "Current Price", new Dictionary<string, string> { { "ar", "السعر الحالي (بعد الخصم)" }, { "en", "Current Price (After Discount)" } } },
                 { "Available Sizes", new Dictionary<string, string> { { "ar", "المقاسات المتاحة" }, { "en", "Available Sizes" } } },
                 { "Sizes Note", new Dictionary<string, string> { { "ar", "افصل بين المقاسات بفاصلة (مثال: S,M,L)" }, { "en", "Separate sizes with a comma (e.g., S,M,L)" } } },
-                  // تحديث نصوص خدمة التوصيل
                 { "Delivery Content2", new Dictionary<string, string> { { "ar", "في حال كان عنوان العميل خارج نطاق التوصيل الخاص بشركة الشحن، سيتم توجيه الشحنة إلى أقرب فرع تابع للشركة في منطقة العميل، حيث يمكن للعميل استلام الشحنة مباشرة من المكتب المحدد." }, { "en", "If the customer's address is outside the shipping company's delivery area, the shipment will be directed to the nearest branch of the company in the customer's area, where the customer can collect the shipment directly from the designated office." } } },
                 { "Local Delivery2", new Dictionary<string, string> { { "ar", "مدة التوصيل داخل مدن المملكة" }, { "en", "Delivery duration within Kingdom cities" } } },
                 { "International Delivery2", new Dictionary<string, string> { { "ar", "مدة التوصيل الدولي" }, { "en", "International Delivery Duration" } } },
@@ -367,23 +359,19 @@ namespace SadStore.Services
                 { "Delivery Companies2", new Dictionary<string, string> { { "ar", "شركات الشحن: أرامكس - سمسا" }, { "en", "Shipping Companies: Aramex - SMSA" } } },
                 { "Delivery Time Int2", new Dictionary<string, string> { { "ar", "يستغرق من ١٠ الى ١٥ يوم عمل" }, { "en", "Takes 10 to 15 working days" } } },
                 { "Int Delivery Company", new Dictionary<string, string> { { "ar", "شركة الشحن : أرامكس" }, { "en", "Shipping Company: Aramex" } } },
-                 { "Gift Policy", new Dictionary<string, string> { { "ar", "سياسة الهدية" }, { "en", "Gift Policy" } } },
+                { "Gift Policy", new Dictionary<string, string> { { "ar", "سياسة الهدية" }, { "en", "Gift Policy" } } },
                 { "Terms_WinterOffer", new Dictionary<string, string> { { "ar", "الشروط والأحكام عرض هدية شتوية :" }, { "en", "Terms and conditions for the winter gift offer:" } } },
                 { "Terms_AccessoryOffer", new Dictionary<string, string> { { "ar", "الشروط والأحكام عرض هدية الاكسسوار :" }, { "en", "Terms and conditions for the accessory gift offer:" } } },
                 { "Gift_StockCondition", new Dictionary<string, string> { { "ar", "الهدايا تُمنح لجميع الطلبات حتى نفاد الكمية." }, { "en", "Gifts are granted to all orders while stocks last." } } },
                 { "Gift_ReturnCondition", new Dictionary<string, string> { { "ar", "في حال استرجاع الطلب، يجب إعادة الهدية المرفقة لإتمام استرداد المبلغ." }, { "en", "In case of order return, the included gift must be returned to complete the refund." } } },
-
                 { "Gift_Winter_199", new Dictionary<string, string> { { "ar", "الطلبات حتى 199 ريال : هدية واحدة بلوزة شتوية." }, { "en", "Orders up to 199 SAR: One free winter blouse." } } },
                 { "Gift_Winter_599", new Dictionary<string, string> { { "ar", "الطلبات أكثر من 599 ريال : هديتان شتوية." }, { "en", "Orders over 599 SAR: Two winter gifts." } } },
-
                 { "Gift_Accessory_599", new Dictionary<string, string> { { "ar", "الطلبات حتى 599 ريال : هدية قطعة واحدة مجانية من صاد ." }, { "en", "Orders up to 599 SAR: One free piece from Saad." } } },
                 { "Gift_Accessory_600", new Dictionary<string, string> { { "ar", "الطلبات من 600 ريال و أكثر : هدية قطعة واحدة مجانية من صاد + اكسسوار هدية ." }, { "en", "Orders of 600 SAR and more: One free piece from Saad + Gift Accessory." } } },
-
                 { "Return Method", new Dictionary<string, string> { { "ar", "طريقة الاسترجاع" }, { "en", "Return Method" } } },
                 { "ReturnMethod_Action", new Dictionary<string, string> { { "ar", "تواصل معنا عبر الواتساب لبدء الاسترجاع" }, { "en", "Contact us via WhatsApp to start return" } } },
                 { "ReturnMethod_Note", new Dictionary<string, string> { { "ar", "سيقوم فريق خدمة العملاء بالرد عليكم وتزويدكم ببوليصة الشحن خلال 48 ساعة." }, { "en", "Our customer service team will respond and provide the shipping policy within 48 hours." } } },
-
-                     { "Get in Touch", new Dictionary<string, string> { { "ar", "تواصل معنا" }, { "en", "Get in Touch" } } },
+                { "Get in Touch", new Dictionary<string, string> { { "ar", "تواصل معنا" }, { "en", "Get in Touch" } } },
                 { "We are here to help", new Dictionary<string, string> { { "ar", "نحن هنا للمساعدة" }, { "en", "We are here to help" } } },
                 { "Email", new Dictionary<string, string> { { "ar", "البريد الإلكتروني" }, { "en", "Email" } } },
                 { "SaadProfile", new Dictionary<string, string> { { "ar", "صاد" }, { "en", "Saad" } } },
@@ -404,72 +392,77 @@ namespace SadStore.Services
                 { "RP_NotesTitle", new Dictionary<string, string> { { "ar", "ملاحظات" }, { "en", "Notes" } } },
                 { "RP_Note1", new Dictionary<string, string> { { "ar", "لا يمكن إلغاء الطلب بعد التأكيد." }, { "en", "The order cannot be cancelled after confirmation." } } },
                 { "RP_Note2", new Dictionary<string, string> { { "ar", "يتم استرداد المبلغ خلال 14 يوم عمل." }, { "en", "The amount will be refunded within 14 working days." } } },
-
                 { "Working Hours", new Dictionary<string, string> { { "ar", "ساعات العمل" }, { "en", "Working Hours" } } },
                 { "Sunday to Thursday", new Dictionary<string, string> { { "ar", "من الأحد إلى الخميس" }, { "en", "Sunday to Thursday" } } },
                 { "9:00 AM - 9:00 PM", new Dictionary<string, string> { { "ar", "9:00 صباحاً - 9:00 مساءً" }, { "en", "9:00 AM - 9:00 PM" } } },
-
-// --- Terms & Conditions Section ---
-{ "Terms_Intro_Title", new Dictionary<string, string> { { "ar", "الشروط والأحكام" }, { "en", "Terms & Conditions" } } },
-{ "Terms_IP_Title", new Dictionary<string, string> { { "ar", "الملكية الفكرية والترخيص" }, { "en", "Intellectual Property & License" } } },
-{ "Terms_IP_Body", new Dictionary<string, string> {
-    { "ar", "يشكل كل المحتوى المتوفر على هذا الموقع (بما في ذلك النصوص، التصميم، الرسومات، الشعارات، الأيقونات، الصور، المقاطع الصوتية، والبرامج) ملكية حصرية لـ (صاد) والمرخصين لها. تمنحك (صاد) ترخيصاً محدوداً لاستخدام هذا الموقع استخداماً شخصياً. تحتفظ (صاد) بالملكية الكاملة لهذا المحتوى." },
-    { "en", "All content available on this site (including text, design, graphics, logos, icons, images, audio clips, and software) is the exclusive property of (Saad) and its licensors. Saad grants you a limited license for personal use of this site. Saad retains full ownership of this content." }
-} },
-
-{ "Terms_Flash_Title", new Dictionary<string, string> { { "ar", "خصم فلاش الويك اند" }, { "en", "Weekend Flash Sale" } } },
-{ "Terms_Flash_Body", new Dictionary<string, string> {
-    { "ar", "يسري الخصم 25٪ كود [WEEK25] على قطع مختارة فقط لمدة 48 ساعة. الخصم لا يشمل التوصيل المجاني ولا يُجمع مع عروض أخرى. القسائم والكوبونات لا تشمل المنتجات المخفضة." },
-    { "en", "The 25% discount code [WEEK25] applies to selected items only for 48 hours. The discount does not include free shipping and cannot be combined with other offers. Vouchers and coupons do not apply to discounted products." }
-} },
-
-{ "Terms_Liability_Title", new Dictionary<string, string> { { "ar", "المسؤولية والخصوصية" }, { "en", "Liability & Privacy" } } },
-{ "Terms_Liability_Body", new Dictionary<string, string> {
-    { "ar", "تخضع عملية تقديمك لمعلومات شخصية لسياسة الخصوصية. استخدامك للموقع يتم على مسؤوليتك الخاصة. لا تضمن (صاد) خلو الموقع من الانقطاع أو الأخطاء، ولا تتحمل مسؤولية أي أضرار ناتجة عن استخدامه. أنت توافق على الدفاع عن (صاد) وتعويضها ضد أي مطالبات." },
-    { "en", "Your submission of personal information is subject to our Privacy Policy. Your use of the site is at your own risk. Saad does not guarantee the site is free from interruptions or errors and is not liable for damages resulting from its use. You agree to indemnify and defend Saad against any claims." }
-} },
-
-{ "Terms_Legal_Title", new Dictionary<string, string> { { "ar", "القانون والنزاعات" }, { "en", "Law & Disputes" } } },
-{ "Terms_Legal_Body", new Dictionary<string, string> {
-    { "ar", "تشكل هذه الأحكام الاتفاقية الكاملة. في حالة بطلان أي جزء، يظل الباقي سارياً. تخضع هذه الأحكام لقوانين المملكة العربية السعودية. يوافق الطرفان على محاولة حل النزاعات ودياً خلال 30 يوماً قبل اللجوء للقضاء." },
-    { "en", "These terms constitute the entire agreement. If any part is void, the rest remains valid. These terms are governed by the laws of Saudi Arabia. Parties agree to attempt amicable dispute resolution within 30 days before legal action." }
-} },
-
-{ "Terms_Orders_Title", new Dictionary<string, string> { { "ar", "الطلبات والأسعار" }, { "en", "Orders & Pricing" } } },
-{ "Terms_Orders_Body", new Dictionary<string, string> {
-    { "ar", "تخضع جميع الطلبات للقبول. نحتفظ بالحق في رفض أو إلغاء الطلب لأي سبب. قد لا يكون توفر البضائع مضموناً دائماً. جميع الأسعار صحيحة عند دخولك الموقع وقد تتغير." },
-    { "en", "All orders are subject to acceptance. We reserve the right to refuse or cancel orders for any reason. Stock availability is not guaranteed. All prices are correct at the time of entry but may change." }
-} },
-
-{ "Terms_Comments_Title", new Dictionary<string, string> { { "ar", "الردود والتعليقات" }, { "en", "Replies & Comments" } } },
-{ "Terms_Comments_Body", new Dictionary<string, string> {
-    { "ar", "نرحب بالتعليقات، لكن لا نقبل أي معلومات سرية. كل المشاركات ستصبح ملكية حصرية لـ (صاد). يمنع استخدام لغة بذيئة أو عناوين مزيفة. نحتفظ بالحق في حذف أو تعديل البيانات." },
-    { "en", "We welcome comments but do not accept confidential info. All submissions become exclusive property of Saad. Profanity or fake addresses are prohibited. We reserve the right to delete or edit data." }
-} },
-
-{ "Terms_Payment_Title", new Dictionary<string, string> { { "ar", "الأسعار وسياسة الدفع" }, { "en", "Prices & Payment Policy" } } },
-{ "Terms_Payment_Body", new Dictionary<string, string> {
-    { "ar", "الأسعار تشمل ضريبة القيمة المضافة. الدفع عبر البطاقات يخضع للتحقق. يجب تطابق بيانات البطاقة مع حاملها. لن تُخزن بيانات البطاقات أو تباع لأطراف ثالثة باستثناء بوابة الدفع." },
-    { "en", "Prices include VAT. Card payments are subject to verification. Card details must match the holder. Card data will not be stored or sold to third parties, except for the payment gateway." }
-} },
-
-{ "Terms_Offers_Title", new Dictionary<string, string> { { "ar", "العروض والتخفيضات" }, { "en", "Offers & Discounts" } } },
-{ "Terms_Offers_Body", new Dictionary<string, string> {
-    { "ar", "كود [free10] يمنح توصيلاً مجانياً لمدة 6 أشهر للطلبات فوق 199 ريال (تطبيق فقط). كود ACTAN يشمل (جديد صاد). كود AC100 يشمل (جديد صاد) باستثناء المخفض." },
-    { "en", "Code [free10] gives free shipping for 6 months for orders over 199 SAR (App only). ACTAN code applies to (New Saad). AC100 code applies to (New Saad) excluding discounted items." }
-} },
-
-{ "Terms_ReturnOffers_Title", new Dictionary<string, string> { { "ar", "سياسة إرجاع العروض" }, { "en", "Offer Return Policy" } } },
-{ "Terms_ReturnOffers_Body", new Dictionary<string, string> {
-    { "ar", "الطلبات ضمن عرض (قطعتين بسعر 95): لا يمكن إرجاع قطعة منفصلة، يشترط إرجاع العرض كاملاً. عند شراء أكثر من قطعتين، يقتصر الإرجاع على عدد زوجي." },
-    { "en", "Orders within (2 for 95) offer: Individual items cannot be returned; the full offer must be returned. For more than 2 items, returns must be in even numbers." }
-} },
-
-{ "Terms_EditOrder_Title", new Dictionary<string, string> { { "ar", "تعديل الطلبات" }, { "en", "Order Modification" } } },
-{ "Terms_EditOrder_Body", new Dictionary<string, string> {
-    { "ar", "حرصاً على سرعة التنفيذ، الطلب يصبح نهائياً وغير قابل للتعديل بعد الدفع. يتحمل العميل مسؤولية مراجعة البيانات قبل الإتمام." },
-    { "en", "For speed of execution, the order becomes final and unmodifiable after payment. The customer is responsible for reviewing data before completion." }
-} },
+                { "Terms_Intro_Title", new Dictionary<string, string> { { "ar", "الشروط والأحكام" }, { "en", "Terms & Conditions" } } },
+                { "Terms_IP_Title", new Dictionary<string, string> { { "ar", "الملكية الفكرية والترخيص" }, { "en", "Intellectual Property & License" } } },
+                { "Terms_IP_Body", new Dictionary<string, string> {
+                { "ar", "يشكل كل المحتوى المتوفر على هذا الموقع (بما في ذلك النصوص، التصميم، الرسومات، الشعارات، الأيقونات، الصور، المقاطع الصوتية، والبرامج) ملكية حصرية لـ (صاد) والمرخصين لها. تمنحك (صاد) ترخيصاً محدوداً لاستخدام هذا الموقع استخداماً شخصياً. تحتفظ (صاد) بالملكية الكاملة لهذا المحتوى." },
+                { "en", "All content available on this site (including text, design, graphics, logos, icons, images, audio clips, and software) is the exclusive property of (Saad) and its licensors. Saad grants you a limited license for personal use of this site. Saad retains full ownership of this content." }} },
+                { "Terms_Flash_Title", new Dictionary<string, string> { { "ar", "خصم فلاش الويك اند" }, { "en", "Weekend Flash Sale" } } },
+                { "Terms_Flash_Body", new Dictionary<string, string> {
+                { "ar", "يسري الخصم 25٪ كود [WEEK25] على قطع مختارة فقط لمدة 48 ساعة. الخصم لا يشمل التوصيل المجاني ولا يُجمع مع عروض أخرى. القسائم والكوبونات لا تشمل المنتجات المخفضة." },
+                { "en", "The 25% discount code [WEEK25] applies to selected items only for 48 hours. The discount does not include free shipping and cannot be combined with other offers. Vouchers and coupons do not apply to discounted products." } } },
+                { "Terms_Liability_Title", new Dictionary<string, string> { { "ar", "المسؤولية والخصوصية" }, { "en", "Liability & Privacy" } } },
+                { "Terms_Liability_Body", new Dictionary<string, string> {
+                { "ar", "تخضع عملية تقديمك لمعلومات شخصية لسياسة الخصوصية. استخدامك للموقع يتم على مسؤوليتك الخاصة. لا تضمن (صاد) خلو الموقع من الانقطاع أو الأخطاء، ولا تتحمل مسؤولية أي أضرار ناتجة عن استخدامه. أنت توافق على الدفاع عن (صاد) وتعويضها ضد أي مطالبات." },
+                { "en", "Your submission of personal information is subject to our Privacy Policy. Your use of the site is at your own risk. Saad does not guarantee the site is free from interruptions or errors and is not liable for damages resulting from its use. You agree to indemnify and defend Saad against any claims." }} },
+                { "Terms_Legal_Title", new Dictionary<string, string> { { "ar", "القانون والنزاعات" }, { "en", "Law & Disputes" } } },
+                { "Terms_Legal_Body", new Dictionary<string, string> {
+                { "ar", "تشكل هذه الأحكام الاتفاقية الكاملة. في حالة بطلان أي جزء، يظل الباقي سارياً. تخضع هذه الأحكام لقوانين المملكة العربية السعودية. يوافق الطرفان على محاولة حل النزاعات ودياً خلال 30 يوماً قبل اللجوء للقضاء." },
+                { "en", "These terms constitute the entire agreement. If any part is void, the rest remains valid. These terms are governed by the laws of Saudi Arabia. Parties agree to attempt amicable dispute resolution within 30 days before legal action." }} },
+                { "Terms_Orders_Title", new Dictionary<string, string> { { "ar", "الطلبات والأسعار" }, { "en", "Orders & Pricing" } } },
+                { "Terms_Orders_Body", new Dictionary<string, string> {
+                { "ar", "تخضع جميع الطلبات للقبول. نحتفظ بالحق في رفض أو إلغاء الطلب لأي سبب. قد لا يكون توفر البضائع مضموناً دائماً. جميع الأسعار صحيحة عند دخولك الموقع وقد تتغير." },
+                { "en", "All orders are subject to acceptance. We reserve the right to refuse or cancel orders for any reason. Stock availability is not guaranteed. All prices are correct at the time of entry but may change." }} },
+                { "Terms_Comments_Title", new Dictionary<string, string> { { "ar", "الردود والتعليقات" }, { "en", "Replies & Comments" } } },
+                { "Terms_Comments_Body", new Dictionary<string, string> {
+                { "ar", "نرحب بالتعليقات، لكن لا نقبل أي معلومات سرية. كل المشاركات ستصبح ملكية حصرية لـ (صاد). يمنع استخدام لغة بذيئة أو عناوين مزيفة. نحتفظ بالحق في حذف أو تعديل البيانات." },
+                { "en", "We welcome comments but do not accept confidential info. All submissions become exclusive property of Saad. Profanity or fake addresses are prohibited. We reserve the right to delete or edit data." }} },
+                { "Terms_Payment_Title", new Dictionary<string, string> { { "ar", "الأسعار وسياسة الدفع" }, { "en", "Prices & Payment Policy" } } },
+                { "Terms_Payment_Body", new Dictionary<string, string> {
+                { "ar", "الأسعار تشمل ضريبة القيمة المضافة. الدفع عبر البطاقات يخضع للتحقق. يجب تطابق بيانات البطاقة مع حاملها. لن تُخزن بيانات البطاقات أو تباع لأطراف ثالثة باستثناء بوابة الدفع." },
+                { "en", "Prices include VAT. Card payments are subject to verification. Card details must match the holder. Card data will not be stored or sold to third parties, except for the payment gateway." }} },
+                { "Terms_Offers_Title", new Dictionary<string, string> { { "ar", "العروض والتخفيضات" }, { "en", "Offers & Discounts" } } },
+                { "Terms_Offers_Body", new Dictionary<string, string> {
+                { "ar", "كود [free10] يمنح توصيلاً مجانياً لمدة 6 أشهر للطلبات فوق 199 ريال (تطبيق فقط). كود ACTAN يشمل (جديد صاد). كود AC100 يشمل (جديد صاد) باستثناء المخفض." },
+                { "en", "Code [free10] gives free shipping for 6 months for orders over 199 SAR (App only). ACTAN code applies to (New Saad). AC100 code applies to (New Saad) excluding discounted items." }} },
+                { "Terms_ReturnOffers_Title", new Dictionary<string, string> { { "ar", "سياسة إرجاع العروض" }, { "en", "Offer Return Policy" } } },
+                { "Terms_ReturnOffers_Body", new Dictionary<string, string> {
+                { "ar", "الطلبات ضمن عرض (قطعتين بسعر 95): لا يمكن إرجاع قطعة منفصلة، يشترط إرجاع العرض كاملاً. عند شراء أكثر من قطعتين، يقتصر الإرجاع على عدد زوجي." },
+                { "en", "Orders within (2 for 95) offer: Individual items cannot be returned; the full offer must be returned. For more than 2 items, returns must be in even numbers." }} },
+                { "Terms_EditOrder_Title", new Dictionary<string, string> { { "ar", "تعديل الطلبات" }, { "en", "Order Modification" } } },
+                { "Terms_EditOrder_Body", new Dictionary<string, string> {
+                { "ar", "حرصاً على سرعة التنفيذ، الطلب يصبح نهائياً وغير قابل للتعديل بعد الدفع. يتحمل العميل مسؤولية مراجعة البيانات قبل الإتمام." },
+                { "en", "For speed of execution, the order becomes final and unmodifiable after payment. The customer is responsible for reviewing data before completion." }} },
+                { "Title (Ar)", new Dictionary<string, string> { { "ar", "العنوان (عربي)" }, { "en", "Title (Ar)" } } },
+                { "Title (En)", new Dictionary<string, string> { { "ar", "العنوان (إنجليزي)" }, { "en", "Title (En)" } } },
+                { "Content (Ar)", new Dictionary<string, string> { { "ar", "المحتوى (عربي)" }, { "en", "Content (Ar)" } } },
+                { "Content (En)", new Dictionary<string, string> { { "ar", "المحتوى (إنجليزي)" }, { "en", "Content (En)" } } },
+                { "City / Region (Ar)", new Dictionary<string, string> { { "ar", "المدينة / المنطقة (عربي)" }, { "en", "City / Region (Ar)" } } },
+                { "City / Region (En)", new Dictionary<string, string> { { "ar", "المدينة / المنطقة (إنجليزي)" }, { "en", "City / Region (En)" } } },
+                { "Wallet Balance", new Dictionary<string, string> { { "ar", "رصيد المحفظة" }, { "en", "Wallet Balance" } } },
+                { "Edit User", new Dictionary<string, string> { { "ar", "تعديل المستخدم" }, { "en", "Edit User" } } },
+                { "User Details", new Dictionary<string, string> { { "ar", "تفاصيل المستخدم" }, { "en", "User Details" } } },
+                { "Send Notification", new Dictionary<string, string> { { "ar", "إرسال إشعار" }, { "en", "Send Notification" } } },
+                { "Notification Title", new Dictionary<string, string> { { "ar", "عنوان الإشعار" }, { "en", "Notification Title" } } },
+                { "Notification Body", new Dictionary<string, string> { { "ar", "نص الإشعار" }, { "en", "Notification Body" } } },
+                { "Notification Sent", new Dictionary<string, string> { { "ar", "تم إرسال الإشعار بنجاح" }, { "en", "Notification sent successfully" } } },
+                { "Pending Payment Orders", new Dictionary<string, string> { { "ar", "طلبات بانتظار الدفع" }, { "en", "Orders Pending Payment" } } },
+                { "Current Balance", new Dictionary<string, string> { { "ar", "الرصيد الحالي" }, { "en", "Current Balance" } } },
+                { "Shipping Address", new Dictionary<string, string> { { "ar", "عنوان الشحن" }, { "en", "Shipping Address" } } },
+                { "Order Items", new Dictionary<string, string> { { "ar", "المنتجات المطلوبة" }, { "en", "Order Items" } } },
+                { "Payment Summary", new Dictionary<string, string> { { "ar", "ملخص الدفع" }, { "en", "Payment Summary" } } },
+                { "Order Date", new Dictionary<string, string> { { "ar", "تاريخ الطلب" }, { "en", "Order Date" } } },
+                { "Track Order", new Dictionary<string, string> { { "ar", "تتبع الطلب" }, { "en", "Track Order" } } },
+                { "Order Placed", new Dictionary<string, string> { { "ar", "تم الطلب" }, { "en", "Order Placed" } } },
+                { "Processing", new Dictionary<string, string> { { "ar", "تجهيز الطلب" }, { "en", "Processing" } } },
+                { "Shipped", new Dictionary<string, string> { { "ar", "تم الشحن" }, { "en", "Shipped" } } },
+                { "Delivered", new Dictionary<string, string> { { "ar", "تم التوصيل" }, { "en", "Delivered" } } },
+                { "Back to Orders", new Dictionary<string, string> { { "ar", "العودة للطلبات" }, { "en", "Back to Orders" } } },
+                { "Return Eligible until", new Dictionary<string, string> { { "ar", "متاح للإرجاع حتى" }, { "en", "Return eligible until" } } },
+                { "Product", new Dictionary<string, string> { { "ar", "المنتج" }, { "en", "Product" } } },
             };
         }
 

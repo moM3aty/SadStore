@@ -24,6 +24,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/main.css">
+    <link rel="icon" type="image/x-icon" href="~/images/logo.png">
 </head>
 
 <body>
@@ -98,8 +99,7 @@
                         {
                             @if (User.IsInRole("Admin"))
                             {
-                                <a href="/Admin/Dashboard" class="text-danger fw-bold mx-2">@Lang.Get("Dashboard")</a>
-                                <span>|</span>
+                                <a href="/Admin/Dashboard">@Lang.Get("Dashboard")</a>
                             }
                         }
                         else
@@ -131,7 +131,6 @@
             <div class="d-flex align-items-center justify-content-end flex-1">
                 <a href="/Wishlist" class="nav-icon position-relative d-none d-md-block ms-3">
                     <i class="fas fa-heart"></i>
-                    <span class="badge">0</span>
                 </a>
                 <a href="/Cart" class="nav-icon position-relative ms-3">
                     <i class="fas fa-bag-shopping"></i>

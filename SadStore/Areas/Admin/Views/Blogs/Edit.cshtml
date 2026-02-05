@@ -7,40 +7,81 @@
 }
 
 <div class="row justify-content-center">
-    <div class="col-md-10">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">@Lang.Get("Edit Post"): @Model.Title</h5>
-                <a href="/Admin/Blogs" class="btn btn-outline-secondary btn-sm">@Lang.Get("Back to List")</a>
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0 text-dark">@Lang.Get("Edit Post")</h4>
+            <a asp-area="Admin" asp-controller="Blogs" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i> @Lang.Get("Back to List")
+            </a>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-edit me-2"></i> @Model.TitleAr</h6>
             </div>
-            <div class="card-body">
-                <form action="/Admin/Blogs/Edit/@Model.Id" method="post" enctype="multipart/form-data">
+            <div class="card-body p-4">
+                <form asp-area="Admin" asp-controller="Blogs" asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
                     <input type="hidden" asp-for="Id" />
 
-                    <div class="mb-3">
-                        <label class="form-label">@Lang.Get("Title")</label>
-                        <input type="text" asp-for="Title" class="form-control" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">@Lang.Get("Product Image")</label>
-                        <input type="file" name="imageFile" class="form-control" accept="image/*" />
-                        <div class="mt-2">
-                            <small>@Lang.Get("Current Image"):</small>
-                            <img src="@Model.ImageUrl" style="width: 100px; height: 60px; object-fit: cover;" class="rounded border">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-bold small text-muted">@Lang.Get("Title (Ar)") <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="TitleAr" class="form-control bg-light" required />
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-bold small text-muted">@Lang.Get("Title (En)") <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="TitleEn" class="form-control bg-light" required />
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">@Lang.Get("Content")</label>
-                        <textarea asp-for="Content" class="form-control" rows="12" required></textarea>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted">@Lang.Get("Product Image")</label>
+                        <div class="d-flex align-items-center gap-3 p-3 border rounded bg-light mb-2">
+                            <img src="@Model.ImageUrl" class="rounded shadow-sm" style="width: 120px; height: 80px; object-fit: cover;" onerror="this.src='/images/blog-default.jpg'">
+                            <div class="flex-grow-1">
+                                <label class="form-label small text-muted mb-1">@Lang.Get("Change Image")</label>
+                                <input type="file" name="imageFile" class="form-control form-control-sm" accept="image/*" />
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-custom">@Lang.Get("Save Changes")</button>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted">@Lang.Get("Content (Ar)") <span class="text-danger">*</span></label>
+                        <textarea asp-for="ContentAr" class="form-control bg-light rich-editor" rows="8"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted">@Lang.Get("Content (En)") <span class="text-danger">*</span></label>
+                        <textarea asp-for="ContentEn" class="form-control bg-light rich-editor" rows="8"></textarea>
+                    </div>
+
+                    <div class="d-grid pt-2">
+                        <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                            <i class="fas fa-save me-2"></i> @Lang.Get("Save Changes")
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '.rich-editor',
+            height: 400,
+            menubar: false,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | blocks | ' +
+                'bold italic backcolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'removeformat | help'
+        });
+    </script>
+}

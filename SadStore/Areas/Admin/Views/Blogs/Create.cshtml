@@ -7,34 +7,78 @@
 }
 
 <div class="row justify-content-center">
-    <div class="col-md-10">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">@Lang.Get("Add New Post")</h5>
-                <a href="/Admin/Blogs" class="btn btn-outline-secondary btn-sm">@Lang.Get("Back to List")</a>
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0 text-dark">@Lang.Get("Add New Post")</h4>
+            <a asp-area="Admin" asp-controller="Blogs" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i> @Lang.Get("Back to List")
+            </a>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-pen-nib me-2"></i> @Lang.Get("Post Details")</h6>
             </div>
-            <div class="card-body">
-                <form action="/Admin/Blogs/Create" method="post" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label class="form-label">@Lang.Get("Title")</label>
-                        <input type="text" name="Title" class="form-control" required />
+            <div class="card-body p-4">
+                <form asp-area="Admin" asp-controller="Blogs" asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-bold small text-muted">@Lang.Get("Title (Ar)") <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="TitleAr" class="form-control bg-light" required />
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-bold small text-muted">@Lang.Get("Title (En)") <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="TitleEn" class="form-control bg-light" required />
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">@Lang.Get("Product Image")</label>
-                        <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted">@Lang.Get("Product Image")</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="far fa-image text-muted"></i></span>
+                            <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">@Lang.Get("Content")</label>
-                        <textarea name="Content" class="form-control" rows="12" required></textarea>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted">@Lang.Get("Content (Ar)") <span class="text-danger">*</span></label>
+                        <!-- TinyMCE Editor 1 -->
+                        <textarea id="editorAr" asp-for="ContentAr" class="form-control bg-light rich-editor" rows="8"></textarea>
                     </div>
 
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-custom">@Lang.Get("Publish Post")</button>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted">@Lang.Get("Content (En)") <span class="text-danger">*</span></label>
+                        <!-- TinyMCE Editor 2 -->
+                        <textarea id="editorEn" asp-for="ContentEn" class="form-control bg-light rich-editor" rows="8"></textarea>
+                    </div>
+
+                    <div class="d-grid pt-2">
+                        <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                            <i class="fas fa-save me-2"></i> @Lang.Get("Publish Post")
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '.rich-editor', 
+            height: 400,
+            menubar: false,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | blocks | ' +
+                'bold italic backcolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'removeformat | help'
+        });
+    </script>
+}

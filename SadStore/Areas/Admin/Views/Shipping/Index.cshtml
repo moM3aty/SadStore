@@ -3,55 +3,73 @@
 @{
     ViewData["Title"] = Lang.Get("Shipping");
     Layout = "_AdminLayout";
+    var isRtl = Lang.IsRtl();
 }
 
-<div class="row">
-    <div class="col-md-10 mx-auto">
-        <div class="table-card">
-            <div class="table-header">
-                <h5 class="mb-0">@Lang.Get("Shipping Locations")</h5>
-                <a href="/Admin/Shipping/Create" class="btn btn-custom">
-                    <i class="fas fa-plus"></i> @Lang.Get("Add New Location")
-                </a>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-light">
-                        <tr>
-                            <th>@Lang.Get("City / Region")</th>
-                            <th>@Lang.Get("Cost")</th>
-                            <th>@Lang.Get("Actions")</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-1 text-dark">@Lang.Get("Shipping Locations")</h4>
+        <p class="text-muted small mb-0">@Lang.Get("Manage delivery areas and costs")</p>
+    </div>
+    <div>
+        <a href="/Admin/Shipping/Export" class="btn btn-success text-white me-2 shadow-sm">
+            <i class="fas fa-file-csv me-1"></i> @Lang.Get("Export to Excel")
+        </a>
+        <a href="/Admin/Shipping/Create" class="btn btn-primary shadow-sm px-4">
+            <i class="fas fa-plus me-1"></i> @Lang.Get("Add New Location")
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-muted">
+                    <tr>
+                        <th class="py-3 ps-4">@Lang.Get("City / Region")</th>
+                        <th class="py-3">@Lang.Get("Cost")</th>
+                        <th class="py-3 text-end pe-4">@Lang.Get("Actions")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model)
                         {
                             <tr>
-                                <td>@item.CityName</td>
-                                <td>@item.ShippingCost.ToString("N2") @Lang.Get("SAR")</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="/Admin/Shipping/Edit/@item.Id" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i> @Lang.Get("Edit")</a>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteLocModal-@item.Id">
-                                            <i class="fas fa-trash"></i> @Lang.Get("Delete")
+                                <!-- تصحيح: استخدام الاسم المناسب حسب اللغة -->
+                                <td class="ps-4 fw-bold text-dark">
+                                    <i class="fas fa-map-marker-alt text-danger me-2"></i> @(isRtl? item.CityNameAr: item.CityNameEn)
+                                </td>
+                                <td class="text-success fw-bold">
+                                    @item.ShippingCost.ToString("N2") <small class="text-muted">@Lang.Get("SAR")</small>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="btn-group shadow-sm">
+                                        <a href="/Admin/Shipping/Edit/@item.Id" class="btn btn-sm btn-outline-primary" title="@Lang.Get("Edit")">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteLocModal-@item.Id" title="@Lang.Get("Delete")">
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
 
                                     <div class="modal fade" id="deleteLocModal-@item.Id" tabindex="-1">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">@Lang.Get("Confirm Delete")</h5>
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content border-0">
+                                                <div class="modal-header border-bottom-0 pb-0">
+                                                    <h5 class="modal-title text-danger">@Lang.Get("Confirm Delete")</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
-                                                <div class="modal-body">
-                                                    @Lang.Get("Are you sure you want to delete") "@item.CityName"?
+                                                <div class="modal-body text-center py-4">
+                                                    @Lang.Get("Are you sure you want to delete") <strong>"@(isRtl? item.CityNameAr: item.CityNameEn)"</strong>?
                                                 </div>
-                                                <div class="modal-footer">
+                                                <div class="modal-footer border-top-0 pt-0 justify-content-center pb-4">
                                                     <form action="/Admin/Shipping/Delete" method="post">
                                                         <input type="hidden" name="id" value="@item.Id" />
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Lang.Get("Cancel")</button>
-                                                        <button type="submit" class="btn btn-danger">@Lang.Get("Delete")</button>
+                                                        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">@Lang.Get("Cancel")</button>
+                                                        <button type="submit" class="btn btn-danger px-4">@Lang.Get("Delete")</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -60,9 +78,18 @@
                                 </td>
                             </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center py-5 text-muted">
+                                <i class="fas fa-truck fa-3x mb-3 opacity-25"></i>
+                                <p>@Lang.Get("No shipping locations found")</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
