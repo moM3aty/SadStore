@@ -1,5 +1,6 @@
 ﻿@model SadStore.Data.Product
 @inject SadStore.Services.LanguageService Lang
+@inject SadStore.Services.CurrencyService Currency
 @using System.Text.Json
 
 @{
@@ -7,7 +8,11 @@
     ViewData["Title"] = isRtl ? Model.NameAr : Model.NameEn;
     var related = ViewBag.RelatedProducts as List<SadStore.Data.Product>;
     var reviews = ViewBag.Reviews as List<SadStore.Data.CustomerReview>;
+    var symbol = Lang.Get(Currency.GetSymbol());
 
+
+    var currentPrice = Currency.Convert(Model.Price);
+    var oldPrice = Model.OldPrice.HasValue ? Currency.Convert(Model.OldPrice.Value) : (decimal?)null;
     // حساب نسبة الخصم
     int discountPercentage = 0;
     if (Model.OldPrice.HasValue && Model.OldPrice > Model.Price)
@@ -104,13 +109,13 @@
                         <h2 class="product-title">@(isRtl? Model.NameAr: Model.NameEn)</h2>
 
                         <div class="product-price">
-                            @if (Model.OldPrice.HasValue && Model.OldPrice > Model.Price)
+                            @if (oldPrice.HasValue && oldPrice > currentPrice)
                             {
                                 <span class="text-decoration-line-through text-muted fs-6 mx-2">
-                                    @Model.OldPrice.Value.ToString("N0") @Lang.Get("SAR")
+                                    @oldPrice.Value.ToString("N0") @symbol
                                 </span>
                             }
-                            <span class="price">@Model.Price.ToString("N0") <span class="coin">@Lang.Get("SAR")</span></span>
+                            <span class="price">@currentPrice.ToString("N0") <span class="coin">@symbol</span></span>
                         </div>
 
                         <p class="price-note">@Lang.Get("Price includes VAT")</p>

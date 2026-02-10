@@ -22,7 +22,7 @@ namespace SadStore.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Profile");
             }
             return View();
         }
@@ -35,33 +35,47 @@ namespace SadStore.Controllers
                 var result = await _signInManager.PasswordSignInAsync(email, password, isPersistent: true, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    TempData["SuccessMessage"] = "Logged in successfully";
                     var user = await _userManager.FindByEmailAsync(email);
                     if (await _userManager.IsInRoleAsync(user, "Admin"))
                     {
                         return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                     }
-                    return RedirectToAction("Index", "Home");
+                    TempData["SuccessMessage"] = "Logged in successfully";
+                    return RedirectToAction("Index", "Profile");
                 }
-                // إضافة رسالة خطأ مترجمة
                 ModelState.AddModelError(string.Empty, _lang.Get("Invalid login attempt"));
             }
             return View("Index");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(string name, string email, string password)
+        public async Task<IActionResult> Register(string name, string email, string phone, string password, string confirmPassword)
         {
+            if (password != confirmPassword)
+            {
+                ModelState.AddModelError(string.Empty, _lang.Get("Passwords do not match"));
+                return View("Index");
+            }
+
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = email, Email = email, PhoneNumber = name }; // تخزين الاسم في حقل الهاتف مؤقتاً أو استخدام حقل مخصص
+               
+                var user = new IdentityUser
+                {
+                    UserName = email, // نستخدم الايميل كاسم مستخدم لضمان التفرد
+                    Email = email,
+                    PhoneNumber = phone
+                };
+
+                // يمكنك تخزين الاسم الحقيقي (name) في Claim إذا أردت لاحقاً
+
                 var result = await _userManager.CreateAsync(user, password);
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "Customer");
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     TempData["SuccessMessage"] = "Logged in successfully";
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Profile");
                 }
                 foreach (var error in result.Errors)
                 {

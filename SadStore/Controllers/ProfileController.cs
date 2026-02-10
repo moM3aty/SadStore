@@ -91,6 +91,7 @@ namespace SadStore.Controllers
                 user.PhoneNumber = phone;
                 await _userManager.UpdateAsync(user);
                 TempData["SuccessMessage"] = "Profile updated successfully";
+                await _context.SaveChangesAsync();
             }
             return RedirectToAction("Index");
         }

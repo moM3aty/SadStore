@@ -2,12 +2,17 @@
 @using System.Globalization
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject SadStore.Services.AppSettingService Settings
 @inject SadStore.Services.LanguageService Lang
+@inject SadStore.Services.CurrencyService Currency
 
 @{
     var isRtl = Lang.IsRtl();
     var dir = isRtl ? "rtl" : "ltr";
     var lang = isRtl ? "ar" : "en";
+    var promoText = Settings.GetPromoText();
+    var currentCurrency = Currency.GetCurrentCurrency();
+    var currencyLabel = currentCurrency == "SAR" ? Lang.Get("Saudi Riyal") : Lang.Get("UAE Dirham");
 }
 
 <!DOCTYPE html>
@@ -30,9 +35,10 @@
 <body>
     <div class="logos">
         <div class="track" id="track">
-            <span class="content">
-                @Lang.Get("PromoBar")
-            </span>
+            <span class="content">@promoText</span>
+            <span class="content">@promoText</span>
+            <span class="content">@promoText</span>
+            <span class="content">@promoText</span>
         </div>
     </div>
 
@@ -87,10 +93,21 @@
 
                     <div class="dropdown mx-3 border-end px-3">
                         <a class="dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                            @Lang.Get("Saudi Riyal")
+                            @currencyLabel
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">@Lang.Get("UAE Dirham")</a></li>
+                        <ul class="dropdown-menu p-0 text-center">
+                            <li class="m-0">
+                                <form asp-controller="Currency" asp-action="SetCurrency" asp-route-returnUrl="@Context.Request.Path" method="post">
+                                    <input type="hidden" name="currency" value="SAR" />
+                                    <button type="submit" class="dropdown-item @(currentCurrency == "SAR" ? "active" : "")">@Lang.Get("Saudi Riyal")</button>
+                                </form>
+                            </li>
+                            <li class="m-0">
+                                <form asp-controller="Currency" asp-action="SetCurrency" asp-route-returnUrl="@Context.Request.Path" method="post">
+                                    <input type="hidden" name="currency" value="AED" />
+                                    <button type="submit" class="dropdown-item @(currentCurrency == "AED" ? "active" : "")">@Lang.Get("UAE Dirham")</button>
+                                </form>
+                            </li>
                         </ul>
                     </div>
 
@@ -270,7 +287,7 @@
                 <div class="row g-4">
                     <div class="col-lg-3">
                         <div class="text">
-                            <p>@Lang.Get("All rights reserved © Sad 2026")</p>
+                            <p>@Lang.Get("All rights reserved © Sad 2026")  - @Lang.Get("GMT") <a href="https://gmtweb.online/">GMTWEB</a></p>
                         </div>
                     </div>
                     <div class="col-lg-5">

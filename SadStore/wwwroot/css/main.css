@@ -1807,10 +1807,13 @@ html[dir="ltr"] .product-page .fa-angle-right{
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.blog-featured-image img {
-    width: 100%;
-    height: auto;
-}
+    .blog-featured-image img {
+        height: 500px;
+        margin: auto;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+    }
 
 .blog-details-content {
     font-size: 1.1rem;
@@ -2295,7 +2298,7 @@ html[dir="ltr"] .product-page .fa-angle-right{
 .auth .container {
   position: relative;
   width: 950px;
-  height: 500px;
+  height: 600px;
   background-color: #FFF;
   box-shadow: 25px 30px 55px #5557;
   border-radius: 13px;
@@ -2425,18 +2428,18 @@ html[dir="ltr"] .product-page .fa-angle-right{
   z-index: 9;
 }
 
-.auth #overlayBtn {
-  cursor: pointer;
-  position: absolute;
-  right: 15%;
-  top: 299px;
-  transform: translateX(-50%);
-  width: 143.67px;
-  height: 40px;
-  border: 1px solid #FFF;
-  background: transparent;
-  border-radius: 20px;
-}
+    .auth #overlayBtn {
+        cursor: pointer;
+        position: absolute;
+        right: 15%;
+        top: 347px;
+        transform: translateX(-50%);
+        width: 143.67px;
+        height: 40px;
+        border: 1px solid #FFF;
+        background: transparent;
+        border-radius: 20px;
+    }
 
 .auth .overlay {
   position: relative;
@@ -2615,4 +2618,7 @@ btnScaled {
 }
 a{
     text-decoration:none !important;
+}
+.dropdown-item.active {
+    background:#EEE;
 }

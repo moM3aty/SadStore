@@ -19,6 +19,15 @@ namespace SadStore.Data
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<UserDetail> UserDetails { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<SiteSetting> SiteSettings { get; set; }
+    }
+    public class SiteSetting
+    {
+        public int Id { get; set; }
+        [Required]
+        public string Key { get; set; } 
+        public string? ValueAr { get; set; }
+        public string? ValueEn { get; set; }
     }
     public class Notification
     {

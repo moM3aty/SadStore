@@ -561,6 +561,29 @@ namespace SadStore.Migrations
                     b.ToTable("ShippingLocations");
                 });
 
+            modelBuilder.Entity("SadStore.Data.SiteSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ValueAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ValueEn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SiteSettings");
+                });
+
             modelBuilder.Entity("SadStore.Data.UserDetail", b =>
                 {
                     b.Property<int>("Id")

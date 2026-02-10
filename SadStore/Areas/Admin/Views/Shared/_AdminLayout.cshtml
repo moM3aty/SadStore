@@ -237,6 +237,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="/Admin/Settings" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Settings" ? "active" : "")">
+                        <i class="fas fa-cogs"></i> @Lang.Get("Settings")
+                    </a>
+                </li>
+                <li>
                     <a href="/">
                         <i class="fas fa-globe"></i> @Lang.Get("View Site")
                     </a>

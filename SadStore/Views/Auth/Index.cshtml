@@ -6,23 +6,25 @@
 
 <section class="auth">
     <div class="container" id="container">
+        
         <!-- زر التبديل للموبايل -->
         <div class="text-center mt-3 mb-0 d-lg-none">
-            <button type="button" class="btn btn-link text-decoration-none fw-bold" style="color: #333;" onclick="toggleForm()">
-                @Lang.Get("Login / Register") <i class="fas fa-exchange-alt"></i>
+            <button type="button" class="btn btn-link text-decoration-none" style="color: #333; font-weight: bold;" onclick="toggleForm()">
+                @Lang.Get("Login / Register")
             </button>
         </div>
 
         <!-- فورم إنشاء الحساب (Sign Up) -->
         <div class="form-container sign-up-container">
             <form asp-action="Register" method="post">
-                <h1 class="fw-bold mb-3">@Lang.Get("Create Account")</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-                <span class="text-muted mb-3">@Lang.Get("or use your email for registration")</span>
+                <h1 class="mb-3">@Lang.Get("Create Account")</h1>
+                
+                <!-- تم إزالة السوشيال ميديا كما طلبت -->
+                
+                <span class="mb-3">@Lang.Get("Enter your personal details and start journey with us")</span>
+                
+                <!-- عرض الأخطاء -->
+                <div asp-validation-summary="All" class="text-danger small w-100 mb-2"></div>
 
                 <div class="infield">
                     <input type="text" name="name" placeholder="@Lang.Get("Name")" required />
@@ -33,25 +35,31 @@
                     <label></label>
                 </div>
                 <div class="infield">
+                    <input type="tel" name="phone" placeholder="@Lang.Get("Phone Number")" required />
+                    <label></label>
+                </div>
+                <div class="infield">
                     <input type="password" name="password" placeholder="@Lang.Get("Password")" required />
                     <label></label>
                 </div>
-                <button type="submit" class="mt-3">@Lang.Get("Sign Up")</button>
+                <div class="infield">
+                    <input type="password" name="confirmPassword" placeholder="@Lang.Get("Confirm Password")" required />
+                    <label></label>
+                </div>
+                <button type="submit" style="margin-top: 15px;">@Lang.Get("Sign Up")</button>
             </form>
         </div>
 
         <!-- فورم تسجيل الدخول (Sign In) -->
         <div class="form-container sign-in-container">
             <form asp-action="Login" method="post">
-                <h1 class="fw-bold mb-3">@Lang.Get("Login")</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-                <span class="text-muted mb-3">@Lang.Get("or use your account")</span>
+                <h1 class="mb-3">@Lang.Get("Login")</h1>
+                
+                <!-- تم إزالة السوشيال ميديا -->
 
-                <div asp-validation-summary="All" class="text-danger small w-100"></div>
+                <span class="mb-3">@Lang.Get("To keep connected with us please login with your personal info")</span>
+                
+                <div asp-validation-summary="All" class="text-danger small w-100 mb-2"></div>
 
                 <div class="infield">
                     <input type="email" name="email" placeholder="@Lang.Get("Email")" required />
@@ -69,20 +77,17 @@
         <!-- اللوحة المنزلقة (Overlay) -->
         <div class="overlay-container" id="overlayCon">
             <div class="overlay">
-                <!-- اللوحة اليسرى (تظهر عند تفعيل التسجيل) -->
                 <div class="overlay-panel overlay-left">
-                    <h1 class="fw-bold">@Lang.Get("Welcome Back!")</h1>
+                    <h1>@Lang.Get("Welcome Back!")</h1>
                     <p>@Lang.Get("To keep connected with us please login with your personal info")</p>
                     <button class="overlay-btn" id="signInBtn">@Lang.Get("Sign In")</button>
                 </div>
-                <!-- اللوحة اليمنى (تظهر عند تفعيل الدخول) -->
                 <div class="overlay-panel overlay-right">
-                    <h1 class="fw-bold">@Lang.Get("Hello, Friend!")</h1>
+                    <h1>@Lang.Get("Hello, Friend!")</h1>
                     <p>@Lang.Get("Enter your personal details and start journey with us")</p>
                     <button class="overlay-btn" id="signUpBtn">@Lang.Get("Sign Up")</button>
                 </div>
             </div>
-            <!-- زر التبديل الدائري -->
             <button id="overlayBtn"></button>
         </div>
     </div>
@@ -91,11 +96,11 @@
 @section Scripts {
     <script>
         const container = document.getElementById('container');
+        const overlayCon = document.getElementById('overlayCon');
         const overlayBtn = document.getElementById('overlayBtn');
         const signInBtn = document.getElementById('signInBtn');
         const signUpBtn = document.getElementById('signUpBtn');
 
-        // حركة الزر الدائري الصغير
         overlayBtn.addEventListener('click', () => {
             container.classList.toggle('right-panel-active');
             overlayBtn.classList.remove('btnScaled');
@@ -104,146 +109,297 @@
             });
         });
 
-        // زر الانتقال لتسجيل الدخول
         signInBtn.addEventListener('click', () => {
             container.classList.remove('right-panel-active');
         });
 
-        // زر الانتقال لإنشاء حساب
         signUpBtn.addEventListener('click', () => {
             container.classList.add('right-panel-active');
         });
 
-        // تبديل الفورم في الموبايل
         function toggleForm() {
-            container.classList.toggle("right-panel-active");
+            document.getElementById("container").classList.toggle("right-panel-active");
         }
     </script>
 }
 
-@* تصحيح كامل للاتجاهات والحركة للغة الإنجليزية فقط *@
-@if (!isRtl)
-{
-    <style>
-        /* إعادة تعيين التموضع للغة الإنجليزية */
-        html[dir="ltr"] .auth .sign-in-container {
-            left: 0;
-            width: 50%;
-            z-index: 2;
-            right: auto; /* إلغاء خصائص الـ RTL */
-            transform: none;
-        }
+<style>
+    /* تم نسخ الستايل الأصلي كما هو تماماً مع إصلاح بسيط للاتجاهات */
+    
+    .auth {
+        height: 75vh;
+        background: #f6f5f7;
+        display: grid;
+        place-content: center;
+        overflow: hidden;
+    }
 
-        html[dir="ltr"] .auth .sign-up-container {
-            left: 0;
-            width: 50%;
-            opacity: 0;
-            z-index: 1;
-            right: auto;
-            transform: none;
-        }
+    .auth .container {
+        position: relative;
+        width: 950px;
+        height: 600px;
+        background-color: #FFF;
+        box-shadow: 25px 30px 55px #5557;
+        border-radius: 13px;
+        overflow: hidden;
+    }
 
-        html[dir="ltr"] .auth .overlay-container {
-            left: 50%;
-            right: auto;
-            width: 50%;
-            z-index: 100;
-            transform: none;
-        }
+    .auth .form-container {
+        position: absolute;
+        width: 55%;
+        height: 100%;
+        padding: 0px 40px;
+        transition: all 0.6s ease-in-out;
+    }
 
-        html[dir="ltr"] .auth .overlay {
-            left: -100%;
-            right: auto;
-            width: 200%;
-            transform: translateX(0);
-            background: #111827;
-        }
+    .auth .sign-up-container {
+        opacity: 0;
+        z-index: 10;
+    }
 
-        /* ضبط النصوص داخل الغطاء */
-        html[dir="ltr"] .auth .overlay-panel {
-            position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 0 40px;
-            text-align: center;
-            top: 0;
-            height: 100%;
-            width: 50%;
-            transform: translateX(0);
-            transition: transform 0.6s ease-in-out;
-        }
+    .auth .sign-in-container {
+        z-index: 10;
+    }
 
-        /* اللوحة اليسرى (Welcome Back) - مخفية مبدئياً لليسار */
-        html[dir="ltr"] .auth .overlay-left {
-            transform: translateX(-20%);
-            left: 0;
-            right: auto;
-        }
+    .auth form {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0px 50px;
+    }
 
-        /* اللوحة اليمنى (Hello Friend) - ظاهرة مبدئياً على اليمين */
-        html[dir="ltr"] .auth .overlay-right {
-            right: 0;
-            left: auto;
-            transform: translateX(0);
-        }
+    .auth h1 {
+        color: #333;
+        font-weight: bold;
+    }
 
-        /* زر الحركة */
-        html[dir="ltr"] .auth #overlayBtn {
-            left: 50%;
-            right: auto;
-            transform: translateX(-50%);
-        }
+    .auth span {
+        font-size: 12px;
+        color: #666;
+    }
 
-        /* === عند الضغط على Sign Up (التحرك) === */
+    .auth .infield {
+        position: relative;
+        margin: 8px 0px;
+        width: 100%;
+    }
 
-        /* تحريك فورم الدخول لليمين (يختفي) */
-        html[dir="ltr"] .auth .container.right-panel-active .sign-in-container {
-            transform: translateX(100%);
-        }
+    .auth input {
+        width: 100%;
+        padding: 12px 15px;
+        background-color: #f3f3f3;
+        border: none;
+        outline: none;
+        text-align: @(isRtl ? "right" : "left");
+    }
 
-        /* تحريك فورم إنشاء الحساب لليمين (يظهر) */
-        html[dir="ltr"] .auth .container.right-panel-active .sign-up-container {
-            transform: translateX(100%);
-            opacity: 1;
-            z-index: 5;
-            animation: show 0.6s;
-        }
+    .auth label {
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        transform: translateX(-50%);
+        width: 0%;
+        height: 2px;
+        background: #c89f72; /* Accent Color */
+        transition: width 0.3s ease;
+    }
 
-        /* تحريك الغطاء بالكامل لليسار */
-        html[dir="ltr"] .auth .container.right-panel-active .overlay-container {
-            transform: translateX(-100%);
-        }
+    .auth input:focus~label {
+        width: 100%;
+    }
 
-        /* تحريك الغطاء الداخلي لضبط الخلفية */
-        html[dir="ltr"] .auth .container.right-panel-active .overlay {
-            transform: translateX(50%);
-        }
+    .auth a {
+        color: #333;
+        font-size: 14px;
+        text-decoration: none;
+        margin: 15px 0px;
+    }
 
-        /* إظهار لوحة Welcome Back */
-        html[dir="ltr"] .auth .container.right-panel-active .overlay-left {
-            transform: translateX(0);
-        }
+    .auth a.forgot {
+        padding-bottom: 3px;
+        border-bottom: 2px solid #EEE;
+    }
 
-        /* إخفاء لوحة Hello Friend */
-        html[dir="ltr"] .auth .container.right-panel-active .overlay-right {
-            transform: translateX(20%);
-        }
+    .auth button {
+        border-radius: 20px;
+        border: 1px solid #111827;
+        background: #111827;
+        color: #FFF;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 12px 45px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: 80ms ease-in;
+    }
 
-        @@keyframes show {
-            0%, 49.99%
+    .auth button:hover {
+        background: #FFF;
+        color: #141b2a;
+    }
+    
+    .auth button.overlay-btn {
+        background-color: transparent;
+        border-color: #FFFFFF;
+        color: #FFF;
+    }
+    
+    .auth button.overlay-btn:hover {
+         background-color: transparent;
+    }
 
-        {
-            opacity: 0;
-            z-index: 1;
-        }
+    .auth .overlay-container {
+        position: absolute;
+        top: 0;
+        /* تعديل الاتجاه بناءً على اللغة */
+        @(isRtl ? "left: 0;" : "right: 50%;") 
+        width: 50%;
+        height: 100%;
+        overflow: hidden;
+        transition: transform 0.6s ease-in-out;
+        z-index: 9;
+    }
 
-        50%, 100% {
-            opacity: 1;
-            z-index: 5;
-        }
+    .auth #overlayBtn {
+        cursor: pointer;
+        position: absolute;
+        /* تعديل مكان الزر بناءً على اللغة */
+        @(isRtl ? "left: 50%;" : "right: 50%;")
+        top: 347px;
+        transform: translateX(@(isRtl ? "-66%" : "50%"));
+        width: 143.67px;
+        height: 40px;
+        border: 1px solid #FFF;
+        background: transparent;
+        border-radius: 20px;
+    }
 
-        }
-    </style>
-}
+    .auth .overlay {
+        position: relative;
+        background: #111827;
+        color: #FFF;
+        /* تعديل حركة الخلفية */
+        @(isRtl ? "left: -100%;" : "right: -100%;")
+        height: 100%;
+        width: 200%;
+        transition: transform 0.6s ease-in-out;
+    }
+
+    .auth .overlay-panel {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0px 40px;
+        text-align: center;
+        height: 100%;
+        width: 50%;
+        transition: 0.6s ease-in-out;
+    }
+
+    .auth .overlay-left {
+        /* تعديل الأماكن */
+        @(isRtl ? "right: 0;" : "left: 0;")
+        transform: translateX(@(isRtl ? "20%" : "-20%"));
+    }
+
+    .auth .overlay-right {
+        /* تعديل الأماكن */
+        @(isRtl ? "left: 0;" : "right: 0;")
+        transform: translateX(0);
+    }
+
+    .auth .overlay-panel h1 {
+        color: #FFF;
+    }
+
+    .auth p {
+        font-size: 14px;
+        font-weight: 300;
+        line-height: 20px;
+        letter-spacing: 0.5px;
+        margin: 25px 0px 35px;
+    }
+    
+    /* Animation Classes - Adjusted for RTL/LTR */
+    
+    .auth .container.right-panel-active .overlay-container {
+        transform: translateX(@(isRtl ? "100%" : "-100%"));
+    }
+
+    .auth .container.right-panel-active .overlay {
+        transform: translateX(@(isRtl ? "-50%" : "50%"));
+    }
+
+    .auth .container.right-panel-active .overlay-left {
+        transform: translateX(0);
+    }
+
+    .auth .container.right-panel-active .overlay-right {
+        transform: translateX(@(isRtl ? "-20%" : "20%"));
+    }
+
+    .auth .container.right-panel-active .sign-in-container {
+        transform: translateX(@(isRtl ? "-200%" : "200%"));
+        opacity: 0;
+    }
+
+    .auth .container.right-panel-active .sign-up-container {
+        transform: translateX(@(isRtl ? "-90%" : "90%"));
+        opacity: 1;
+        z-index: 5;
+        animation: show 0.6s;
+    }
+
+    @@keyframes show {
+        0%, 50% { opacity: 0; z-index: 1; }
+        50.1%, 100% { opacity: 1; z-index: 5; }
+    }
+
+    .btnScaled {
+        animation: scaleBtn 0.6s;
+    }
+
+    @@keyframes scaleBtn {
+        0% { width: 143.67px; }
+        50% { width: 250px; }
+        100% { width: 143.67px; }
+    }
+
+    @@media (max-width: 991px) {
+        .auth { height: auto; padding: 40px 15px; display: flex; justify-content: center; align-items: center; }
+        .auth .container { margin: auto; width: 100%; height: auto; min-height: 600px; max-width: 100%; }
+        .auth .overlay-container { display: none; }
+        .auth .form-container { position: relative; width: 100%; height: auto; padding: 40px 20px; transform: none !important; opacity: 1 !important; max-width: 100%; }
+        .auth form { padding: 0; }
+        .auth .sign-in-container, .auth .sign-up-container { position: relative; opacity: 1; z-index: 1; }
+        .auth .sign-up-container { display: none; }
+        .auth .container.right-panel-active .sign-in-container { display: none; }
+        .auth .container.right-panel-active .sign-up-container { display: block; }
+        .auth button { width: 100%; }
+    }
+    
+    /* LTR Specific Fixes */
+    @if (!isRtl) {
+        <text>
+        .auth .sign-in-container { left: 0; right: auto; }
+        .auth .sign-up-container { left: 0; right: auto; opacity: 0; z-index: 1; }
+        .auth .overlay-container { left: 50%; right: auto; }
+        .auth .overlay { left: -100%; right: auto; }
+        .auth .overlay-left { left: 0; right: auto; transform: translateX(-20%); }
+        .auth .overlay-right { right: 0; left: auto; transform: translateX(0); }
+        .auth #overlayBtn { left: 50%; right: auto; transform: translateX(-50%); }
+        </text>
+    } else {
+        <text>
+        .auth .sign-in-container { right: 0; left: auto; }
+        .auth .sign-up-container { right: 0; left: auto; opacity: 0; z-index: 1; }
+        .auth .overlay-container { right: 50%; left: auto; }
+        .auth .overlay { right: -100%; left: auto; }
+        </text>
+    }
+</style>

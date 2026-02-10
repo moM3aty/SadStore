@@ -1,0 +1,77 @@
+﻿@model SadStore.Data.SiteSetting
+@inject SadStore.Services.LanguageService Lang
+@{
+    ViewData["Title"] = Lang.Get("Settings");
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-1 text-dark">@Lang.Get("General Settings")</h4>
+        <p class="text-muted small mb-0">@Lang.Get("Manage site content and announcements")</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-bullhorn me-2"></i> @Lang.Get("Announcement Bar")</h6>
+            </div>
+            <div class="card-body p-4">
+                <form asp-area="Admin" asp-controller="Settings" asp-action="UpdatePromo" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted">@Lang.Get("Announcement Text (Arabic)")</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-primary fw-bold">AR</span>
+                            <input type="text" name="ValueAr" class="form-control" value="@Model.ValueAr" required />
+                        </div>
+                        <div class="form-text text-muted">النص الذي يظهر في الشريط المتحرك أعلى الموقع.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted">@Lang.Get("Announcement Text (English)")</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-primary fw-bold">EN</span>
+                            <input type="text" name="ValueEn" class="form-control" value="@Model.ValueEn" required />
+                        </div>
+                        <div class="form-text text-muted">Text displayed in the scrolling top bar.</div>
+                    </div>
+
+                    <div class="alert alert-info d-flex align-items-center rounded-3 shadow-sm border-0 bg-soft-info">
+                        <i class="fas fa-info-circle fa-lg me-3"></i>
+                        <div>
+                            <small>@Lang.Get("Changes will be reflected immediately on the website.")</small>
+                        </div>
+                    </div>
+
+                    <div class="d-grid pt-2">
+                        <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                            <i class="fas fa-save me-2"></i> @Lang.Get("Save Changes")
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Live Preview Card -->
+        <div class="card shadow-sm border-0 rounded-3 bg-dark text-white text-center h-100">
+            <div class="card-body py-5 d-flex flex-column justify-content-center align-items-center">
+                <i class="fas fa-eye fa-3x mb-3 opacity-50"></i>
+                <h5 class="fw-bold">@Lang.Get("Preview")</h5>
+                <p class="small opacity-75 mb-4">@Lang.Get("How it looks on the site")</p>
+
+                <div class="w-100 p-3 bg-primary text-white rounded mb-2 small shadow-sm position-relative overflow-hidden">
+                    <span class="fw-bold">@Model.ValueAr</span>
+                </div>
+                <div class="w-100 p-3 bg-white text-dark rounded small shadow-sm">
+                    <span class="fw-bold">@Model.ValueEn</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

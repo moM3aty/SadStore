@@ -1,5 +1,6 @@
 ﻿@model List<SadStore.Data.Product>
 @inject SadStore.Services.LanguageService Lang
+@inject SadStore.Services.CurrencyService Currency
 @using System.Text.Json
 
 @{
@@ -154,6 +155,10 @@
                     {
                         var isFav = wishlistIds.Contains(item.Id);
 
+                        var price = Currency.Convert(item.Price);
+                        var oldPrice = item.OldPrice.HasValue ? Currency.Convert(item.OldPrice.Value) : (decimal?)null;
+                        var symbol = Lang.Get(Currency.GetSymbol());
+
                         <div class="col-md-6 col-lg-4">
                             <div class="product-card-premium h-100 bg-white rounded-4 shadow-hover position-relative overflow-hidden group-hover">
                                 <a href="/Products/Details/@item.Id" class="text-decoration-none">
@@ -187,11 +192,11 @@
                                             @(isRtl? item.NameAr: item.NameEn)
                                         </h6>
                                         <div class="price-wrapper mb-3">
-                                            @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                                            @if (oldPrice.HasValue && oldPrice > price)
                                             {
-                                                <span class="text-decoration-line-through text-muted small me-2">@item.OldPrice.Value.ToString("N0")</span>
+                                                <span class="text-decoration-line-through text-muted small me-2">@oldPrice.Value.ToString("N0")</span>
                                             }
-                                            <span class="fw-bold fs-5 text-primary">@item.Price.ToString("N0") <small class="fs-6">@Lang.Get("SAR")</small></span>
+                                            <span class="fw-bold fs-5 text-primary">@price.ToString("N0") <small class="fs-6">@symbol</small></span>
                                         </div>
                                     </div>
                                 </a>
@@ -292,7 +297,7 @@
         align-items: center;
         justify-content: center;
         transition: all 0.2s;
-        border: none;
+        border: none;   
     }
 
         .action-icon:hover {

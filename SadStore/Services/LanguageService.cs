@@ -38,6 +38,7 @@ namespace SadStore.Services
                 { "Saudi Riyal", new Dictionary<string, string> { { "ar", "ريال سعودي" }, { "en", "Saudi Riyal" } } },
                 { "UAE Dirham", new Dictionary<string, string> { { "ar", "درهم إماراتي" }, { "en", "UAE Dirham" } } },
                 { "SAR", new Dictionary<string, string> { { "ar", "ر.س" }, { "en", "SAR" } } },
+                { "AED", new Dictionary<string, string> { { "ar", "د.ا" }, { "en", "AED" } } },
                 { "Change Main Image", new Dictionary<string, string> { { "ar", "تغيير الصورة الرئيسية" }, { "en", "Change Main Image" } } },
                 { "Upload Additional Images", new Dictionary<string, string> { { "ar", "رفع صور إضافية (معرض الصور)" }, { "en", "Upload Additional Images (Gallery)" } } },
                 { "Main Image", new Dictionary<string, string> { { "ar", "الصورة الرئيسية" }, { "en", "Main Image" } } },
@@ -463,6 +464,20 @@ namespace SadStore.Services
                 { "Back to Orders", new Dictionary<string, string> { { "ar", "العودة للطلبات" }, { "en", "Back to Orders" } } },
                 { "Return Eligible until", new Dictionary<string, string> { { "ar", "متاح للإرجاع حتى" }, { "en", "Return eligible until" } } },
                 { "Product", new Dictionary<string, string> { { "ar", "المنتج" }, { "en", "Product" } } },
+                { "Settings", new Dictionary<string, string> { { "ar", "الإعدادات" }, { "en", "Settings" } } },
+                { "General Settings", new Dictionary<string, string> { { "ar", "الإعدادات العامة" }, { "en", "General Settings" } } },
+                { "Manage site content and announcements", new Dictionary<string, string> { { "ar", "إدارة محتوى الموقع والإعلانات" }, { "en", "Manage site content and announcements" } } },
+                { "Announcement Bar", new Dictionary<string, string> { { "ar", "شريط الإعلانات" }, { "en", "Announcement Bar" } } },
+                { "Announcement Text (Arabic)", new Dictionary<string, string> { { "ar", "نص الإعلان (عربي)" }, { "en", "Announcement Text (Arabic)" } } },
+                { "Announcement Text (English)", new Dictionary<string, string> { { "ar", "نص الإعلان (إنجليزي)" }, { "en", "Announcement Text (English)" } } },
+                { "Changes will be reflected immediately on the website.", new Dictionary<string, string> { { "ar", "ستنعكس التغييرات فوراً على الموقع." }, { "en", "Changes will be reflected immediately on the website." } } },
+                { "Preview", new Dictionary<string, string> { { "ar", "معاينة" }, { "en", "Preview" } } },
+                { "How it looks on the site", new Dictionary<string, string> { { "ar", "كيف يظهر على الموقع" }, { "en", "How it looks on the site" } } },
+                { "Confirm Password", new Dictionary<string, string> { { "ar", "تأكيد كلمة المرور" }, { "en", "Confirm Password" } } },
+                { "Passwords do not match", new Dictionary<string, string> { { "ar", "كلمات المرور غير متطابقة" }, { "en", "Passwords do not match" } } },
+                { "GMT", new Dictionary<string, string> { { "ar", "تم التصميم بواسطة " }, { "en", "Developed by " } } },
+                
+
             };
         }
 

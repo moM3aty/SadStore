@@ -7,14 +7,12 @@ using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. قاعدة البيانات
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Server=M3ATY;Database=SadStoreDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;";
 
 builder.Services.AddDbContext<StoreContext>(options =>
     options.UseSqlServer(connectionString));
 
-// 2. Identity
 builder.Services.AddDefaultIdentity<IdentityUser>(options => {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = false;
@@ -26,12 +24,11 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => {
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<StoreContext>();
 
-// 3. تسجيل خدمة الترجمة الخاصة بنا (Singleton لأنها ثابتة)
 builder.Services.AddSingleton<LanguageService>();
-
+builder.Services.AddScoped<AppSettingService>();
+builder.Services.AddScoped<CurrencyService>();
 builder.Services.AddControllersWithViews();
 
-// 4. Session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -42,17 +39,14 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// 5. تهيئة قاعدة البيانات (تم تحديث هذا الجزء لضمان العمل)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
-        // هذا السطر سينشئ قاعدة البيانات والجداول إذا لم تكن موجودة
         var context = services.GetRequiredService<StoreContext>();
         context.Database.EnsureCreated();
 
-        // استدعاء دالة ملء البيانات
         await DbInitializer.Initialize(services);
     }
     catch (Exception ex)
@@ -62,7 +56,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// 6. إعدادات اللغة
 var supportedCultures = new[] { new CultureInfo("ar"), new CultureInfo("en") };
 app.UseRequestLocalization(new RequestLocalizationOptions
 {
