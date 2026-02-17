@@ -39,12 +39,15 @@
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" name="password" placeholder="@Lang.Get("Password")" required />
+                    <input type="password" name="password" id="regPass" placeholder="@Lang.Get("Password")" required />
                     <label></label>
+                                        <i class="far fa-eye toggle-password" onclick="togglePassword('regPass', this)"></i>
+
                 </div>
                 <div class="infield">
-                    <input type="password" name="confirmPassword" placeholder="@Lang.Get("Confirm Password")" required />
+                    <input type="password" name="confirmPassword" id="regConfirmPass" placeholder="@Lang.Get("Confirm Password")" required />
                     <label></label>
+                    <i class="far fa-eye toggle-password" onclick="togglePassword('regConfirmPass', this)"></i>
                 </div>
                 <button type="submit" style="margin-top: 15px;">@Lang.Get("Sign Up")</button>
             </form>
@@ -66,8 +69,9 @@
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" name="password" placeholder="@Lang.Get("Password")" required />
+                    <input type="password" name="password" id="loginPass" placeholder="@Lang.Get("Password")" required />
                     <label></label>
+                    <i class="far fa-eye toggle-password" onclick="togglePassword('loginPass', this)"></i>
                 </div>
                 <a href="#" class="forgot">@Lang.Get("Forgot your password?")</a>
                 <button type="submit">@Lang.Get("Sign In")</button>
@@ -94,38 +98,71 @@
 </section>
 
 @section Scripts {
-    <script>
+   <script>
+        // تعريف العناصر
         const container = document.getElementById('container');
-        const overlayCon = document.getElementById('overlayCon');
         const overlayBtn = document.getElementById('overlayBtn');
         const signInBtn = document.getElementById('signInBtn');
         const signUpBtn = document.getElementById('signUpBtn');
 
-        overlayBtn.addEventListener('click', () => {
-            container.classList.toggle('right-panel-active');
-            overlayBtn.classList.remove('btnScaled');
-            window.requestAnimationFrame(() => {
-                overlayBtn.classList.add('btnScaled');
+        // حركة الزر الدائري (للتبديل)
+        if (overlayBtn) {
+            overlayBtn.addEventListener('click', () => {
+                container.classList.toggle('right-panel-active');
+                overlayBtn.classList.remove('btnScaled');
+                window.requestAnimationFrame(() => {
+                    overlayBtn.classList.add('btnScaled');
+                });
             });
-        });
+        }
 
-        signInBtn.addEventListener('click', () => {
-            container.classList.remove('right-panel-active');
-        });
+        // زر الانتقال لتسجيل الدخول (اللوحة اليسرى)
+        if (signInBtn) {
+            signInBtn.addEventListener('click', () => {
+                container.classList.remove('right-panel-active');
+            });
+        }
 
-        signUpBtn.addEventListener('click', () => {
-            container.classList.add('right-panel-active');
-        });
+        // زر الانتقال لإنشاء حساب (اللوحة اليمنى)
+        if (signUpBtn) {
+            signUpBtn.addEventListener('click', () => {
+                container.classList.add('right-panel-active');
+            });
+        }
 
+        // دالة التبديل للموبايل
         function toggleForm() {
-            document.getElementById("container").classList.toggle("right-panel-active");
+            container.classList.toggle("right-panel-active");
+        }
+
+        // دالة إظهار وإخفاء كلمة المرور
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input) {
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove("fa-eye");
+                    icon.classList.add("fa-eye-slash");
+                } else {
+                    input.type = "password";
+                    icon.classList.remove("fa-eye-slash");
+                    icon.classList.add("fa-eye");
+                }
+            }
         }
     </script>
 }
 
 <style>
     /* تم نسخ الستايل الأصلي كما هو تماماً مع إصلاح بسيط للاتجاهات */
-    
+     .toggle-password {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #999;
+        z-index: 5;
+    }
     .auth {
         height: 75vh;
         background: #f6f5f7;
@@ -393,6 +430,8 @@
         .auth .overlay-left { left: 0; right: auto; transform: translateX(-20%); }
         .auth .overlay-right { right: 0; left: auto; transform: translateX(0); }
         .auth #overlayBtn { left: 50%; right: auto; transform: translateX(-50%); }
+        .toggle-password { right: 15px; }
+        
         </text>
     } else {
         <text>
@@ -400,6 +439,9 @@
         .auth .sign-up-container { right: 0; left: auto; opacity: 0; z-index: 1; }
         .auth .overlay-container { right: 50%; left: auto; }
         .auth .overlay { right: -100%; left: auto; }
+       
+        .toggle-password { left: 15px; }
+        
         </text>
     }
 </style>
