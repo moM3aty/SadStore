@@ -3,81 +3,87 @@
     ViewData["Title"] = Lang.Get("Home");
 }
 
-<section class="hero-section mx-1 mx-lg-4">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-5 text-content">
-                <div class="hero-text">
-                    <h1 class="abayaa-text">@Lang.Get("Abayas")</h1>
-                    <div class="collection-links">
-                        <a href="/Products?category=Abayas&tag=casual" class="casual-text">@Lang.Get("Casual")</a>
-                        <a href="/Products?category=Abayas&tag=evening" class="sahra-text">@Lang.Get("Evening")</a>
-                        <a href="/Products?category=Abayas&tag=umrah" class="omra-text">@Lang.Get("Umrah")</a>
+<div class="bg-green-dark">
+    <section class="hero-section mx-1 mx-lg-4">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-5 text-content">
+                    <div class="hero-text d-flex flex-column justify-content-center align-items-center gap-5">
+                        <h1 class="abayaa-text">@Lang.Get("Abayas")</h1>
+                        <div class="collection-links">
+                            <a href="/Products?category=Abayas&tag=casual" class="casual-text">@Lang.Get("Casual")</a>
+                            <a href="/Products?category=Abayas&tag=evening" class="sahra-text">@Lang.Get("Evening")</a>
+                            <a href="/Products?category=Abayas&tag=umrah" class="omra-text">@Lang.Get("Umrah")</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="fabrics-section mx-1 mx-lg-4">
-    <div class="container-fluid">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-lg-12 text-content">
-                <div class="hero-text">
-                    <a href="/Products?category=Fabrics" class="fabrics-text text-decoration-none text-center">
-                        @Lang.Get("Abaya Fabrics & Accessories")
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="clothes-section mx-1 mx-lg-4">
-    <div class="container-fluid">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-lg-4 text-content">
-                <div class="hero-text">
-                    <h1 class="clothes-text">@Lang.Get("Clothes")</h1>
-                    <div class="collection-links">
-                        <a href="/Products?category=Clothes&tag=casual" class="casual-text">@Lang.Get("Casual")</a>
-                        <a href="/Products?category=Clothes&tag=evening" class="sahra-text">@Lang.Get("Evening")</a>
+    <section class="fabrics-section mx-1 mx-lg-4">
+        <div class="container-fluid">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-lg-12 text-content">
+                    <div class="hero-text text-center">
+                        <h1 class="fabrics-text text-center mb-5">@Lang.Get("Fabrics")</h1>
+                        <div class="collection-links">
+                            <a href="/Products?category=Fabrics&tag=abayas" class="casual-text">@Lang.Get("Abayas")</a>
+                            <a href="/Products?category=Fabrics&tag=accessories" class="sahra-text">@Lang.Get("Accessories")</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="weaving-section mx-1 mx-lg-4">
-    <div class="container-fluid">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-lg-8 text-content">
-                <div class="hero-text d-flex flex-column gap-2">
-                    <a href="/Products?category=Leather" class="weaving-text text-decoration-none">
-                        @Lang.Get("Leather Sewing & Decoration")
-                    </a>
-
-                    <a href="/Products?category=Embroidery" class="weaving-text text-decoration-none">
-                        @Lang.Get("Embroidery & Lace")
-                    </a>
-
-                    <a href="/Products?category=Bags" class="weaving-text text-decoration-none">
-                        @Lang.Get("Bags & Belts")
-                    </a>
-
-                    <div class="d-flex flex-wrap gap-5">
-                        <a href="/Products?category=RawLeather" class="weaving-text text-decoration-none">
-                            @Lang.Get("Raw Leather")
-                        </a>
-
-                        <a href="/Products?category=Supplies" class="weaving-text text-decoration-none">
-                            @Lang.Get("Supplies")
-                        </a>
+    <section class="clothes-section mx-1 mx-lg-4">
+        <div class="container-fluid">
+            <div class="row justify-content-center align-items-center mt-5">
+                <div class="col-12 text-content">
+                    <div class="hero-text">
+                        <h1 class="clothes-text mb-5 text-center">@Lang.Get("Clothes")</h1>
+                        <div class="collection-links">
+                            <a href="/Products?category=Clothes&tag=casual" class="casual-text">@Lang.Get("Casual")</a>
+                            <a href="/Products?category=Clothes&tag=evening" class="sahra-text">@Lang.Get("Evening")</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+    <section class="weaving-section mx-1 mx-lg-4">
+        <div class="container-fluid">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-12 text-content">
+                    <div class="hero-text">
+                        <h1 class="weaving-text text-center mb-5">@Lang.Get("Leather")</h1>
+                        <div class="collection-links flex-wrap gap-lg-5">
+                            <a href="/Products?category=Leather&tag=raw" class="casual-text">@Lang.Get("Raw Materials")</a>
+                            <a href="/Products?category=Leather&tag=bags" class="sahra-text">@Lang.Get("Bags")</a>
+                            <a href="/Products?category=Leather&tag=embroidery" class="sahra-text">@Lang.Get("Embroidery & Beading")</a>
+                            <a href="/Products?category=Leather&tag=tailoring" class="sahra-text">@Lang.Get("Tailoring & Decoration")</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="Giveaways-section mx-1 mx-lg-4">
+        <div class="container-fluid">
+            <div class="row g-4 justify-content-center align-items-center">
+                <div class="col-lg-12 text-content">
+                    <div class="hero-text text-center d-flex justify-content-center align-items-center mt-5">
+                        <h1 class="fabrics-text text-center mb-5">
+                            <a href="/Products?category=Giveaways" class="text-white text-decoration-none">
+                                @Lang.Get("Giveaways")
+                            </a>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

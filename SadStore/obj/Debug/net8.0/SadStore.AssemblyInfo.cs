@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SadStore")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+05d03152f4a8adc6b1fcb019cdb24e5a865ea59e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+780e39481a463ba27adcbe8cc39805169683c5c6")]
 [assembly: System.Reflection.AssemblyProductAttribute("SadStore")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SadStore")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

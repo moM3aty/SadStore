@@ -76,16 +76,16 @@
                             }
                         </a>
                         <ul class="dropdown-menu p-0 text-center">
-                            <li class="m-0" >
-                                <form  id="langFormEn" asp-controller="Home" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post">
+                            <li class="m-0">
+                                <form id="langFormEn" asp-controller="Home" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post">
                                     <input type="hidden" name="culture" value="en" />
-                                    <a style ="border-radius:5px; " class="dropdown-item p-0" onclick="document.getElementById('langFormEn').submit();">English</a>
+                                    <a style="border-radius:5px;" class="dropdown-item p-0" onclick="document.getElementById('langFormEn').submit();" style="cursor: pointer;">English</a>
                                 </form>
                             </li>
-                            <li class="m-0 ">
+                            <li class="m-0">
                                 <form id="langFormAr" asp-controller="Home" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post">
                                     <input type="hidden" name="culture" value="ar" />
-                                    <a style="border-radius:5px;" class="dropdown-item p-0"  onclick="document.getElementById('langFormAr').submit();">العربية</a>
+                                    <a style="border-radius:5px;" class="dropdown-item p-0" onclick="document.getElementById('langFormAr').submit();" style="cursor: pointer;">العربية</a>
                                 </form>
                             </li>
                         </ul>
@@ -153,23 +153,81 @@
                     <i class="fas fa-bag-shopping"></i>
                     <span class="badge">@((Context.Session.GetString("Cart") != null && Context.Session.GetString("Cart") != "{}") ? "!" : "0")</span>
                 </a>
-                 @if (SignInManager.IsSignedIn(User))
-                        {
-                    
-                        <a href="/Profile" class="nav-icon mx-2">
-                            <i class="fas fa-user"></i>
-                        </a>
-                        }
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a href="/Profile" class="nav-icon mx-2">
+                        <i class="fas fa-user"></i>
+                    </a>
+                }
             </div>
         </div>
 
+        <!-- القائمة العلوية الثابتة (Static Menu) كما طلبت -->
         <div class="nav-links-bar d-none d-lg-block w-100">
             <div class="container">
-                @await Component.InvokeAsync("NavbarCategories")
+                <ul class="nav justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">@Lang.Get("Home")</a>
+                    </li>
+
+                    <!-- Fabrics -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">@Lang.Get("Fabrics")</a>
+                        <ul class="dropdown-menu text-center">
+                            <li><a class="dropdown-item" href="/Products?category=Fabrics">@Lang.Get("Cotton")</a></li>
+                            <li><a class="dropdown-item" href="/Products?category=Fabrics">@Lang.Get("Silk")</a></li>
+                            <li><a class="dropdown-item" href="/Products?category=Fabrics">@Lang.Get("Wool")</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Abayas -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">@Lang.Get("Abayas")</a>
+                        <ul class="dropdown-menu text-center">
+                            <li><a class="dropdown-item" href="/Products?category=Abayas">@Lang.Get("Black Abayas")</a></li>
+                            <li><a class="dropdown-item" href="/Products?category=Abayas">@Lang.Get("Colorful Abayas")</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Clothes -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">@Lang.Get("Clothes")</a>
+                        <ul class="dropdown-menu text-center">
+                            <li><a class="dropdown-item" href="/Products?category=Clothes">@Lang.Get("Men")</a></li>
+                            <li><a class="dropdown-item" href="/Products?category=Clothes">@Lang.Get("Women")</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Leather -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">@Lang.Get("Leather")</a>
+                        <ul class="dropdown-menu text-center">
+                            <li><a class="dropdown-item" href="/Products?category=Leather">@Lang.Get("Natural")</a></li>
+                            <li><a class="dropdown-item" href="/Products?category=Leather">@Lang.Get("Synthetic")</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Giveaways -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">@Lang.Get("Giveaways")</a>
+                        <ul class="dropdown-menu text-center">
+                            <li><a class="dropdown-item" href="/Products?category=Giveaways">@Lang.Get("Gifts")</a></li>
+                            <li><a class="dropdown-item" href="/Products?category=Giveaways">@Lang.Get("Event Giveaways")</a></li>
+                            <li><a class="dropdown-item" href="/Products?category=Giveaways">@Lang.Get("Boxes")</a></li>
+                            <li><a class="dropdown-item" href="/Products?category=Giveaways">@Lang.Get("Packaging")</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Contact -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Home/Contact">@Lang.Get("Contact Us")</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
+    <!-- القائمة الجانبية للموبايل (تم تحديثها أيضاً لتطابق الروابط العلوية) -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
         <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title fw-bold">@Lang.Get("Menu")</h5>
@@ -191,8 +249,28 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/Products" class="sidebar-link">
-                        <i class="fas fa-fire ms-2"></i> @Lang.Get("New Arrivals")
+                    <a href="/Products?category=Fabrics" class="sidebar-link">
+                        <i class="fas fa-cut ms-2"></i> @Lang.Get("Fabrics")
+                    </a>
+                </li>
+                <li>
+                    <a href="/Products?category=Abayas" class="sidebar-link">
+                        <i class="fas fa-female ms-2"></i> @Lang.Get("Abayas")
+                    </a>
+                </li>
+                <li>
+                    <a href="/Products?category=Clothes" class="sidebar-link">
+                        <i class="fas fa-tshirt ms-2"></i> @Lang.Get("Clothes")
+                    </a>
+                </li>
+                <li>
+                    <a href="/Products?category=Leather" class="sidebar-link">
+                        <i class="fas fa-shopping-bag ms-2"></i> @Lang.Get("Leather")
+                    </a>
+                </li>
+                <li>
+                    <a href="/Products?category=Giveaways" class="sidebar-link">
+                        <i class="fas fa-gift ms-2"></i> @Lang.Get("Giveaways")
                     </a>
                 </li>
                 <li>
@@ -224,7 +302,7 @@
                         <p>@Lang.Get("The first destination for all women's details ✨")</p>
                         <div class="d-flex flex-column flex-sm-row gap-2 logo-section">
                             <div>
-                                <img src="~/images/footer-1.jpg" alt="footer">
+                                <img src="~/images/footer-1.avif" alt="footer" onerror="this.src='/images/footer-1.jpg'">
                                 <div>
                                     <p class="fw-bold">@Lang.Get("Commercial Registration")</p>
                                     <p>1010166254</p>
@@ -263,9 +341,19 @@
                 <div class="col-md-6 col-xl-3">
                     <div class="contact-us">
                         <h3>@Lang.Get("Contact Us")</h3>
-                        <div class="d-flex gap-2">
-                            <a href=""><i class="fas fa-phone"></i> @Lang.Get("Phone")</a>
-                            <a href=""><i class="fas fa-envelope"></i> @Lang.Get("Email")</a>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <a href="https://wa.me/966565532971">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>@Lang.Get("WhatsApp")</span>
+                            </a>
+                            <a href="tel:+966565532971">
+                                <i class="fas fa-phone"></i>
+                                <span>@Lang.Get("Phone")</span>
+                            </a>
+                            <a href="mailto:info@store.com">
+                                <i class="fas fa-envelope"></i>
+                                <span>@Lang.Get("Email")</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -273,31 +361,44 @@
                     <h3 class="text-center">@Lang.Get("Download Mobile App")</h3>
                     <div class="apps d-flex flex-column align-items-center gap-2">
                         <div class="d-flex gap-2">
-                            <a href=""><img src="~/images/appstore.webp" alt=""></a>
-                            <a href=""><img src="~/images/googleplay.webp" alt=""></a>
+                            <a href="">
+                                <img src="~/images/appstore.webp" alt="">
+                            </a>
+                            <a href="">
+                                <img src="~/images/googleplay.webp" alt="">
+                            </a>
                         </div>
                         <div>
-                            <a href=""><img src="~/images/sbc.webp" alt=""></a>
-                            <p><a href="">@Lang.Get("Certified on the Business Platform")</a></p>
+                            <a href="">
+                                <img src="~/images/sbc.webp" alt="">
+                            </a>
+                            <p>
+                                <a href="">@Lang.Get("Certified on the Business Platform")</a>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <div class="row g-4">
+        </div>
+    </footer>
+
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="mx-0">
+                <div class="row g-4 align-items-center">
                     <div class="col-lg-3">
-                        <div class="text">
-                            <p>@Lang.Get("All rights reserved © Sad 2026")  - @Lang.Get("GMT") <a href="https://gmtweb.online/">GMTWEB</a></p>
+                        <div class="text mt-3">
+                            <p>@Lang.Get("All rights reserved ©") <a href="/">@Lang.Get("Saad Store")</a> 2026 - @Lang.Get("GMT") <a href="https://gmtweb.online/">GMTWEB</a></p>
                         </div>
                     </div>
                     <div class="col-lg-5">
                         <div class="images">
-                            <img src="~/images/mada_mini.jpg" alt="">
-                            <img src="~/images/credit_card_mini.jpg" alt="">
-                            <img src="~/images/apple_pay_mini.jpg" alt="">
-                            <img src="~/images/tabby_installment_mini.jpg" alt="">
-                            <img src="~/images/tamara_installment_mini.jpg" alt="">
-                            <img src="~/images/mispay_installment_mini.jpg" alt="">
+                            <img src="~/images/mada_mini.avif" alt="">
+                            <img src="~/images/credit_card_mini.avif" alt="">
+                            <img src="~/images/apple_pay_mini.avif" alt="">
+                            <img src="~/images/tabby_installment_mini.avif" alt="">
+                            <img src="~/images/tamara_installment_mini.avif" alt="">
+                            <img src="~/images/mispay_installment_mini.avif" alt="">
                             <img src="~/images/customer_wallet_mini.png" alt="">
                             <img src="~/images/sbc.webp" alt="">
                         </div>
@@ -315,7 +416,7 @@
                 </div>
             </div>
         </div>
-    </footer>
+    </div>
 
     <a href="https://wa.me/966565532971" class="whatsapp-float text-decoration-none" target="_blank">
         <i class="fab fa-whatsapp"></i>
