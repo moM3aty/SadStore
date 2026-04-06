@@ -249,93 +249,84 @@
     </div>
 </div>
 
-<style>
-    /* Styling */
-    :root {
-        --primary-color: #c89f72;
-        --dark-color: #1a1a1a;
-    }
-
-    .text-primary {
-        color: var(--primary-color) !important;
-    }
-
-    .product-card-premium {
-        transition: all 0.3s ease-in-out;
-        border: 1px solid transparent;
-    }
-
-        .product-card-premium:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
-            border-color: #f0f0f0;
+    <style>
+    
+        .product-card-premium {
+            transition: all 0.3s ease-in-out;
+            border: 1px solid transparent;
         }
 
-    .image-container img {
-        transition: transform 0.5s ease;
-    }
+            .product-card-premium:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+                border-color: #f0f0f0;
+            }
 
-    .product-card-premium:hover .image-container img {
-        transform: scale(1.05);
-    }
-
-    .overlay-actions {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: all 0.3s ease;
-    }
-
-    .product-card-premium:hover .overlay-actions {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    .action-icon {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-        border: none;   
-    }
-
-        .action-icon:hover {
-            background-color: var(--primary-color);
-            color: white !important;
+        .image-container img {
+            transition: transform 0.5s ease;
         }
 
-            .action-icon:hover i {
+        .product-card-premium:hover .image-container img {
+            transform: scale(1.05);
+        }
+
+        .overlay-actions {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .product-card-premium:hover .overlay-actions {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            border: none;   
+        }
+
+            .action-icon:hover {
+                background-color: var(--primary-color);
                 color: white !important;
             }
 
-    .form-check-input:checked {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-    }
+                .action-icon:hover i {
+                    color: white !important;
+                }
 
-    .btn-white {
-        background-color: white;
-        border: 1px solid #eee;
-    }
-
-    .form-select {
-        cursor: pointer;
-    }
-
-        .form-select:focus {
+        .form-check-input:checked {
+            background-color: var(--primary-color);
             border-color: var(--primary-color);
-            box-shadow: none;
         }
 
-    .transition-colors {
-        transition: background-color 0.3s ease;
-    }
+        .btn-white {
+            background-color: white;
+            border: 1px solid #eee;
+        }
 
-    .cursor-pointer {
-        cursor: pointer;
-    }
-</style>
+        .form-select {
+            cursor: pointer;
+        }
+
+            .form-select:focus {
+                border-color: var(--primary-color);
+                box-shadow: none;
+            }
+
+        .transition-colors {
+            transition: background-color 0.3s ease;
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

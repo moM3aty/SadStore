@@ -497,6 +497,14 @@ namespace SadStore.Services
                 { "Boxes", new Dictionary<string, string> { { "ar", "بوكسات" }, { "en", "Boxes" } } },
                 { "Packaging", new Dictionary<string, string> { { "ar", "تغليف" }, { "en", "Packaging" } } },
                 { "WhatsApp", new Dictionary<string, string> { { "ar", "واتساب" }, { "en", "WhatsApp" } } },
+                { "Giveaways", new Dictionary<string, string> { { "ar", "توزيعات" }, { "en", "Giveaways" } } },
+                { "Leather", new Dictionary<string, string> { { "ar", "جلود" }, { "en", "Leather" } } },
+                { "Fabrics", new Dictionary<string, string> { { "ar", "أقمشة" }, { "en", "Fabrics" } } },
+                { "Accessories", new Dictionary<string, string> { { "ar", "إكسسوارات" }, { "en", "Accessories" } } },
+                { "Tailoring & Decoration", new Dictionary<string, string> { { "ar", "حياكة وزخرفة" }, { "en", "Tailoring & Decoration" } } },
+                { "Embroidery & Beading", new Dictionary<string, string> { { "ar", "تطريز وشك" }, { "en", "Embroidery & Beading" } } },
+                { "Bags", new Dictionary<string, string> { { "ar", "شنط" }, { "en", "Bags" } } },
+                { "Raw Materials", new Dictionary<string, string> { { "ar", "مواد خام" }, { "en", "Raw Materials" } } },
                 { "GMT", new Dictionary<string, string> { { "ar", "بواسطة" }, { "en", "By" } } }
             };
         }
