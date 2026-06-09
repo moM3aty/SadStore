@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using SadStore.Data;
 using SadStore.Services;
 using System.Globalization;
-
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -13,7 +12,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<StoreContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => {
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = false;
     options.Password.RequiredLength = 6;
@@ -23,6 +23,26 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => {
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<StoreContext>();
+
+builder.Services.AddAuthentication(options =>
+{
+    // تعيين الـ Cookies كافتراضي للويب، والـ JWT كافتراضي للـ API
+    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("SadStore_Super_Secret_Key_For_JWT_Auth_2026")),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
 
 builder.Services.AddSingleton<LanguageService>();
 builder.Services.AddScoped<AppSettingService>();
